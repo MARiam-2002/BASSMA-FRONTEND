@@ -206,7 +206,13 @@ export function Portfolio() {
                   <button type="button" className={styles.cardOpen} onClick={() => setActive(p)}>
                     <div className={styles.cardThumb} aria-hidden>
                       {p.image ? (
-                        <img src={p.image} alt="" />
+                        <img
+                          src={p.image}
+                          alt=""
+                          loading="lazy"
+                          decoding="async"
+                          referrerPolicy="no-referrer"
+                        />
                       ) : (
                         <span className={styles.placeholder}>{t.portfolio[filtersLabel(p.category)]}</span>
                       )}
@@ -261,6 +267,17 @@ export function Portfolio() {
               >
                 ×
               </button>
+              {active.image ? (
+                <div className={styles.modalThumb}>
+                  <img
+                    src={active.image}
+                    alt={active.title[lang]}
+                    loading="eager"
+                    decoding="async"
+                    referrerPolicy="no-referrer"
+                  />
+                </div>
+              ) : null}
               <h2 id="project-dialog-title" className={styles.modalTitle}>
                 {active.title[lang]}
               </h2>
