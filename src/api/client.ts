@@ -23,7 +23,9 @@ export type ContactPayload = {
   lang?: 'ar' | 'en'
 }
 
-export type ProjectCategory = 'branding' | 'websites' | 'apps' | 'social'
+export type ProjectCategory = 'websites' | 'apps' | 'social'
+
+export type ServiceCategory = 'branding' | 'websites' | 'apps' | 'social'
 
 export type Project = {
   id: string
@@ -32,11 +34,14 @@ export type Project = {
   description: { ar: string; en: string }
   image?: string
   tags?: string[]
+  websiteUrl?: string
+  appUrl?: string
+  socialUrl?: string
 }
 
 export type ServiceItem = {
   id: string
-  category: ProjectCategory
+  category: ServiceCategory
   title: { ar: string; en: string }
   description: { ar: string; en: string }
 }

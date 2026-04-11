@@ -4,16 +4,10 @@ import { fetchJson, type Project, type ProjectCategory } from '../api/client'
 import { useLanguage } from '../i18n/LanguageContext'
 import styles from './Portfolio.module.css'
 
-type PortfolioFilterKey =
-  | 'filterAll'
-  | 'filterBranding'
-  | 'filterWebsites'
-  | 'filterApps'
-  | 'filterSocial'
+type PortfolioFilterKey = 'filterAll' | 'filterWebsites' | 'filterApps' | 'filterSocial'
 
 const FILTERS: { id: ProjectCategory | 'all'; labelKey: PortfolioFilterKey }[] = [
   { id: 'all', labelKey: 'filterAll' },
-  { id: 'branding', labelKey: 'filterBranding' },
   { id: 'websites', labelKey: 'filterWebsites' },
   { id: 'apps', labelKey: 'filterApps' },
   { id: 'social', labelKey: 'filterSocial' },
@@ -22,7 +16,7 @@ const FILTERS: { id: ProjectCategory | 'all'; labelKey: PortfolioFilterKey }[] =
 const fallbackProjects: Project[] = [
   {
     id: 'p1',
-    category: 'branding',
+    category: 'websites',
     title: { ar: 'هوية فاخرة لمتجر إلكتروني', en: 'Luxury e‑commerce identity' },
     description: {
       ar: 'نظام ألوان، شعار، وتطبيقات للهوية على الموقع والتغليف.',
@@ -61,6 +55,65 @@ const fallbackProjects: Project[] = [
     tags: ['Meta', 'Content'],
   },
 ]
+
+function projectHasExternalLinks(p: Project) {
+  return !!(p.websiteUrl || p.appUrl || p.socialUrl)
+}
+
+function ProjectExternalLinks({
+  p,
+  linkWebsite,
+  linkApp,
+  linkSocial,
+  externalAria,
+  className,
+}: {
+  p: Project
+  linkWebsite: string
+  linkApp: string
+  linkSocial: string
+  externalAria: string
+  className?: string
+}) {
+  if (!projectHasExternalLinks(p)) return null
+  return (
+    <div className={className ?? styles.cardLinks}>
+      {p.websiteUrl ? (
+        <a
+          href={p.websiteUrl}
+          className={styles.linkChip}
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label={`${linkWebsite} — ${externalAria}`}
+        >
+          {linkWebsite}
+        </a>
+      ) : null}
+      {p.appUrl ? (
+        <a
+          href={p.appUrl}
+          className={styles.linkChip}
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label={`${linkApp} — ${externalAria}`}
+        >
+          {linkApp}
+        </a>
+      ) : null}
+      {p.socialUrl ? (
+        <a
+          href={p.socialUrl}
+          className={styles.linkChip}
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label={`${linkSocial} — ${externalAria}`}
+        >
+          {linkSocial}
+        </a>
+      ) : null}
+    </div>
+  )
+}
 
 export function Portfolio() {
   const { t, dir, lang } = useLanguage()
@@ -140,32 +193,41 @@ export function Portfolio() {
         {filtered.length === 0 ? (
           <p className={styles.empty}>{t.portfolio.empty}</p>
         ) : (
-        <ul className={styles.grid}>
-          {filtered.map((p, i) => (
-            <motion.li
-              key={p.id}
-              layout
-              initial={{ opacity: 0, scale: 0.97 }}
-              animate={inView ? { opacity: 1, scale: 1 } : {}}
-              transition={{ delay: 0.05 * i, duration: 0.4 }}
-            >
-              <button type="button" className={styles.card} onClick={() => setActive(p)}>
-                <div className={styles.cardThumb} aria-hidden>
-                  {p.image ? (
-                    <img src={p.image} alt="" />
-                  ) : (
-                    <span className={styles.placeholder}>{t.portfolio[filtersLabel(p.category)]}</span>
-                  )}
+          <ul className={styles.grid}>
+            {filtered.map((p, i) => (
+              <motion.li
+                key={p.id}
+                layout
+                initial={{ opacity: 0, scale: 0.97 }}
+                animate={inView ? { opacity: 1, scale: 1 } : {}}
+                transition={{ delay: 0.05 * i, duration: 0.4 }}
+              >
+                <div className={styles.card}>
+                  <button type="button" className={styles.cardOpen} onClick={() => setActive(p)}>
+                    <div className={styles.cardThumb} aria-hidden>
+                      {p.image ? (
+                        <img src={p.image} alt="" />
+                      ) : (
+                        <span className={styles.placeholder}>{t.portfolio[filtersLabel(p.category)]}</span>
+                      )}
+                    </div>
+                    <div className={styles.cardBody}>
+                      <span className={styles.badge}>{t.portfolio[filtersLabel(p.category)]}</span>
+                      <h3 className={styles.cardTitle}>{p.title[lang]}</h3>
+                      <span className={styles.cardCta}>{t.portfolio.viewProject}</span>
+                    </div>
+                  </button>
+                  <ProjectExternalLinks
+                    p={p}
+                    linkWebsite={t.portfolio.linkWebsite}
+                    linkApp={t.portfolio.linkApp}
+                    linkSocial={t.portfolio.linkSocial}
+                    externalAria={t.portfolio.externalLinkAria}
+                  />
                 </div>
-                <div className={styles.cardBody}>
-                  <span className={styles.badge}>{t.portfolio[filtersLabel(p.category)]}</span>
-                  <h3 className={styles.cardTitle}>{p.title[lang]}</h3>
-                  <span className={styles.cardCta}>{t.portfolio.viewProject}</span>
-                </div>
-              </button>
-            </motion.li>
-          ))}
-        </ul>
+              </motion.li>
+            ))}
+          </ul>
         )}
       </div>
       <AnimatePresence>
@@ -210,6 +272,14 @@ export function Portfolio() {
                   ))}
                 </ul>
               )}
+              <ProjectExternalLinks
+                p={active}
+                linkWebsite={t.portfolio.linkWebsite}
+                linkApp={t.portfolio.linkApp}
+                linkSocial={t.portfolio.linkSocial}
+                externalAria={t.portfolio.externalLinkAria}
+                className={styles.modalLinks}
+              />
               <button type="button" className={styles.modalBtn} onClick={() => setActive(null)}>
                 {t.portfolio.close}
               </button>
@@ -221,10 +291,8 @@ export function Portfolio() {
   )
 }
 
-function filtersLabel(cat: ProjectCategory): 'filterBranding' | 'filterWebsites' | 'filterApps' | 'filterSocial' {
+function filtersLabel(cat: ProjectCategory): PortfolioFilterKey {
   switch (cat) {
-    case 'branding':
-      return 'filterBranding'
     case 'websites':
       return 'filterWebsites'
     case 'apps':
