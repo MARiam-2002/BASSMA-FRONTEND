@@ -21,11 +21,10 @@ type LanguageContextValue = {
 const LanguageContext = createContext<LanguageContextValue | null>(null)
 
 function readStoredLang(): Lang {
-  if (typeof window === 'undefined') return 'en'
+  if (typeof window === 'undefined') return 'ar'
   const raw = localStorage.getItem(STORAGE_KEY)
   if (raw === 'ar' || raw === 'en') return raw
-  const browser = navigator.language?.toLowerCase().startsWith('ar') ? 'ar' : 'en'
-  return browser
+  return 'ar'
 }
 
 export function LanguageProvider({ children }: { children: ReactNode }) {
