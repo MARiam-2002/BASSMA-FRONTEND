@@ -200,10 +200,14 @@
 }
 
 .mobileLink {
-  padding: 0.75rem 0.5rem;
+  display: block;
+  padding: 0.85rem 0.65rem;
+  min-height: 2.75rem;
   font-weight: 600;
   color: var(--text-muted);
   border-radius: 8px;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: rgba(212, 175, 55, 0.15);
 }
 
 .mobileLink:hover {
