@@ -1,0 +1,36 @@
+# Dependencies
+node_modules
+
+# Build
+dist
+dist-ssr
+
+# Logs
+logs
+*.log
+npm-debug.log*
+pnpm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Environment (keep .env.example if you add one)
+.env
+.env.*
+!.env.example
+
+# Editor / OS
+.DS_Store
+Thumbs.db
+.idea
+.vscode/*
+!.vscode/extensions.json
+
+# Vite
+.vite
+
+# TypeScript
+*.tsbuildinfo
+
+# Optional tooling
+coverage
+*.pem

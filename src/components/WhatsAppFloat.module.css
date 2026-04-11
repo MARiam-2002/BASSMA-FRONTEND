@@ -1,0 +1,32 @@
+.btn {
+  position: fixed;
+  z-index: 60;
+  inset-inline-end: 1rem;
+  bottom: 1rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.65rem 0.9rem 0.65rem 0.75rem;
+  border-radius: 999px;
+  background: var(--whatsapp);
+  color: #fff;
+  font-size: 0.78rem;
+  font-weight: 600;
+  box-shadow: 0 12px 36px rgba(37, 211, 102, 0.35);
+}
+
+@media (max-width: 420px) {
+  .label {
+    display: none;
+  }
+
+  .btn {
+    padding: 0.75rem;
+    border-radius: 999px;
+  }
+}
+
+.icon {
+  display: flex;
+  flex-shrink: 0;
+}

@@ -1,0 +1,34 @@
+.overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1.25rem;
+  background: radial-gradient(ellipse at center, #0a192f 0%, #030a14 70%);
+  pointer-events: none;
+}
+
+.logo {
+  width: min(42vw, 160px);
+  height: auto;
+  max-height: 200px;
+  object-fit: contain;
+  filter: drop-shadow(0 0 28px rgba(242, 210, 137, 0.35))
+    drop-shadow(0 0 48px rgba(212, 175, 55, 0.2));
+}
+
+.text {
+  margin: 0;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  letter-spacing: 0.04em;
+}
+
+.pulse {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
