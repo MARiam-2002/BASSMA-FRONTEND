@@ -68,6 +68,7 @@ export function Portfolio() {
   const [projects, setProjects] = useState<Project[]>(fallbackProjects)
   const [active, setActive] = useState<Project | null>(null)
   const ref = useRef(null)
+  const modalCloseRef = useRef<HTMLButtonElement>(null)
   const inView = useInView(ref, { once: true, margin: '-60px' })
 
   const load = useCallback(async () => {
@@ -82,6 +83,22 @@ export function Portfolio() {
   useEffect(() => {
     void load()
   }, [load])
+
+  useEffect(() => {
+    if (!active) return
+    const focusTimer = window.setTimeout(() => modalCloseRef.current?.focus(), 80)
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setActive(null)
+    }
+    window.addEventListener('keydown', onKey)
+    const prevOverflow = document.body.style.overflow
+    document.body.style.overflow = 'hidden'
+    return () => {
+      window.clearTimeout(focusTimer)
+      window.removeEventListener('keydown', onKey)
+      document.body.style.overflow = prevOverflow
+    }
+  }, [active])
 
   const filtered = useMemo(() => {
     if (filter === 'all') return projects
@@ -103,7 +120,7 @@ export function Portfolio() {
         <motion.div
           className={styles.filters}
           role="tablist"
-          aria-label="Portfolio categories"
+          aria-label={t.portfolio.filtersAria}
           initial={{ opacity: 0 }}
           animate={inView ? { opacity: 1 } : {}}
         >
@@ -120,6 +137,9 @@ export function Portfolio() {
             </button>
           ))}
         </motion.div>
+        {filtered.length === 0 ? (
+          <p className={styles.empty}>{t.portfolio.empty}</p>
+        ) : (
         <ul className={styles.grid}>
           {filtered.map((p, i) => (
             <motion.li
@@ -146,6 +166,7 @@ export function Portfolio() {
             </motion.li>
           ))}
         </ul>
+        )}
       </div>
       <AnimatePresence>
         {active && (
@@ -169,7 +190,13 @@ export function Portfolio() {
               aria-modal="true"
               aria-labelledby="project-dialog-title"
             >
-              <button type="button" className={styles.modalClose} onClick={() => setActive(null)}>
+              <button
+                ref={modalCloseRef}
+                type="button"
+                className={styles.modalClose}
+                onClick={() => setActive(null)}
+                aria-label={t.portfolio.close}
+              >
                 ×
               </button>
               <h2 id="project-dialog-title" className={styles.modalTitle}>

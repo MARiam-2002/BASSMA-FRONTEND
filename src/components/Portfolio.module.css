@@ -56,6 +56,19 @@
   background: linear-gradient(135deg, var(--gold-light), var(--gold));
 }
 
+.filter:focus-visible,
+.filterActive:focus-visible {
+  outline: 2px solid rgba(249, 224, 118, 0.95);
+  outline-offset: 3px;
+}
+
+.empty {
+  margin: 0 0 2rem;
+  text-align: center;
+  color: var(--text-muted);
+  font-size: 0.95rem;
+}
+
 .grid {
   list-style: none;
   margin: 0;
@@ -91,6 +104,17 @@
   border-color: rgba(212, 175, 55, 0.4);
   transform: translateY(-4px);
   box-shadow: 0 20px 50px rgba(0, 0, 0, 0.35);
+}
+
+.card:focus-visible {
+  outline: 2px solid rgba(249, 224, 118, 0.95);
+  outline-offset: 3px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .card:hover {
+    transform: none;
+  }
 }
 
 .cardThumb {
@@ -224,4 +248,10 @@
 
 .modalBtn:hover {
   border-color: rgba(212, 175, 55, 0.4);
+}
+
+.modalClose:focus-visible,
+.modalBtn:focus-visible {
+  outline: 2px solid rgba(249, 224, 118, 0.95);
+  outline-offset: 2px;
 }

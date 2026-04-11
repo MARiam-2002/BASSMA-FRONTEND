@@ -40,6 +40,7 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
     document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr'
     document.body.classList.remove('lang-ar', 'lang-en')
     document.body.classList.add(lang === 'ar' ? 'lang-ar' : 'lang-en')
+    document.title = translations[lang].siteTitle
   }, [lang])
 
   const value = useMemo<LanguageContextValue>(

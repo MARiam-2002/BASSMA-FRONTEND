@@ -117,6 +117,14 @@
   background: rgba(10, 25, 47, 0.5);
 }
 
+.navLink:focus-visible,
+.menuBtn:focus-visible,
+.lang button:focus-visible,
+.mobileLink:focus-visible {
+  outline: 2px solid rgba(249, 224, 118, 0.95);
+  outline-offset: 3px;
+}
+
 @media (min-width: 900px) {
   .menuBtn {
     display: none;

@@ -4,6 +4,8 @@ export const STORAGE_KEY = 'basma-lang'
 
 export const translations = {
   ar: {
+    siteTitle: 'بصمة Basma | Digital Agency',
+    skipLink: 'تخطي إلى المحتوى الرئيسي',
     nav: {
       home: 'الرئيسية',
       about: 'من نحن',
@@ -13,6 +15,7 @@ export const translations = {
     },
     hero: {
       headline: 'نصنع بصمتك الرقمية',
+      logoAlt: 'بصمة — للهوية الرقمية، تصميم المواقع، والتسويق الرقمي',
       ctaContact: 'تواصل معنا',
       ctaWork: 'شاهد الأعمال',
       ctaWhatsapp: 'تواصل عبر واتساب',
@@ -41,6 +44,8 @@ export const translations = {
     portfolio: {
       title: 'معرض الأعمال',
       subtitle: 'مشاريع مختارة تعكس جودة التنفيذ',
+      filtersAria: 'تصفية الأعمال حسب التصنيف',
+      empty: 'لا توجد أعمال في هذا التصنيف حالياً.',
       filterAll: 'الكل',
       filterBranding: 'هوية',
       filterWebsites: 'مواقع',
@@ -52,6 +57,7 @@ export const translations = {
     contact: {
       title: 'تواصل معنا',
       subtitle: 'أخبرنا عن مشروعك — نرد بسرعة.',
+      fillRequired: 'يرجى تعبئة الاسم والبريد والرسالة قبل الإرسال.',
       name: 'الاسم',
       email: 'البريد',
       phone: 'الهاتف',
@@ -62,6 +68,7 @@ export const translations = {
       error: 'تعذر الإرسال. حاول مرة أخرى.',
     },
     footer: {
+      navAria: 'روابط سريعة',
       rights: 'جميع الحقوق محفوظة.',
       emailLabel: 'البريد',
       phoneLabel: 'الهاتف',
@@ -69,6 +76,8 @@ export const translations = {
     loading: 'جاري التحميل…',
   },
   en: {
+    siteTitle: 'Basma | Digital Agency',
+    skipLink: 'Skip to main content',
     nav: {
       home: 'Home',
       about: 'About',
@@ -78,6 +87,7 @@ export const translations = {
     },
     hero: {
       headline: 'We Build Your Digital Identity',
+      logoAlt: 'Basma — digital identity, web design, and digital marketing',
       ctaContact: 'Contact Us',
       ctaWork: 'View Work',
       ctaWhatsapp: 'Chat on WhatsApp',
@@ -106,6 +116,8 @@ export const translations = {
     portfolio: {
       title: 'Portfolio',
       subtitle: 'Selected work that reflects our execution quality',
+      filtersAria: 'Filter projects by category',
+      empty: 'No projects in this category yet.',
       filterAll: 'All',
       filterBranding: 'Branding',
       filterWebsites: 'Websites',
@@ -117,6 +129,7 @@ export const translations = {
     contact: {
       title: 'Get in Touch',
       subtitle: 'Tell us about your project — we respond quickly.',
+      fillRequired: 'Please fill in name, email, and message before sending.',
       name: 'Name',
       email: 'Email',
       phone: 'Phone',
@@ -127,6 +140,7 @@ export const translations = {
       error: 'Could not send. Please try again.',
     },
     footer: {
+      navAria: 'Quick links',
       rights: 'All rights reserved.',
       emailLabel: 'Email',
       phoneLabel: 'Phone',

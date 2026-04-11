@@ -94,3 +94,18 @@
   transform: translateY(-2px);
   filter: brightness(1.05);
 }
+
+.btnPrimary:focus-visible,
+.btnGhost:focus-visible,
+.btnWa:focus-visible {
+  outline: 2px solid rgba(249, 224, 118, 0.95);
+  outline-offset: 3px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .btnPrimary:hover,
+  .btnGhost:hover,
+  .btnWa:hover {
+    transform: none;
+  }
+}

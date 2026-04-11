@@ -9,10 +9,12 @@ export function Contact() {
   const ref = useRef(null)
   const inView = useInView(ref, { once: true, margin: '-60px' })
   const [status, setStatus] = useState<'idle' | 'sending' | 'ok' | 'err'>('idle')
+  const [hint, setHint] = useState<string | null>(null)
 
   async function onSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault()
     setStatus('idle')
+    setHint(null)
     const form = e.currentTarget
     const fd = new FormData(form)
     const payload: ContactPayload = {
@@ -22,7 +24,10 @@ export function Contact() {
       message: String(fd.get('message') ?? '').trim(),
       lang,
     }
-    if (!payload.name || !payload.email || !payload.message) return
+    if (!payload.name || !payload.email || !payload.message) {
+      setHint(t.contact.fillRequired)
+      return
+    }
     setStatus('sending')
     try {
       await fetchJson<{ ok: boolean }>('/api/contact', {
@@ -74,8 +79,21 @@ export function Contact() {
           <button type="submit" className={styles.submit} disabled={status === 'sending'}>
             {status === 'sending' ? t.contact.sending : t.contact.send}
           </button>
-          {status === 'ok' && <p className={styles.feedbackOk}>{t.contact.success}</p>}
-          {status === 'err' && <p className={styles.feedbackErr}>{t.contact.error}</p>}
+          {hint && (
+            <p className={styles.feedbackHint} role="alert">
+              {hint}
+            </p>
+          )}
+          {status === 'ok' && (
+            <p className={styles.feedbackOk} role="status" aria-live="polite">
+              {t.contact.success}
+            </p>
+          )}
+          {status === 'err' && (
+            <p className={styles.feedbackErr} role="status" aria-live="polite">
+              {t.contact.error}
+            </p>
+          )}
         </motion.form>
       </div>
     </section>

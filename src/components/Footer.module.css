@@ -25,6 +25,25 @@
   opacity: 0.98;
 }
 
+.quickNav {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.5rem 1rem;
+  max-width: 100%;
+}
+
+.quickLink {
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--text-muted);
+  transition: color 0.2s;
+}
+
+.quickLink:hover {
+  color: var(--gold-light);
+}
+
 .meta {
   display: flex;
   flex-direction: column;

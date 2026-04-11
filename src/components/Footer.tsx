@@ -7,6 +7,14 @@ const EMAIL = 'bassma1company@gmail.com'
 const PHONE_DISPLAY = '+20 10 21288238'
 const PHONE_TEL = '+201021288238'
 
+const quickLinks = [
+  { key: 'home' as const, href: '#home' },
+  { key: 'about' as const, href: '#about' },
+  { key: 'services' as const, href: '#services' },
+  { key: 'portfolio' as const, href: '#portfolio' },
+  { key: 'contact' as const, href: '#contact' },
+]
+
 export function Footer() {
   const { t, dir } = useLanguage()
   const ref = useRef(null)
@@ -29,6 +37,13 @@ export function Footer() {
             height={220}
           />
         </motion.div>
+        <nav className={styles.quickNav} aria-label={t.footer.navAria}>
+          {quickLinks.map((l) => (
+            <a key={l.key} href={l.href} className={styles.quickLink}>
+              {t.nav[l.key]}
+            </a>
+          ))}
+        </nav>
         <div className={styles.meta}>
           <a href={`mailto:${EMAIL}`} className={styles.link}>
             <span className={styles.label}>{t.footer.emailLabel}</span>

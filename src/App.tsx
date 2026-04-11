@@ -1,5 +1,5 @@
 import { AnimatePresence, motion } from 'framer-motion'
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState, type MouseEvent } from 'react'
 import { About } from './components/About'
 import { Contact } from './components/Contact'
 import { Footer } from './components/Footer'
@@ -9,17 +9,36 @@ import { Navbar } from './components/Navbar'
 import { Portfolio } from './components/Portfolio'
 import { Services } from './components/Services'
 import { WhatsAppFloat } from './components/WhatsAppFloat'
+import { useLanguage } from './i18n/LanguageContext'
 
 export default function App() {
+  const { t } = useLanguage()
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    const id = window.setTimeout(() => setLoading(false), 2000)
+    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    const ms = reduced ? 450 : 2000
+    const id = window.setTimeout(() => setLoading(false), ms)
     return () => window.clearTimeout(id)
+  }, [])
+
+  const onSkipNav = useCallback((e: MouseEvent<HTMLAnchorElement>) => {
+    const main = document.getElementById('main-content')
+    if (!main) return
+    e.preventDefault()
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    main.focus()
+    main.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'start' })
+    if (window.location.hash !== '#main-content') {
+      window.history.pushState(null, '', '#main-content')
+    }
   }, [])
 
   return (
     <>
+      <a href="#main-content" className="skip-link" onClick={onSkipNav}>
+        {t.skipLink}
+      </a>
       <AnimatePresence>{loading && <LoadingScreen key="load" />}</AnimatePresence>
       <motion.div
         initial={{ opacity: 0 }}
@@ -27,7 +46,7 @@ export default function App() {
         transition={{ duration: 0.45 }}
       >
         <Navbar />
-        <main>
+        <main id="main-content" tabIndex={-1}>
           <Hero />
           <About />
           <Services />

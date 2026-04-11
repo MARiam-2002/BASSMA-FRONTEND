@@ -18,7 +18,7 @@ export function Hero() {
       >
         <img
           src="/logo-slogan.png"
-          alt=""
+          alt={t.hero.logoAlt}
           className={styles.heroLogo}
           width={420}
           height={320}
