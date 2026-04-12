@@ -56,6 +56,16 @@ const fallbackProjects: Project[] = [
   },
 ]
 
+function projectHeroImage(p: Project): string | undefined {
+  return p.image ?? p.gallery?.[0]
+}
+
+function projectGalleryExtras(p: Project): string[] {
+  const g = p.gallery ?? []
+  if (p.image) return g
+  return g.slice(1)
+}
+
 function projectHasExternalLinks(p: Project) {
   return !!(p.websiteUrl || p.appUrl || p.socialUrl)
 }
@@ -205,9 +215,9 @@ export function Portfolio() {
                 <div className={styles.card}>
                   <button type="button" className={styles.cardOpen} onClick={() => setActive(p)}>
                     <div className={styles.cardThumb} aria-hidden>
-                      {p.image ? (
+                      {projectHeroImage(p) ? (
                         <img
-                          src={p.image}
+                          src={projectHeroImage(p)}
                           alt=""
                           loading="lazy"
                           decoding="async"
@@ -267,10 +277,10 @@ export function Portfolio() {
               >
                 ×
               </button>
-              {active.image ? (
+              {projectHeroImage(active) ? (
                 <div className={styles.modalThumb}>
                   <img
-                    src={active.image}
+                    src={projectHeroImage(active)}
                     alt={active.title[lang]}
                     loading="eager"
                     decoding="async"
@@ -282,6 +292,24 @@ export function Portfolio() {
                 {active.title[lang]}
               </h2>
               <p className={styles.modalDesc}>{active.description[lang]}</p>
+              {projectGalleryExtras(active).length > 0 ? (
+                <>
+                  <p className={styles.modalGalleryLabel}>{t.portfolio.gallerySection}</p>
+                  <ul className={styles.modalGallery}>
+                    {projectGalleryExtras(active).map((url, i) => (
+                      <li key={`${url}-${i}`}>
+                        <img
+                          src={url}
+                          alt=""
+                          loading="lazy"
+                          decoding="async"
+                          referrerPolicy="no-referrer"
+                        />
+                      </li>
+                    ))}
+                  </ul>
+                </>
+              ) : null}
               {active.tags && active.tags.length > 0 && (
                 <ul className={styles.tags}>
                   {active.tags.map((tag) => (

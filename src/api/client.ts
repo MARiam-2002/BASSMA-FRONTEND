@@ -73,11 +73,65 @@ export type Project = {
   category: ProjectCategory
   title: { ar: string; en: string }
   description: { ar: string; en: string }
+  /** Main cover image URL */
   image?: string
+  /** Additional image URLs (shown in project details) */
+  gallery?: string[]
   tags?: string[]
   websiteUrl?: string
   appUrl?: string
   socialUrl?: string
+}
+
+export type CreateProjectPayload = {
+  category: ProjectCategory
+  title: { ar: string; en: string }
+  description: { ar: string; en: string }
+  image?: string
+  gallery?: string[]
+  tags?: string[]
+  websiteUrl?: string
+  appUrl?: string
+  socialUrl?: string
+}
+
+export async function createProjectJson(payload: CreateProjectPayload): Promise<{ project: Project }> {
+  return fetchJson<{ project: Project }>('/api/projects', {
+    method: 'POST',
+    body: JSON.stringify(payload),
+  })
+}
+
+/**
+ * Create a project with optional `cover` + `gallery` files (multipart).
+ * Requires Cloudinary on the server. Field `data` is JSON matching CreateProjectPayload (URLs optional; files fill image/gallery).
+ */
+export async function createProjectMultipart(
+  payload: CreateProjectPayload,
+  files?: { cover?: File | null; gallery?: File[] },
+): Promise<{ project: Project }> {
+  const form = new FormData()
+  form.append('data', JSON.stringify(payload))
+  if (files?.cover) form.append('cover', files.cover)
+  for (const f of files?.gallery ?? []) {
+    form.append('gallery', f)
+  }
+  const res = await fetch(`${API_BASE}/api/projects`, {
+    method: 'POST',
+    body: form,
+  })
+  const text = await res.text()
+  if (!res.ok) {
+    let msg = text || res.statusText
+    try {
+      const j = JSON.parse(text) as { error?: string; message?: string }
+      if (j.message || j.error) msg = j.message ?? j.error ?? msg
+    } catch {
+      /* ignore */
+    }
+    throw new Error(msg)
+  }
+  return JSON.parse(text) as { project: Project }
 }
 
 export type ServiceItem = {

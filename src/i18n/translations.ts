@@ -55,6 +55,7 @@ export const translations = {
       linkApp: 'التطبيق',
       linkSocial: 'سوشيال',
       externalLinkAria: 'يفتح في نافذة جديدة',
+      gallerySection: 'معرض الصور',
       close: 'إغلاق',
     },
     contact: {
@@ -130,6 +131,7 @@ export const translations = {
       linkApp: 'App',
       linkSocial: 'Social',
       externalLinkAria: 'Opens in a new tab',
+      gallerySection: 'Gallery',
       close: 'Close',
     },
     contact: {
