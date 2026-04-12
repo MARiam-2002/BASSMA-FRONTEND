@@ -268,66 +268,70 @@ export function Portfolio() {
               aria-modal="true"
               aria-labelledby="project-dialog-title"
             >
-              <button
-                ref={modalCloseRef}
-                type="button"
-                className={styles.modalClose}
-                onClick={() => setActive(null)}
-                aria-label={t.portfolio.close}
-              >
-                ×
-              </button>
-              {projectHeroImage(active) ? (
-                <div className={styles.modalThumb}>
-                  <img
-                    src={projectHeroImage(active)}
-                    alt={active.title[lang]}
-                    loading="eager"
-                    decoding="async"
-                    referrerPolicy="no-referrer"
-                  />
-                </div>
-              ) : null}
-              <h2 id="project-dialog-title" className={styles.modalTitle}>
-                {active.title[lang]}
-              </h2>
-              <p className={styles.modalDesc}>{active.description[lang]}</p>
-              {projectGalleryExtras(active).length > 0 ? (
-                <>
-                  <p className={styles.modalGalleryLabel}>{t.portfolio.gallerySection}</p>
-                  <ul className={styles.modalGallery}>
-                    {projectGalleryExtras(active).map((url, i) => (
-                      <li key={`${url}-${i}`}>
-                        <img
-                          src={url}
-                          alt=""
-                          loading="lazy"
-                          decoding="async"
-                          referrerPolicy="no-referrer"
-                        />
-                      </li>
+              <div className={styles.modalHeader}>
+                <button
+                  ref={modalCloseRef}
+                  type="button"
+                  className={styles.modalClose}
+                  onClick={() => setActive(null)}
+                  aria-label={t.portfolio.close}
+                >
+                  ×
+                </button>
+              </div>
+              <div className={styles.modalScroll}>
+                {projectHeroImage(active) ? (
+                  <div className={styles.modalThumb}>
+                    <img
+                      src={projectHeroImage(active)}
+                      alt={active.title[lang]}
+                      loading="eager"
+                      decoding="async"
+                      referrerPolicy="no-referrer"
+                    />
+                  </div>
+                ) : null}
+                <h2 id="project-dialog-title" className={styles.modalTitle}>
+                  {active.title[lang]}
+                </h2>
+                <p className={styles.modalDesc}>{active.description[lang]}</p>
+                {projectGalleryExtras(active).length > 0 ? (
+                  <>
+                    <p className={styles.modalGalleryLabel}>{t.portfolio.gallerySection}</p>
+                    <ul className={styles.modalGallery}>
+                      {projectGalleryExtras(active).map((url, i) => (
+                        <li key={`${url}-${i}`}>
+                          <img
+                            src={url}
+                            alt=""
+                            loading="lazy"
+                            decoding="async"
+                            referrerPolicy="no-referrer"
+                          />
+                        </li>
+                      ))}
+                    </ul>
+                  </>
+                ) : null}
+                {active.tags && active.tags.length > 0 && (
+                  <ul className={styles.tags}>
+                    {active.tags.map((tag) => (
+                      <li key={tag}>{tag}</li>
                     ))}
                   </ul>
-                </>
-              ) : null}
-              {active.tags && active.tags.length > 0 && (
-                <ul className={styles.tags}>
-                  {active.tags.map((tag) => (
-                    <li key={tag}>{tag}</li>
-                  ))}
-                </ul>
-              )}
-              <ProjectExternalLinks
-                p={active}
-                linkWebsite={t.portfolio.linkWebsite}
-                linkApp={t.portfolio.linkApp}
-                linkSocial={t.portfolio.linkSocial}
-                externalAria={t.portfolio.externalLinkAria}
-                className={styles.modalLinks}
-              />
-              <button type="button" className={styles.modalBtn} onClick={() => setActive(null)}>
-                {t.portfolio.close}
-              </button>
+                )}
+                <ProjectExternalLinks
+                  p={active}
+                  linkWebsite={t.portfolio.linkWebsite}
+                  linkApp={t.portfolio.linkApp}
+                  linkSocial={t.portfolio.linkSocial}
+                  externalAria={t.portfolio.externalLinkAria}
+                  className={styles.modalLinks}
+                />
+                <button type="button" className={styles.modalBtn} onClick={() => setActive(null)}>
+                  {t.portfolio.close}
+                </button>
+              </div>
             </motion.div>
           </motion.div>
         )}

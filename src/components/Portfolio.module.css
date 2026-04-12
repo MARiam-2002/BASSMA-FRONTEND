@@ -228,24 +228,37 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 1.25rem;
+  padding: max(0.75rem, env(safe-area-inset-top, 0px)) 1rem max(1.25rem, env(safe-area-inset-bottom, 0px));
+  overflow-y: auto;
+  overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
 }
 
 .modal {
   position: relative;
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
   max-width: 480px;
   width: 100%;
-  padding: 2rem 1.75rem 1.75rem;
+  max-height: min(92vh, calc(100vh - 2rem));
+  padding: 0;
   border-radius: calc(var(--radius) + 4px);
   border: 1px solid var(--border);
   background: linear-gradient(165deg, #0c1a2e 0%, #050d18 100%);
   box-shadow: 0 30px 80px rgba(0, 0, 0, 0.55);
+  overflow: hidden;
+}
+
+.modalHeader {
+  flex-shrink: 0;
+  display: flex;
+  justify-content: flex-end;
+  padding: 0.5rem 0.65rem 0;
 }
 
 .modalClose {
-  position: absolute;
-  top: 0.65rem;
-  inset-inline-end: 0.75rem;
   width: 2.25rem;
   height: 2.25rem;
   border-radius: 999px;
@@ -255,6 +268,16 @@
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+.modalScroll {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
+  padding: 0 1.75rem 1.75rem;
 }
 
 .modalClose:hover {
@@ -281,7 +304,6 @@
 .modalTitle {
   margin: 0 0 0.75rem;
   font-size: 1.35rem;
-  padding-inline-end: 2rem;
 }
 
 .modalDesc {
