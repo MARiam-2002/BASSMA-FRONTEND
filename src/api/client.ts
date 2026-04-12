@@ -16,7 +16,7 @@ export async function fetchJson<T>(path: string, init?: RequestInit): Promise<T>
 }
 
 /** Whether the API has Cloudinary + upload secret configured (for optional admin UIs). */
-export async function getUploadStatus(): Promise<{ enabled: boolean }> {
+export async function getUploadStatus(): Promise<{ enabled: boolean; secretRequired: boolean }> {
   return fetchJson('/api/upload/status')
 }
 
@@ -29,7 +29,7 @@ export type UploadImageResponse = {
 
 /**
  * Upload a portfolio image to Cloudinary via the API.
- * Pass the same secret as server `UPLOAD_SECRET` — never hard-code this in public production builds.
+ * If the server has `UPLOAD_SECRET` set, pass the same value; otherwise pass an empty string (omit header).
  */
 export async function uploadPortfolioImage(
   file: File,
@@ -37,9 +37,11 @@ export async function uploadPortfolioImage(
 ): Promise<UploadImageResponse> {
   const form = new FormData()
   form.append('file', file)
+  const headers: Record<string, string> = {}
+  if (uploadSecret.trim()) headers['X-Upload-Secret'] = uploadSecret.trim()
   const res = await fetch(`${API_BASE}/api/upload/image`, {
     method: 'POST',
-    headers: { 'X-Upload-Secret': uploadSecret },
+    headers,
     body: form,
   })
   const text = await res.text()
