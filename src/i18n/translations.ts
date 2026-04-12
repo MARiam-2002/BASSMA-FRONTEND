@@ -56,6 +56,8 @@ export const translations = {
       linkSocial: 'سوشيال',
       externalLinkAria: 'يفتح في نافذة جديدة',
       gallerySection: 'معرض الصور',
+      viewImageFull: 'عرض الصورة بحجم كامل',
+      lightboxClose: 'إغلاق الصورة',
       close: 'إغلاق',
     },
     contact: {
@@ -132,6 +134,8 @@ export const translations = {
       linkSocial: 'Social',
       externalLinkAria: 'Opens in a new tab',
       gallerySection: 'Gallery',
+      viewImageFull: 'View full image',
+      lightboxClose: 'Close image',
       close: 'Close',
     },
     contact: {

@@ -285,8 +285,28 @@
   background: rgba(255, 255, 255, 0.06);
 }
 
-.modalThumb {
+.modalThumbBtn {
+  display: block;
+  width: 100%;
   margin: 0 0 1rem;
+  padding: 0;
+  border: none;
+  border-radius: var(--radius);
+  background: transparent;
+  cursor: zoom-in;
+  text-align: inherit;
+  font: inherit;
+  color: inherit;
+}
+
+.modalThumbBtn:focus-visible {
+  outline: 2px solid rgba(249, 224, 118, 0.95);
+  outline-offset: 2px;
+}
+
+.modalThumb {
+  display: block;
+  margin: 0;
   border-radius: var(--radius);
   overflow: hidden;
   border: 1px solid var(--border);
@@ -299,6 +319,7 @@
   height: 100%;
   object-fit: cover;
   display: block;
+  pointer-events: none;
 }
 
 .modalTitle {
@@ -344,11 +365,28 @@
   background: linear-gradient(145deg, #0f2847, #051018);
 }
 
+.modalGalleryBtn {
+  display: block;
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  border: none;
+  background: transparent;
+  cursor: zoom-in;
+  border-radius: 8px;
+}
+
+.modalGalleryBtn:focus-visible {
+  outline: 2px solid rgba(249, 224, 118, 0.95);
+  outline-offset: 1px;
+}
+
 .modalGallery img {
   width: 100%;
   height: 100%;
   object-fit: cover;
   display: block;
+  pointer-events: none;
 }
 
 .tags {
@@ -384,6 +422,67 @@
 
 .modalClose:focus-visible,
 .modalBtn:focus-visible {
+  outline: 2px solid rgba(249, 224, 118, 0.95);
+  outline-offset: 2px;
+}
+
+.lightboxBackdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 110;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: max(1rem, env(safe-area-inset-top, 0px)) 1rem max(1rem, env(safe-area-inset-bottom, 0px));
+  background: rgba(0, 0, 0, 0.88);
+  backdrop-filter: blur(8px);
+  overflow: auto;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
+}
+
+.lightboxInner {
+  position: relative;
+  max-width: min(96vw, 1200px);
+  max-height: min(92vh, 92dvh);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.lightboxImg {
+  max-width: 100%;
+  max-height: min(88vh, 88dvh);
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  border-radius: var(--radius);
+  box-shadow: 0 24px 80px rgba(0, 0, 0, 0.55);
+}
+
+.lightboxClose {
+  position: absolute;
+  top: 0.25rem;
+  inset-inline-end: 0.25rem;
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 999px;
+  font-size: 1.5rem;
+  line-height: 1;
+  color: var(--text);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.45);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  z-index: 1;
+}
+
+.lightboxClose:hover {
+  background: rgba(0, 0, 0, 0.65);
+}
+
+.lightboxClose:focus-visible {
   outline: 2px solid rgba(249, 224, 118, 0.95);
   outline-offset: 2px;
 }

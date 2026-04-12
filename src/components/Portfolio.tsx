@@ -130,6 +130,7 @@ export function Portfolio() {
   const [filter, setFilter] = useState<ProjectCategory | 'all'>('all')
   const [projects, setProjects] = useState<Project[]>(fallbackProjects)
   const [active, setActive] = useState<Project | null>(null)
+  const [lightboxSrc, setLightboxSrc] = useState<string | null>(null)
   const ref = useRef(null)
   const modalCloseRef = useRef<HTMLButtonElement>(null)
   const inView = useInView(ref, { once: true, margin: '-60px' })
@@ -148,20 +149,29 @@ export function Portfolio() {
   }, [load])
 
   useEffect(() => {
-    if (!active) return
-    const focusTimer = window.setTimeout(() => modalCloseRef.current?.focus(), 80)
-    const onKey = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') setActive(null)
+    if (!active) {
+      setLightboxSrc(null)
+      return
     }
-    window.addEventListener('keydown', onKey)
+    const focusTimer = window.setTimeout(() => modalCloseRef.current?.focus(), 80)
     const prevOverflow = document.body.style.overflow
     document.body.style.overflow = 'hidden'
     return () => {
       window.clearTimeout(focusTimer)
-      window.removeEventListener('keydown', onKey)
       document.body.style.overflow = prevOverflow
     }
   }, [active])
+
+  useEffect(() => {
+    if (!active) return
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key !== 'Escape') return
+      if (lightboxSrc) setLightboxSrc(null)
+      else setActive(null)
+    }
+    window.addEventListener('keydown', onKey)
+    return () => window.removeEventListener('keydown', onKey)
+  }, [active, lightboxSrc])
 
   const filtered = useMemo(() => {
     if (filter === 'all') return projects
@@ -281,15 +291,22 @@ export function Portfolio() {
               </div>
               <div className={styles.modalScroll}>
                 {projectHeroImage(active) ? (
-                  <div className={styles.modalThumb}>
-                    <img
-                      src={projectHeroImage(active)}
-                      alt={active.title[lang]}
-                      loading="eager"
-                      decoding="async"
-                      referrerPolicy="no-referrer"
-                    />
-                  </div>
+                  <button
+                    type="button"
+                    className={styles.modalThumbBtn}
+                    onClick={() => setLightboxSrc(projectHeroImage(active)!)}
+                    aria-label={t.portfolio.viewImageFull}
+                  >
+                    <span className={styles.modalThumb}>
+                      <img
+                        src={projectHeroImage(active)}
+                        alt={active.title[lang]}
+                        loading="eager"
+                        decoding="async"
+                        referrerPolicy="no-referrer"
+                      />
+                    </span>
+                  </button>
                 ) : null}
                 <h2 id="project-dialog-title" className={styles.modalTitle}>
                   {active.title[lang]}
@@ -301,13 +318,20 @@ export function Portfolio() {
                     <ul className={styles.modalGallery}>
                       {projectGalleryExtras(active).map((url, i) => (
                         <li key={`${url}-${i}`}>
-                          <img
-                            src={url}
-                            alt=""
-                            loading="lazy"
-                            decoding="async"
-                            referrerPolicy="no-referrer"
-                          />
+                          <button
+                            type="button"
+                            className={styles.modalGalleryBtn}
+                            onClick={() => setLightboxSrc(url)}
+                            aria-label={t.portfolio.viewImageFull}
+                          >
+                            <img
+                              src={url}
+                              alt=""
+                              loading="lazy"
+                              decoding="async"
+                              referrerPolicy="no-referrer"
+                            />
+                          </button>
                         </li>
                       ))}
                     </ul>
@@ -335,6 +359,43 @@ export function Portfolio() {
             </motion.div>
           </motion.div>
         )}
+      </AnimatePresence>
+      <AnimatePresence>
+        {lightboxSrc ? (
+          <motion.div
+            className={styles.lightboxBackdrop}
+            role="presentation"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={() => setLightboxSrc(null)}
+          >
+            <motion.div
+              className={styles.lightboxInner}
+              initial={{ opacity: 0, scale: 0.96 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.98 }}
+              transition={{ type: 'spring', damping: 28, stiffness: 320 }}
+              onClick={(e) => e.stopPropagation()}
+            >
+              <button
+                type="button"
+                className={styles.lightboxClose}
+                onClick={() => setLightboxSrc(null)}
+                aria-label={t.portfolio.lightboxClose}
+              >
+                ×
+              </button>
+              <img
+                className={styles.lightboxImg}
+                src={lightboxSrc}
+                alt=""
+                decoding="async"
+                referrerPolicy="no-referrer"
+              />
+            </motion.div>
+          </motion.div>
+        ) : null}
       </AnimatePresence>
     </section>
   )
