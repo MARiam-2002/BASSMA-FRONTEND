@@ -70,6 +70,24 @@ function projectHasExternalLinks(p: Project) {
   return !!(p.websiteUrl || p.appUrl || p.socialUrl)
 }
 
+function ExternalLinkIcon({ className }: { className?: string }) {
+  return (
+    <svg
+      className={className}
+      width={14}
+      height={14}
+      viewBox="0 0 24 24"
+      aria-hidden={true}
+      focusable={false}
+    >
+      <path
+        fill="currentColor"
+        d="M18 19H6a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1h5V4H6a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-5h-2v5zM15 3h6v6h-1.5V5.56l-8.94 8.94-1.06-1.06L18.44 4.5H15V3z"
+      />
+    </svg>
+  )
+}
+
 function ProjectExternalLinks({
   p,
   linkWebsite,
@@ -77,6 +95,8 @@ function ProjectExternalLinks({
   linkSocial,
   externalAria,
   className,
+  variant = 'modal',
+  liveLinksHeading,
 }: {
   p: Project
   linkWebsite: string
@@ -84,43 +104,57 @@ function ProjectExternalLinks({
   linkSocial: string
   externalAria: string
   className?: string
+  variant?: 'card' | 'modal'
+  liveLinksHeading?: string
 }) {
   if (!projectHasExternalLinks(p)) return null
-  return (
-    <div className={className ?? styles.cardLinks}>
+  const chipClass = variant === 'card' ? styles.linkChipCard : styles.linkChip
+  const links = (
+    <>
       {p.websiteUrl ? (
         <a
           href={p.websiteUrl}
-          className={styles.linkChip}
+          className={chipClass}
           target="_blank"
           rel="noopener noreferrer"
           aria-label={`${linkWebsite} — ${externalAria}`}
         >
+          <ExternalLinkIcon className={styles.linkChipIcon} />
           {linkWebsite}
         </a>
       ) : null}
       {p.appUrl ? (
         <a
           href={p.appUrl}
-          className={styles.linkChip}
+          className={chipClass}
           target="_blank"
           rel="noopener noreferrer"
           aria-label={`${linkApp} — ${externalAria}`}
         >
+          <ExternalLinkIcon className={styles.linkChipIcon} />
           {linkApp}
         </a>
       ) : null}
       {p.socialUrl ? (
         <a
           href={p.socialUrl}
-          className={styles.linkChip}
+          className={chipClass}
           target="_blank"
           rel="noopener noreferrer"
           aria-label={`${linkSocial} — ${externalAria}`}
         >
+          <ExternalLinkIcon className={styles.linkChipIcon} />
           {linkSocial}
         </a>
       ) : null}
+    </>
+  )
+  return (
+    <div className={className ?? styles.cardLinks}>
+      {variant === 'card' && liveLinksHeading ? (
+        <p className={styles.cardLinksHeading}>{liveLinksHeading}</p>
+      ) : null}
+      <div className={variant === 'card' ? styles.cardLinksRow : styles.modalLinksRow}>{links}</div>
     </div>
   )
 }
@@ -245,6 +279,8 @@ export function Portfolio() {
                   </button>
                   <ProjectExternalLinks
                     p={p}
+                    variant="card"
+                    liveLinksHeading={t.portfolio.liveLinksHeading}
                     linkWebsite={t.portfolio.linkWebsite}
                     linkApp={t.portfolio.linkApp}
                     linkSocial={t.portfolio.linkSocial}
