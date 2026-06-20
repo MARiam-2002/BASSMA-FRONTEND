@@ -3,10 +3,86 @@ import { useLanguage } from "./i18n/LanguageProvider";
 import { LanguageSwitcher } from "./i18n/LanguageSwitcher";
 import {
   filterKeys,
-  projects,
-  services,
+  projects as fallbackProjects,
+  services as fallbackServices,
   type FilterKey,
+  type ProjectCategory,
 } from "./i18n/translations";
+import {
+  getProjects,
+  getServices,
+  submitContact,
+  type Project as ApiProject,
+  type ServiceItem,
+} from "./api/client";
+
+// ─── API helpers ──────────────────────────────────────────────────────────────
+
+const SERVICE_ICONS: Record<string, string> = {
+  social: "◎",
+  apps: "○",
+  websites: "◇",
+  branding: "◆",
+};
+
+const SERVICE_ORDER = ["social", "apps", "websites", "branding"];
+
+function mapApiCategory(category: string): ProjectCategory {
+  if (category === "websites" || category === "branding") return "sites";
+  if (category === "apps") return "apps";
+  return "social";
+}
+
+type DisplayProject = {
+  id: string;
+  title: { ar: string; en: string };
+  category: ProjectCategory;
+  image: string;
+  linkLabel: { ar: string; en: string };
+  linkUrl?: string;
+};
+
+function toDisplayProject(project: ApiProject): DisplayProject {
+  const category = mapApiCategory(project.category);
+  const link =
+    project.websiteUrl != null
+      ? { url: project.websiteUrl, linkLabel: { ar: "الموقع", en: "Website" } }
+      : project.appUrl != null
+        ? { url: project.appUrl, linkLabel: { ar: "التطبيق", en: "App" } }
+        : project.socialUrl != null
+          ? { url: project.socialUrl, linkLabel: { ar: "سوشيال", en: "Social" } }
+          : { linkLabel: { ar: "الموقع", en: "Website" } };
+
+  return {
+    id: project.id,
+    title: project.title,
+    category,
+    image: project.image ?? "",
+    ...link,
+  };
+}
+
+function sortServices<T extends { category: string }>(items: T[]): T[] {
+  return [...items].sort(
+    (a, b) => SERVICE_ORDER.indexOf(a.category) - SERVICE_ORDER.indexOf(b.category),
+  );
+}
+
+type DisplayService = {
+  icon: string;
+  title: { ar: string; en: string };
+  description: { ar: string; en: string };
+  category: string;
+};
+
+function toDisplayService(service: ServiceItem): DisplayService {
+  return {
+    icon: SERVICE_ICONS[service.category] ?? "◆",
+    title: service.title,
+    description: service.description,
+    category: service.category,
+  };
+}
 
 // ─── Hooks & helpers ──────────────────────────────────────────────────────────
 
@@ -138,6 +214,7 @@ interface ProjectCardProps {
   category: string;
   image: string;
   linkLabel: string;
+  linkUrl?: string;
   viewDetails: string;
   linkHint: string;
 }
@@ -151,7 +228,7 @@ function SectionHeader({ title, subtitle }: { title: string; subtitle: string })
   );
 }
 
-function ProjectCard({ title, category, image, linkLabel, viewDetails, linkHint }: ProjectCardProps) {
+function ProjectCard({ title, category, image, linkLabel, linkUrl, viewDetails, linkHint }: ProjectCardProps) {
   return (
     <article className="project-card card-interactive group">
       <div className="project-card-media">
@@ -166,10 +243,22 @@ function ProjectCard({ title, category, image, linkLabel, viewDetails, linkHint 
       </div>
 
       <div className="project-card-footer">
-        <a href="#" className="project-card-cta btn-gold">
-          {linkLabel}
-          <ExternalLinkIcon />
-        </a>
+        {linkUrl ? (
+          <a
+            href={linkUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="project-card-cta btn-gold"
+          >
+            {linkLabel}
+            <ExternalLinkIcon />
+          </a>
+        ) : (
+          <span className="project-card-cta btn-gold opacity-60 cursor-default">
+            {linkLabel}
+            <ExternalLinkIcon />
+          </span>
+        )}
         <span className="project-card-link-hint">{linkHint}</span>
       </div>
     </article>
@@ -183,17 +272,77 @@ export default function App() {
   const [activeFilter, setActiveFilter] = useState<FilterKey>("all");
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [formData, setFormData] = useState({ name: "", email: "", phone: "", message: "" });
+  const [contactSubmitting, setContactSubmitting] = useState(false);
+  const [projects, setProjects] = useState<DisplayProject[]>(() =>
+    fallbackProjects.map((p) => ({
+      id: String(p.id),
+      title: p.title,
+      category: p.category,
+      image: p.image,
+      linkLabel: p.linkLabel,
+    })),
+  );
+  const [services, setServices] = useState<DisplayService[]>(() =>
+    sortServices(
+      fallbackServices.map((s, i) => ({
+        icon: s.icon,
+        title: s.title,
+        description: s.description,
+        category: SERVICE_ORDER[i] ?? "branding",
+      })),
+    ),
+  );
   const headerScrolled = useHeaderScroll();
+
+  useEffect(() => {
+    let cancelled = false;
+
+    async function loadContent() {
+      try {
+        const [projectsRes, servicesRes] = await Promise.all([getProjects(), getServices()]);
+        if (cancelled) return;
+
+        if (projectsRes.projects.length > 0) {
+          setProjects(projectsRes.projects.map(toDisplayProject));
+        }
+
+        if (servicesRes.services.length > 0) {
+          setServices(sortServices(servicesRes.services.map(toDisplayService)));
+        }
+      } catch {
+        /* keep static fallback data */
+      }
+    }
+
+    loadContent();
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   const filteredProjects =
     activeFilter === "all"
       ? projects
       : projects.filter((p) => p.category === activeFilter);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    alert(t.contact.success);
-    setFormData({ name: "", email: "", phone: "", message: "" });
+    setContactSubmitting(true);
+    try {
+      await submitContact({
+        name: formData.name,
+        email: formData.email,
+        phone: formData.phone || undefined,
+        message: formData.message,
+        lang,
+      });
+      alert(t.contact.success);
+      setFormData({ name: "", email: "", phone: "", message: "" });
+    } catch {
+      alert(t.contact.error);
+    } finally {
+      setContactSubmitting(false);
+    }
   };
 
   const navLinks = [
@@ -505,6 +654,7 @@ export default function App() {
                     category={t.portfolio.categories[project.category]}
                     image={project.image}
                     linkLabel={project.linkLabel[lang]}
+                    linkUrl={project.linkUrl}
                     viewDetails={t.portfolio.viewDetails}
                     linkHint={t.portfolio.linkHint}
                   />
@@ -577,8 +727,8 @@ export default function App() {
                     />
                   </div>
 
-                  <button type="submit" className="contact-submit">
-                    {t.contact.submit}
+                  <button type="submit" className="contact-submit" disabled={contactSubmitting}>
+                    {contactSubmitting ? t.contact.submitting : t.contact.submit}
                   </button>
                 </form>
               </Reveal>

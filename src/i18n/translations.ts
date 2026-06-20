@@ -183,7 +183,9 @@ export const ui = {
       phone: "الهاتف",
       message: "الرسالة",
       submit: "إرسال",
+      submitting: "جاري الإرسال…",
       success: "شكراً! سنتواصل معك قريباً.",
+      error: "تعذّر إرسال الرسالة. حاول مرة أخرى.",
       imageAlt: "تواصل معنا",
     },
     footer: {
@@ -263,7 +265,9 @@ export const ui = {
       phone: "Phone",
       message: "Message",
       submit: "Send",
+      submitting: "Sending…",
       success: "Thank you! We'll get back to you soon.",
+      error: "Could not send your message. Please try again.",
       imageAlt: "Contact us",
     },
     footer: {

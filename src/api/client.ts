@@ -142,3 +142,18 @@ export type ServiceItem = {
   title: { ar: string; en: string }
   description: { ar: string; en: string }
 }
+
+export async function getProjects(): Promise<{ projects: Project[] }> {
+  return fetchJson<{ projects: Project[] }>('/api/projects')
+}
+
+export async function getServices(): Promise<{ services: ServiceItem[] }> {
+  return fetchJson<{ services: ServiceItem[] }>('/api/services')
+}
+
+export async function submitContact(payload: ContactPayload): Promise<{ ok: boolean }> {
+  return fetchJson<{ ok: boolean }>('/api/contact', {
+    method: 'POST',
+    body: JSON.stringify(payload),
+  })
+}
