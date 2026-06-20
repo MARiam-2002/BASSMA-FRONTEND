@@ -2,128 +2,6 @@ export type Lang = "ar" | "en";
 export type ProjectCategory = "sites" | "apps" | "social";
 export type FilterKey = "all" | ProjectCategory;
 
-export const services = [
-  {
-    icon: "◎",
-    title: { ar: "إدارة السوشيال ميديا", en: "Social Media Management" },
-    description: {
-      ar: "استراتيجية محتوى، جدولة، وتفاعل يعزز ولاء العملاء.",
-      en: "Content strategy, scheduling, and engagement that builds customer loyalty.",
-    },
-  },
-  {
-    icon: "○",
-    title: { ar: "تطوير التطبيقات", en: "App Development" },
-    description: {
-      ar: "تجارب جوال وويب-app عصرية مع تركيز على الأداء.",
-      en: "Modern mobile and web-app experiences with a focus on performance.",
-    },
-  },
-  {
-    icon: "◇",
-    title: { ar: "تطوير المواقع", en: "Web Development" },
-    description: {
-      ar: "مواقع سريعة، متجاوبة، وجاهزة للتحويل والنمو.",
-      en: "Fast, responsive websites built for conversion and growth.",
-    },
-  },
-  {
-    icon: "◆",
-    title: { ar: "تصميم الهوية", en: "Brand Identity Design" },
-    description: {
-      ar: "شعارات، أدلة بصرية، ونبرة علامة متسقة عبر كل القنوات.",
-      en: "Logos, visual guidelines, and consistent brand voice across all channels.",
-    },
-  },
-] as const;
-
-export const projects = [
-  {
-    id: 1,
-    title: { ar: "موقع NASA Space Apps Cairo", en: "NASA Space Apps Cairo Website" },
-    category: "sites" as ProjectCategory,
-    image: "https://api.builder.io/api/v1/image/assets/TEMP/27db2f1a74203fc3a87019214e0927dbc96767ef?width=703",
-    linkLabel: { ar: "الموقع", en: "Website" },
-  },
-  {
-    id: 2,
-    title: { ar: "لوحة تحكم ArtHub الإدارية", en: "ArtHub Admin Dashboard" },
-    category: "sites" as ProjectCategory,
-    image: "https://api.builder.io/api/v1/image/assets/TEMP/28367a34ecd445d7d6107a8246bad14d61fe4500?width=703",
-    linkLabel: { ar: "الموقع", en: "Website" },
-  },
-  {
-    id: 3,
-    title: { ar: "موقع Watfa التعريفي للتطبيق", en: "Watfa App Landing Page" },
-    category: "sites" as ProjectCategory,
-    image: "https://api.builder.io/api/v1/image/assets/TEMP/2aca22b6381fb2442a2eec76267542c3b70ec90b?width=703",
-    linkLabel: { ar: "الموقع", en: "Website" },
-  },
-  {
-    id: 4,
-    title: { ar: "لوحة تحكم Watfa لإدارة التطبيق", en: "Watfa App Management Dashboard" },
-    category: "sites" as ProjectCategory,
-    image: "https://api.builder.io/api/v1/image/assets/TEMP/0d323c9df65562008f68d14c38e7f38c928078ba?width=703",
-    linkLabel: { ar: "الموقع", en: "Website" },
-  },
-  {
-    id: 5,
-    title: { ar: "متجر Sanfour للتجارة الإلكترونية", en: "Sanfour E-Commerce Store" },
-    category: "sites" as ProjectCategory,
-    image: "https://api.builder.io/api/v1/image/assets/TEMP/4563bf697a5d42a3db2a7d06bac44109f4d3b807?width=703",
-    linkLabel: { ar: "الموقع", en: "Website" },
-  },
-  {
-    id: 6,
-    title: { ar: "إدارة حسابات السوشيال ميديا - Maleek Burger", en: "Social Media — Maleek Burger" },
-    category: "social" as ProjectCategory,
-    image: "https://api.builder.io/api/v1/image/assets/TEMP/f778119bc61f30a26e34c44b335f825fb06819a3?width=703",
-    linkLabel: { ar: "سوشيال", en: "Social" },
-  },
-  {
-    id: 7,
-    title: { ar: "إدارة حسابات السوشيال ميديا - Xperience Academy", en: "Social Media — Xperience Academy" },
-    category: "social" as ProjectCategory,
-    image: "https://api.builder.io/api/v1/image/assets/TEMP/61ef169a69cfc3d39a4ffec572dec277f8b400db?width=703",
-    linkLabel: { ar: "سوشيال", en: "Social" },
-  },
-  {
-    id: 8,
-    title: { ar: "إدارة حسابات السوشيال ميديا - Spyko", en: "Social Media — Spyko" },
-    category: "social" as ProjectCategory,
-    image: "https://api.builder.io/api/v1/image/assets/TEMP/e21557a3f460eb3d4ead922cb234071ecf55e78b?width=703",
-    linkLabel: { ar: "سوشيال", en: "Social" },
-  },
-  {
-    id: 9,
-    title: { ar: "تطبيق لبنان اليوم الإخباري", en: "Lebanon Today News App" },
-    category: "apps" as ProjectCategory,
-    image: "https://api.builder.io/api/v1/image/assets/TEMP/3e80d918cd0c41cc933fcddf499a2b41ba09429b?width=703",
-    linkLabel: { ar: "التطبيق", en: "App" },
-  },
-  {
-    id: 10,
-    title: { ar: "تطبيق Wanna Meal لاقتراح الوجبات بالذكاء الاصطناعي", en: "Wanna Meal AI Meal Suggestion App" },
-    category: "apps" as ProjectCategory,
-    image: "https://api.builder.io/api/v1/image/assets/TEMP/c7602847f71ee2d6dca89a6a2dd20cc039a423ac?width=703",
-    linkLabel: { ar: "التطبيق", en: "App" },
-  },
-  {
-    id: 11,
-    title: { ar: "تطبيق Watfa - اشترِ الآن وادفع لاحقًا", en: "Watfa — Buy Now, Pay Later App" },
-    category: "apps" as ProjectCategory,
-    image: "https://api.builder.io/api/v1/image/assets/TEMP/af52f110a91e49b6688e4b2092155e6556d58b71?width=703",
-    linkLabel: { ar: "التطبيق", en: "App" },
-  },
-  {
-    id: 12,
-    title: { ar: "تطبيق ArtHub لربط الفنانين والعملاء", en: "ArtHub — Artists & Clients App" },
-    category: "apps" as ProjectCategory,
-    image: "https://api.builder.io/api/v1/image/assets/TEMP/39caf34d56819f9afe030118699557179be47bbf?width=703",
-    linkLabel: { ar: "التطبيق", en: "App" },
-  },
-] as const;
-
 export const ui = {
   ar: {
     brand: "بصمة",
@@ -156,12 +34,21 @@ export const ui = {
     servicesSection: {
       title: "خدماتنا",
       subtitle: "حلول متكاملة لهويتك الرقمية",
+      loading: "جاري تحميل الخدمات…",
+      error: "تعذّر تحميل الخدمات من الخادم.",
+      retry: "إعادة المحاولة",
     },
     portfolio: {
       title: "معرض الأعمال",
       subtitle: "مشاريع مختارة تعكس جودة التنفيذ",
+      loading: "جاري تحميل الأعمال…",
+      error: "تعذّر تحميل الأعمال من الخادم.",
+      empty: "لا توجد أعمال لعرضها حالياً.",
+      retry: "إعادة المحاولة",
+      noImage: "لا توجد صورة",
       filterLabel: "تصفية المشاريع",
       viewDetails: "عرض التفاصيل",
+      closeModal: "إغلاق",
       linkHint: "رابط المشروع — يفتح في نافذة جديدة",
       filters: {
         all: "الكل",
@@ -238,12 +125,21 @@ export const ui = {
     servicesSection: {
       title: "Our Services",
       subtitle: "End-to-end solutions for your digital identity",
+      loading: "Loading services…",
+      error: "Could not load services from the server.",
+      retry: "Try again",
     },
     portfolio: {
       title: "Portfolio",
       subtitle: "Selected projects that reflect our quality of execution",
+      loading: "Loading portfolio…",
+      error: "Could not load portfolio from the server.",
+      empty: "No projects to show yet.",
+      retry: "Try again",
+      noImage: "No image",
       filterLabel: "Filter projects",
       viewDetails: "View details",
+      closeModal: "Close",
       linkHint: "Project link — opens in a new tab",
       filters: {
         all: "All",

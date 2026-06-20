@@ -1,88 +1,10 @@
 import { useEffect, useRef, useState, type CSSProperties, type ReactNode } from "react";
+import { submitContact } from "./api/client";
+import { useSiteContent } from "./hooks/useSiteContent";
 import { useLanguage } from "./i18n/LanguageProvider";
 import { LanguageSwitcher } from "./i18n/LanguageSwitcher";
-import {
-  filterKeys,
-  projects as fallbackProjects,
-  services as fallbackServices,
-  type FilterKey,
-  type ProjectCategory,
-} from "./i18n/translations";
-import {
-  getProjects,
-  getServices,
-  submitContact,
-  type Project as ApiProject,
-  type ServiceItem,
-} from "./api/client";
-
-// ─── API helpers ──────────────────────────────────────────────────────────────
-
-const SERVICE_ICONS: Record<string, string> = {
-  social: "◎",
-  apps: "○",
-  websites: "◇",
-  branding: "◆",
-};
-
-const SERVICE_ORDER = ["social", "apps", "websites", "branding"];
-
-function mapApiCategory(category: string): ProjectCategory {
-  if (category === "websites" || category === "branding") return "sites";
-  if (category === "apps") return "apps";
-  return "social";
-}
-
-type DisplayProject = {
-  id: string;
-  title: { ar: string; en: string };
-  category: ProjectCategory;
-  image: string;
-  linkLabel: { ar: string; en: string };
-  linkUrl?: string;
-};
-
-function toDisplayProject(project: ApiProject): DisplayProject {
-  const category = mapApiCategory(project.category);
-  const link =
-    project.websiteUrl != null
-      ? { url: project.websiteUrl, linkLabel: { ar: "الموقع", en: "Website" } }
-      : project.appUrl != null
-        ? { url: project.appUrl, linkLabel: { ar: "التطبيق", en: "App" } }
-        : project.socialUrl != null
-          ? { url: project.socialUrl, linkLabel: { ar: "سوشيال", en: "Social" } }
-          : { linkLabel: { ar: "الموقع", en: "Website" } };
-
-  return {
-    id: project.id,
-    title: project.title,
-    category,
-    image: project.image ?? "",
-    ...link,
-  };
-}
-
-function sortServices<T extends { category: string }>(items: T[]): T[] {
-  return [...items].sort(
-    (a, b) => SERVICE_ORDER.indexOf(a.category) - SERVICE_ORDER.indexOf(b.category),
-  );
-}
-
-type DisplayService = {
-  icon: string;
-  title: { ar: string; en: string };
-  description: { ar: string; en: string };
-  category: string;
-};
-
-function toDisplayService(service: ServiceItem): DisplayService {
-  return {
-    icon: SERVICE_ICONS[service.category] ?? "◆",
-    title: service.title,
-    description: service.description,
-    category: service.category,
-  };
-}
+import { filterKeys, type FilterKey } from "./i18n/translations";
+import type { DisplayProject } from "./lib/siteContent";
 
 // ─── Hooks & helpers ──────────────────────────────────────────────────────────
 
@@ -217,6 +139,8 @@ interface ProjectCardProps {
   linkUrl?: string;
   viewDetails: string;
   linkHint: string;
+  noImageLabel: string;
+  onViewDetails?: () => void;
 }
 
 function SectionHeader({ title, subtitle }: { title: string; subtitle: string }) {
@@ -228,18 +152,54 @@ function SectionHeader({ title, subtitle }: { title: string; subtitle: string })
   );
 }
 
-function ProjectCard({ title, category, image, linkLabel, linkUrl, viewDetails, linkHint }: ProjectCardProps) {
+function ProjectCard({
+  title,
+  category,
+  image,
+  linkLabel,
+  linkUrl,
+  viewDetails,
+  linkHint,
+  noImageLabel,
+  onViewDetails,
+}: ProjectCardProps) {
+  const [imageError, setImageError] = useState(false);
+
+  useEffect(() => {
+    setImageError(false);
+  }, [image]);
+
+  const showImage = Boolean(image) && !imageError;
+
   return (
     <article className="project-card card-interactive group">
       <div className="project-card-media">
-        <img src={image} alt={title} loading="lazy" decoding="async" />
+        {showImage ? (
+          <img
+            src={image}
+            alt={title}
+            loading="lazy"
+            decoding="async"
+            onError={() => setImageError(true)}
+          />
+        ) : (
+          <div className="project-card-media-placeholder" aria-hidden="true">
+            <span>{noImageLabel}</span>
+          </div>
+        )}
         <div className="project-card-media-overlay" aria-hidden="true" />
       </div>
 
       <div className="project-card-body">
         <span className="project-card-category">{category}</span>
         <h3 className="project-card-title">{title}</h3>
-        <p className="project-card-meta">{viewDetails}</p>
+        <button
+          type="button"
+          className="project-card-meta project-card-details-btn"
+          onClick={onViewDetails}
+        >
+          {viewDetails}
+        </button>
       </div>
 
       <div className="project-card-footer">
@@ -265,60 +225,135 @@ function ProjectCard({ title, category, image, linkLabel, linkUrl, viewDetails, 
   );
 }
 
+function ProjectCardSkeleton() {
+  return <article className="project-card project-card-skeleton" aria-hidden="true" />;
+}
+
+function ContentMessage({
+  message,
+  actionLabel,
+  onAction,
+}: {
+  message: string;
+  actionLabel?: string;
+  onAction?: () => void;
+}) {
+  return (
+    <div className="content-status">
+      <p>{message}</p>
+      {actionLabel && onAction ? (
+        <button type="button" className="content-status-btn" onClick={onAction}>
+          {actionLabel}
+        </button>
+      ) : null}
+    </div>
+  );
+}
+
+function ProjectDetailModal({
+  project,
+  lang,
+  dir,
+  categoryLabel,
+  onClose,
+  closeLabel,
+}: {
+  project: DisplayProject;
+  lang: "ar" | "en";
+  dir: "rtl" | "ltr";
+  categoryLabel: string;
+  onClose: () => void;
+  closeLabel: string;
+}) {
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") onClose();
+    };
+    document.body.style.overflow = "hidden";
+    window.addEventListener("keydown", onKey);
+    return () => {
+      document.body.style.overflow = "";
+      window.removeEventListener("keydown", onKey);
+    };
+  }, [onClose]);
+
+  return (
+    <div
+      className="project-modal-backdrop"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="project-modal-title"
+      onClick={onClose}
+    >
+      <div
+        className="project-modal surface-card-elevated"
+        dir={dir}
+        onClick={(e) => e.stopPropagation()}
+      >
+        <button type="button" className="project-modal-close" onClick={onClose} aria-label={closeLabel}>
+          ×
+        </button>
+
+        {project.image ? (
+          <img src={project.image} alt="" className="project-modal-cover" />
+        ) : null}
+
+        <div className="project-modal-body">
+          <p className="project-modal-category">{categoryLabel}</p>
+          <h3 id="project-modal-title" className="project-modal-title">
+            {project.title[lang]}
+          </h3>
+
+          {project.description?.[lang] ? (
+            <p className="project-modal-description">{project.description[lang]}</p>
+          ) : null}
+
+          {project.tags && project.tags.length > 0 ? (
+            <div className="project-modal-tags">
+              {project.tags.map((tag) => (
+                <span key={tag} className="project-modal-tag">
+                  {tag}
+                </span>
+              ))}
+            </div>
+          ) : null}
+
+          {project.gallery && project.gallery.length > 0 ? (
+            <div className="project-modal-gallery">
+              {project.gallery.map((src) => (
+                <img key={src} src={src} alt="" loading="lazy" decoding="async" />
+              ))}
+            </div>
+          ) : null}
+
+          {project.linkUrl ? (
+            <a
+              href={project.linkUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="project-modal-cta btn-gold"
+            >
+              {project.linkLabel[lang]}
+              <ExternalLinkIcon />
+            </a>
+          ) : null}
+        </div>
+      </div>
+    </div>
+  );
+}
+
 // ─── Main Component ───────────────────────────────────────────────────────────
 
 export default function App() {
   const { lang, t, dir } = useLanguage();
+  const { projects, services, loading, error, retry } = useSiteContent();
   const [activeFilter, setActiveFilter] = useState<FilterKey>("all");
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [formData, setFormData] = useState({ name: "", email: "", phone: "", message: "" });
   const [contactSubmitting, setContactSubmitting] = useState(false);
-  const [projects, setProjects] = useState<DisplayProject[]>(() =>
-    fallbackProjects.map((p) => ({
-      id: String(p.id),
-      title: p.title,
-      category: p.category,
-      image: p.image,
-      linkLabel: p.linkLabel,
-    })),
-  );
-  const [services, setServices] = useState<DisplayService[]>(() =>
-    sortServices(
-      fallbackServices.map((s, i) => ({
-        icon: s.icon,
-        title: s.title,
-        description: s.description,
-        category: SERVICE_ORDER[i] ?? "branding",
-      })),
-    ),
-  );
+  const [selectedProject, setSelectedProject] = useState<DisplayProject | null>(null);
   const headerScrolled = useHeaderScroll();
-
-  useEffect(() => {
-    let cancelled = false;
-
-    async function loadContent() {
-      try {
-        const [projectsRes, servicesRes] = await Promise.all([getProjects(), getServices()]);
-        if (cancelled) return;
-
-        if (projectsRes.projects.length > 0) {
-          setProjects(projectsRes.projects.map(toDisplayProject));
-        }
-
-        if (servicesRes.services.length > 0) {
-          setServices(sortServices(servicesRes.services.map(toDisplayService)));
-        }
-      } catch {
-        /* keep static fallback data */
-      }
-    }
-
-    loadContent();
-    return () => {
-      cancelled = true;
-    };
-  }, []);
 
   const filteredProjects =
     activeFilter === "all"
@@ -591,33 +626,43 @@ export default function App() {
             </Reveal>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-5">
-              {services.map((service, i) => (
-                <Reveal
-                  key={service.title.ar}
-                  delay={i * 70}
-                  className="card-interactive group rounded-2xl p-6 flex flex-col gap-4 text-start h-full surface-card-elevated"
-                >
-                  <div
-                    className={`w-10 h-10 flex items-center justify-center rounded-xl transition-all duration-300 group-hover:scale-110 group-hover:border-[rgba(212,175,55,0.45)] ${
-                      dir === "rtl" ? "self-end" : "self-start"
-                    }`}
-                    style={{
-                      border: "1px solid rgba(212,175,55,0.20)",
-                      background: "rgba(212,175,55,0.10)",
-                      color: "#D4AF37",
-                      fontSize: "18px",
-                    }}
+              {loading ? (
+                <ContentMessage message={t.servicesSection.loading} />
+              ) : error ? (
+                <ContentMessage
+                  message={t.servicesSection.error}
+                  actionLabel={t.servicesSection.retry}
+                  onAction={retry}
+                />
+              ) : (
+                services.map((service, i) => (
+                  <Reveal
+                    key={`${service.category}-${service.title.en}`}
+                    delay={i * 70}
+                    className="card-interactive group rounded-2xl p-6 flex flex-col gap-4 text-start h-full surface-card-elevated"
                   >
-                    {service.icon}
-                  </div>
-                  <div>
-                    <h3 className="text-lg font-bold text-white mb-2">{service.title[lang]}</h3>
-                    <p className="text-sm leading-relaxed" style={{ color: "rgba(248,250,252,0.68)" }}>
-                      {service.description[lang]}
-                    </p>
-                  </div>
-                </Reveal>
-              ))}
+                    <div
+                      className={`w-10 h-10 flex items-center justify-center rounded-xl transition-all duration-300 group-hover:scale-110 group-hover:border-[rgba(212,175,55,0.45)] ${
+                        dir === "rtl" ? "self-end" : "self-start"
+                      }`}
+                      style={{
+                        border: "1px solid rgba(212,175,55,0.20)",
+                        background: "rgba(212,175,55,0.10)",
+                        color: "#D4AF37",
+                        fontSize: "18px",
+                      }}
+                    >
+                      {service.icon}
+                    </div>
+                    <div>
+                      <h3 className="text-lg font-bold text-white mb-2">{service.title[lang]}</h3>
+                      <p className="text-sm leading-relaxed" style={{ color: "rgba(248,250,252,0.68)" }}>
+                        {service.description[lang]}
+                      </p>
+                    </div>
+                  </Reveal>
+                ))
+              )}
             </div>
           </div>
         </section>
@@ -630,36 +675,57 @@ export default function App() {
             </Reveal>
 
             <Reveal delay={60}>
-              <div className="flex flex-wrap items-center justify-center gap-2 mb-12" role="tablist" aria-label={t.portfolio.filterLabel}>
-                {filterKeys.map((filter) => (
-                  <button
-                    key={filter}
-                    type="button"
-                    role="tab"
-                    aria-selected={activeFilter === filter}
-                    onClick={() => setActiveFilter(filter)}
-                    className={`filter-pill hover:scale-105 active:scale-95 ${activeFilter === filter ? "filter-pill-active" : ""}`}
-                  >
-                    {t.portfolio.filters[filter]}
-                  </button>
-                ))}
-              </div>
+              {!loading && !error && projects.length > 0 ? (
+                <div className="flex flex-wrap items-center justify-center gap-2 mb-12" role="tablist" aria-label={t.portfolio.filterLabel}>
+                  {filterKeys.map((filter) => (
+                    <button
+                      key={filter}
+                      type="button"
+                      role="tab"
+                      aria-selected={activeFilter === filter}
+                      onClick={() => setActiveFilter(filter)}
+                      className={`filter-pill hover:scale-105 active:scale-95 ${activeFilter === filter ? "filter-pill-active" : ""}`}
+                    >
+                      {t.portfolio.filters[filter]}
+                    </button>
+                  ))}
+                </div>
+              ) : null}
             </Reveal>
 
             <div className="portfolio-grid">
-              {filteredProjects.map((project, i) => (
-                <Reveal key={project.id} delay={(i % 3) * 60} className="h-full">
-                  <ProjectCard
-                    title={project.title[lang]}
-                    category={t.portfolio.categories[project.category]}
-                    image={project.image}
-                    linkLabel={project.linkLabel[lang]}
-                    linkUrl={project.linkUrl}
-                    viewDetails={t.portfolio.viewDetails}
-                    linkHint={t.portfolio.linkHint}
-                  />
-                </Reveal>
-              ))}
+              {loading ? (
+                <>
+                  {Array.from({ length: 6 }).map((_, i) => (
+                    <ProjectCardSkeleton key={i} />
+                  ))}
+                  <p className="portfolio-status-text col-span-full">{t.portfolio.loading}</p>
+                </>
+              ) : error ? (
+                <ContentMessage
+                  message={t.portfolio.error}
+                  actionLabel={t.portfolio.retry}
+                  onAction={retry}
+                />
+              ) : filteredProjects.length === 0 ? (
+                <ContentMessage message={t.portfolio.empty} />
+              ) : (
+                filteredProjects.map((project, i) => (
+                  <Reveal key={project.id} delay={(i % 3) * 60} className="h-full">
+                    <ProjectCard
+                      title={project.title[lang]}
+                      category={t.portfolio.categories[project.category]}
+                      image={project.image}
+                      linkLabel={project.linkLabel[lang]}
+                      linkUrl={project.linkUrl}
+                      viewDetails={t.portfolio.viewDetails}
+                      linkHint={t.portfolio.linkHint}
+                      noImageLabel={t.portfolio.noImage}
+                      onViewDetails={() => setSelectedProject(project)}
+                    />
+                  </Reveal>
+                ))
+              )}
             </div>
           </div>
         </section>
@@ -921,6 +987,17 @@ export default function App() {
         <WhatsAppIcon className="w-6 h-6 shrink-0" />
         <span>{t.footer.whatsappFab}</span>
       </a>
+
+      {selectedProject ? (
+        <ProjectDetailModal
+          project={selectedProject}
+          lang={lang}
+          dir={dir}
+          categoryLabel={t.portfolio.categories[selectedProject.category]}
+          onClose={() => setSelectedProject(null)}
+          closeLabel={t.portfolio.closeModal}
+        />
+      ) : null}
     </div>
   );
 }
