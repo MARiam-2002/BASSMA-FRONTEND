@@ -253,7 +253,7 @@
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.35);
   }
 
-  .header-logo-mark {
+  .logo-mark {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -271,8 +271,8 @@
       transform 0.22s cubic-bezier(0.22, 1, 0.36, 1);
   }
 
-  a:hover .header-logo-mark,
-  a:focus-visible .header-logo-mark {
+  a:hover .logo-mark,
+  a:focus-visible .logo-mark {
     border-color: rgba(212, 175, 55, 0.48);
     box-shadow:
       inset 0 1px 0 rgba(255, 255, 255, 0.08),

@@ -419,7 +419,7 @@ export default function App() {
             href="#home"
             className="group flex items-center gap-2.5 shrink-0 transition-transform duration-200 hover:scale-[1.03] z-10"
           >
-            <span className="header-logo-mark shrink-0">
+            <span className="logo-mark shrink-0">
               <img
                 src="/logo-only.png"
                 alt=""
@@ -874,8 +874,17 @@ export default function App() {
 
           <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-12 gap-10 xl:gap-8 mb-12">
             <Reveal className="xl:col-span-4" delay={60}>
-              <a href="#home" className="inline-flex items-center gap-3 mb-5 transition-transform duration-200 hover:scale-[1.02]">
-                <img src="/logo-only.png" alt="" className="w-12 h-12 object-contain" />
+              <a href="#home" className="group inline-flex items-center gap-3 mb-5 transition-transform duration-200 hover:scale-[1.02]">
+                <span className="logo-mark shrink-0">
+                  <img
+                    src="/logo-only.png"
+                    alt=""
+                    className="w-7 h-7 object-contain"
+                    width={28}
+                    height={28}
+                    decoding="async"
+                  />
+                </span>
                 <span className="text-xl font-bold gold-gradient-text">{t.brand}</span>
               </a>
               <p className="text-sm leading-relaxed mb-6 max-w-sm" style={{ color: "rgba(248,250,252,0.68)" }}>
