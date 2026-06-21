@@ -38,6 +38,16 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
     document.title =
       lang === "ar" ? "بصمة | وكالة رقمية متخصصة" : "Basma | Digital Agency";
 
+    const poppinsId = "bassma-poppins-font";
+    if (lang === "en" && !document.getElementById(poppinsId)) {
+      const link = document.createElement("link");
+      link.id = poppinsId;
+      link.rel = "stylesheet";
+      link.href =
+        "https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap";
+      document.head.appendChild(link);
+    }
+
     try {
       localStorage.setItem(STORAGE_KEY, lang);
     } catch {

@@ -1,5 +1,3 @@
-@import url("https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800&display=swap");
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -61,7 +59,7 @@
     @apply bg-background text-foreground;
     font-family: 'Cairo', -apple-system, sans-serif;
     background: radial-gradient(80% 120% at 50% -20%, #0F2847 0%, #030A14 55%, #010509 100%);
-    background-attachment: fixed;
+    background-attachment: scroll;
     min-height: 100vh;
     margin: 0;
     -webkit-font-smoothing: antialiased;

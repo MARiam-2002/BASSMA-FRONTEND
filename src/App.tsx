@@ -423,6 +423,9 @@ export default function App() {
               src="/logo-only.png"
               alt=""
               className="w-11 h-11 shrink-0 object-contain"
+              width={44}
+              height={44}
+              decoding="async"
             />
             <span className="text-base font-bold gold-gradient-text">{t.brand}</span>
           </a>
@@ -523,7 +526,10 @@ export default function App() {
                   className="w-40 sm:w-48 lg:w-[220px] mb-6 lg:mb-8 object-contain animate-fade-up"
                   style={{ animationDelay: "0.05s" }}
                   loading="eager"
+                  fetchPriority="high"
                   decoding="async"
+                  width={220}
+                  height={80}
                 />
 
                 <h1
@@ -569,7 +575,10 @@ export default function App() {
                   alt={t.hero.mockupAlt}
                   className="w-full max-w-[560px] lg:max-w-[720px] object-contain animate-float"
                   loading="eager"
+                  fetchPriority="high"
                   decoding="async"
+                  width={720}
+                  height={720}
                 />
               </div>
             </div>
@@ -642,9 +651,7 @@ export default function App() {
                     className="card-interactive group rounded-2xl p-6 flex flex-col gap-4 text-start h-full surface-card-elevated"
                   >
                     <div
-                      className={`w-10 h-10 flex items-center justify-center rounded-xl transition-all duration-300 group-hover:scale-110 group-hover:border-[rgba(212,175,55,0.45)] ${
-                        dir === "rtl" ? "self-end" : "self-start"
-                      }`}
+                      className="w-10 h-10 flex items-center justify-center rounded-xl self-start transition-all duration-300 group-hover:scale-110 group-hover:border-[rgba(212,175,55,0.45)]"
                       style={{
                         border: "1px solid rgba(212,175,55,0.20)",
                         background: "rgba(212,175,55,0.10)",
