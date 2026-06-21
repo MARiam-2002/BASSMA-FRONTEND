@@ -961,14 +961,14 @@ export default function App() {
             style={{ borderTop: "1px solid rgba(212,175,55,0.15)" }}
           >
             <p
-              className="order-2 sm:order-1 text-sm text-center sm:text-start"
+              className="order-2 sm:order-2 text-sm text-center sm:text-start"
               style={{ color: "rgba(248,250,252,0.55)" }}
             >
               {t.footer.copyright}
             </p>
             <a
               href="#home"
-              className="back-to-top order-1 sm:order-2 self-end sm:self-auto inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm font-medium"
+              className="back-to-top order-1 sm:order-1 self-start sm:self-auto inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm font-medium"
               style={{
                 color: "rgba(248,250,252,0.68)",
                 border: "1px solid rgba(212,175,55,0.22)",
