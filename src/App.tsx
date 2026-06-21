@@ -417,16 +417,18 @@ export default function App() {
           {/* Logo — يمين في RTL */}
           <a
             href="#home"
-            className="flex items-center gap-2.5 shrink-0 transition-transform duration-200 hover:scale-[1.03] z-10"
+            className="group flex items-center gap-2.5 shrink-0 transition-transform duration-200 hover:scale-[1.03] z-10"
           >
-            <img
-              src="/logo-only.png"
-              alt=""
-              className="w-11 h-11 shrink-0 object-contain"
-              width={44}
-              height={44}
-              decoding="async"
-            />
+            <span className="header-logo-mark shrink-0">
+              <img
+                src="/logo-only.png"
+                alt=""
+                className="w-7 h-7 object-contain"
+                width={28}
+                height={28}
+                decoding="async"
+              />
+            </span>
             <span className="text-base font-bold gold-gradient-text">{t.brand}</span>
           </a>
 
