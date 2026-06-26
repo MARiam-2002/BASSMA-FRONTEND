@@ -167,6 +167,7 @@
   }
 
   .whatsapp-fab {
+    bottom: 2rem;
     background: linear-gradient(117deg, #f9e076 0%, #c9a227 45%, #d4af37 100%);
     color: #fff;
     border: 1px solid rgba(255, 255, 255, 0.22);
@@ -199,6 +200,28 @@
       box-shadow:
         0 14px 40px rgba(212, 175, 55, 0.38),
         0 8px 26px rgba(37, 211, 102, 0.26);
+    }
+  }
+
+  @keyframes whatsapp-fab-glow-compact {
+    0%,
+    100% {
+      box-shadow:
+        0 8px 24px rgba(212, 175, 55, 0.36),
+        0 4px 14px rgba(37, 211, 102, 0.22);
+    }
+
+    50% {
+      box-shadow:
+        0 10px 28px rgba(212, 175, 55, 0.44),
+        0 6px 18px rgba(37, 211, 102, 0.3);
+    }
+  }
+
+  @media (max-width: 639px) {
+    .whatsapp-fab {
+      bottom: max(1.5rem, env(safe-area-inset-bottom, 0px));
+      animation: whatsapp-fab-glow-compact 3s ease-in-out infinite;
     }
   }
 

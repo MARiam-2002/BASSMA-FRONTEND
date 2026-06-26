@@ -998,12 +998,12 @@ export default function App() {
         href="https://wa.me/201021288238"
         target="_blank"
         rel="noopener noreferrer"
-        className="btn-gold whatsapp-fab fixed bottom-8 z-50 flex items-center gap-2.5 rounded-full px-5 py-3 sm:px-6 sm:py-3.5 text-sm lg:text-base font-semibold"
+        className="btn-gold whatsapp-fab fixed z-50 flex items-center justify-center rounded-full w-14 h-14 p-0 sm:w-auto sm:h-auto sm:gap-2.5 sm:px-6 sm:py-3.5 text-sm lg:text-base font-semibold"
         style={dir === "rtl" ? { left: "1.25rem" } : { right: "1.25rem" }}
         aria-label={t.footer.whatsappFabLabel}
       >
-        <WhatsAppIcon className="w-6 h-6 shrink-0" />
-        <span>{t.footer.whatsappFab}</span>
+        <WhatsAppIcon className="w-[1.625rem] h-[1.625rem] sm:w-6 sm:h-6 shrink-0" />
+        <span className="hidden sm:inline">{t.footer.whatsappFab}</span>
       </a>
 
       {selectedProject ? (
