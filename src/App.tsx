@@ -2,7 +2,6 @@ import { useEffect, useRef, useState, type CSSProperties, type ReactNode } from 
 import { submitContact } from "./api/client";
 import { useSiteContent } from "./hooks/useSiteContent";
 import { useLanguage } from "./i18n/LanguageProvider";
-import { LanguageSwitcher } from "./i18n/LanguageSwitcher";
 import { filterKeys, type FilterKey } from "./i18n/translations";
 import type { DisplayProject } from "./lib/siteContent";
 
@@ -442,8 +441,6 @@ export default function App() {
 
           {/* Language Switcher + Mobile Menu */}
           <div className="flex items-center gap-3 z-10">
-            <LanguageSwitcher className="hidden sm:flex" />
-
             <button
               className="md:hidden flex flex-col justify-center gap-1.5 p-2 rounded-lg transition-colors hover:bg-white/5"
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
@@ -489,9 +486,6 @@ export default function App() {
             {link.label}
           </a>
         ))}
-        <div className="px-6 py-4 sm:hidden">
-          <LanguageSwitcher className="w-full justify-center" />
-        </div>
       </div>
 
       <main id="home">
@@ -531,7 +525,7 @@ export default function App() {
 
                 <h1
                   className="text-4xl sm:text-5xl lg:text-[58px] font-semibold leading-[1.12] mb-8 lg:mb-10 white-gradient-text max-w-xl animate-fade-up"
-                  style={{ letterSpacing: lang === "en" ? "0.02em" : "0.88px", animationDelay: "0.12s" }}
+                  style={{ letterSpacing: "0.88px", animationDelay: "0.12s" }}
                 >
                   {t.hero.title}
                 </h1>
@@ -819,57 +813,13 @@ export default function App() {
       </main>
 
       {/* ══ FOOTER ═════════════════════════════════════════════════════════ */}
-      <footer
-        className="relative mt-4 overflow-hidden"
-        style={{
-          borderTop: "1px solid rgba(212,175,55,0.22)",
-          background: "linear-gradient(180deg, rgba(3,10,20,0.40) 0%, rgba(3,10,20,0.95) 45%, #02060d 100%)",
-        }}
-      >
-        <div
-          className="pointer-events-none absolute inset-x-0 top-0 h-px"
-          style={{ background: "linear-gradient(90deg, transparent, rgba(212,175,55,0.55), transparent)" }}
-        />
-        <div
-          className="pointer-events-none absolute left-1/2 top-0 -translate-x-1/2 w-[min(720px,90vw)] h-[280px] animate-glow-pulse"
-          style={{
-            background: "radial-gradient(70.71% 70.71% at 50% 0%, rgba(212,175,55,0.14) 0%, rgba(212,175,55,0.00) 72%)",
-          }}
-        />
+      <footer className="site-footer">
+        <div className="site-footer-glow" aria-hidden="true" />
 
-        <div className="container mx-auto px-6 lg:px-12 xl:px-20 max-w-[1400px] relative pt-14 pb-8">
-          <Reveal>
-            <div
-              className="rounded-2xl px-6 py-8 sm:px-8 sm:py-10 mb-12 flex flex-col lg:flex-row items-center justify-between gap-6 text-center lg:text-start surface-card-elevated backdrop-blur-sm"
-            >
-              <div>
-                <p className="text-sm font-semibold mb-2" style={{ color: "#D4AF37" }}>
-                  {t.footer.ctaEyebrow}
-                </p>
-                <h3 className="text-2xl sm:text-3xl font-bold text-white mb-2">
-                  {t.footer.ctaTitle}
-                </h3>
-                <p className="text-sm max-w-md" style={{ color: "rgba(248,250,252,0.68)" }}>
-                  {t.footer.ctaDesc}
-                </p>
-              </div>
-              <a
-                href="#contact"
-                className="footer-cta btn-gold shrink-0 inline-flex items-center justify-center px-8 py-3.5 rounded-2xl text-base font-semibold"
-                style={{
-                  background: "linear-gradient(117deg, #F9E076 0%, #C9A227 45%, #D4AF37 100%)",
-                  color: "#0A0F18",
-                  boxShadow: "0 10px 32px rgba(212,175,55,0.25)",
-                }}
-              >
-                {t.footer.ctaButton}
-              </a>
-            </div>
-          </Reveal>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-12 gap-10 xl:gap-8 mb-12">
-            <Reveal className="xl:col-span-4" delay={60}>
-              <a href="#home" className="group inline-flex items-center gap-3 mb-5 transition-transform duration-200 hover:scale-[1.02]">
+        <div className="container mx-auto px-6 lg:px-12 xl:px-20 max-w-[1400px] relative">
+          <div className="site-footer-main">
+            <div className="site-footer-brand">
+              <a href="#home" className="site-footer-logo group">
                 <span className="logo-mark shrink-0">
                   <img
                     src="/logo-only.png"
@@ -882,105 +832,54 @@ export default function App() {
                 </span>
                 <span className="text-xl font-bold gold-gradient-text">{t.brand}</span>
               </a>
-              <p className="text-sm leading-relaxed mb-6 max-w-sm" style={{ color: "rgba(248,250,252,0.68)" }}>
-                {t.footer.desc}
-              </p>
-              <a
-                href="https://wa.me/201021288238"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="footer-contact-card w-full max-w-sm"
-              >
-                <span className="footer-contact-icon [&_svg]:w-[18px] [&_svg]:h-[18px] text-white">
-                  <WhatsAppIcon />
-                </span>
-                <span className="text-start">
-                  <span className="block text-xs mb-0.5" style={{ color: "rgba(248,250,252,0.55)" }}>
-                    {t.footer.whatsapp}
-                  </span>
-                  <span className="block text-sm font-semibold text-white">{t.footer.whatsappAction}</span>
-                </span>
-              </a>
-            </Reveal>
+              <p className="site-footer-tagline">{t.footer.tagline}</p>
+              <p className="site-footer-desc">{t.footer.desc}</p>
+            </div>
 
-            <Reveal className="xl:col-span-2" delay={100}>
-              <h4 className="text-sm font-bold text-white mb-4">{t.footer.quickLinks}</h4>
-              <ul className="space-y-3">
+            <nav className="site-footer-nav" aria-label={t.footer.explore}>
+              <p className="site-footer-label">{t.footer.explore}</p>
+              <ul>
                 {navLinks.map((link) => (
                   <li key={link.href}>
-                    <a href={link.href} className="footer-link inline-block text-sm font-medium">
-                      {link.label}
-                    </a>
+                    <a href={link.href}>{link.label}</a>
                   </li>
                 ))}
               </ul>
-            </Reveal>
+            </nav>
 
-            <Reveal className="xl:col-span-3" delay={140}>
-              <h4 className="text-sm font-bold text-white mb-4">{t.footer.servicesTitle}</h4>
-              <ul className="space-y-3">
-                {services.map((service) => (
-                  <li key={service.title.ar}>
-                    <a href="#services" className="footer-link inline-block text-sm font-medium">
-                      {service.title[lang]}
-                    </a>
-                  </li>
-                ))}
-              </ul>
-            </Reveal>
-
-            <Reveal className="xl:col-span-3" delay={180}>
-              <h4 className="text-sm font-bold text-white mb-4">{t.footer.contactTitle}</h4>
-              <div className="space-y-3">
-                <a href="mailto:bassma1company@gmail.com" className="footer-contact-card">
-                  <span className="footer-contact-icon">
+            <div className="site-footer-contact">
+              <p className="site-footer-label">{t.footer.contactTitle}</p>
+              <ul className="site-footer-contact-list">
+                <li>
+                  <a href="mailto:bassma1company@gmail.com" className="site-footer-contact-link">
                     <MailIcon />
-                  </span>
-                  <span className="text-start min-w-0">
-                    <span className="block text-xs mb-0.5" style={{ color: "rgba(248,250,252,0.55)" }}>
-                      {t.footer.email}
-                    </span>
-                    <span className="block text-sm font-medium text-white truncate">
-                      bassma1company@gmail.com
-                    </span>
-                  </span>
-                </a>
-                <a href="tel:+201021288238" className="footer-contact-card">
-                  <span className="footer-contact-icon">
+                    <span dir="ltr">bassma1company@gmail.com</span>
+                  </a>
+                </li>
+                <li>
+                  <a href="tel:+201021288238" className="site-footer-contact-link">
                     <PhoneIcon />
-                  </span>
-                  <span className="text-start">
-                    <span className="block text-xs mb-0.5" style={{ color: "rgba(248,250,252,0.55)" }}>
-                      {t.footer.phone}
-                    </span>
-                    <span className="block text-sm font-medium text-white" dir="ltr">
-                      +20 10 21288238
-                    </span>
-                  </span>
-                </a>
-              </div>
-            </Reveal>
+                    <span dir="ltr">+20 10 21288238</span>
+                  </a>
+                </li>
+                <li>
+                  <a
+                    href="https://wa.me/201021288238"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="site-footer-contact-link site-footer-contact-link--accent"
+                  >
+                    <WhatsAppIcon className="w-[1.125rem] h-[1.125rem]" />
+                    <span>واتساب</span>
+                  </a>
+                </li>
+              </ul>
+            </div>
           </div>
 
-          <div
-            className="pt-6 pb-24 sm:pb-10 flex flex-col sm:flex-row items-center sm:items-center justify-between gap-4"
-            style={{ borderTop: "1px solid rgba(212,175,55,0.15)" }}
-          >
-            <p
-              className="order-2 sm:order-2 text-sm text-center sm:text-start"
-              style={{ color: "rgba(248,250,252,0.55)" }}
-            >
-              {t.footer.copyright}
-            </p>
-            <a
-              href="#home"
-              className="back-to-top order-1 sm:order-1 self-start sm:self-auto inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm font-medium"
-              style={{
-                color: "rgba(248,250,252,0.68)",
-                border: "1px solid rgba(212,175,55,0.22)",
-                background: "rgba(10,25,47,0.45)",
-              }}
-            >
+          <div className="site-footer-bar">
+            <p className="site-footer-copy">{t.footer.copyright}</p>
+            <a href="#home" className="site-footer-top">
               <ArrowUpIcon />
               {t.footer.backToTop}
             </a>

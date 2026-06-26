@@ -314,22 +314,171 @@
     transform: scale(1.04);
   }
 
-  .footer-link {
-    color: rgba(248, 250, 252, 0.68);
-    transition:
-      color 0.22s cubic-bezier(0.22, 1, 0.36, 1),
-      transform 0.22s cubic-bezier(0.22, 1, 0.36, 1);
+  .site-footer {
+    position: relative;
+    margin-top: 1rem;
+    padding: 3.25rem 0 0;
+    border-top: 1px solid var(--gold-border);
+    background: #02060d;
   }
 
-  .footer-link:hover,
-  .footer-link:focus-visible {
-    color: #f9e076;
-    transform: translateX(3px);
+  .site-footer-glow {
+    pointer-events: none;
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse 80% 45% at 50% 0%, rgba(212, 175, 55, 0.05) 0%, transparent 68%);
   }
 
-  [dir="ltr"] .footer-link:hover,
-  [dir="ltr"] .footer-link:focus-visible {
-    transform: translateX(-3px);
+  .site-footer-main {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 2.5rem;
+    padding-bottom: 2.5rem;
+  }
+
+  @media (min-width: 768px) {
+    .site-footer-main {
+      grid-template-columns: minmax(0, 1.35fr) minmax(0, 0.75fr) minmax(0, 1fr);
+      gap: 3rem;
+    }
+  }
+
+  .site-footer-logo {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
+    transition: transform 0.2s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .site-footer-logo:hover {
+    transform: translateY(-1px);
+  }
+
+  .site-footer-tagline {
+    margin-top: 1.125rem;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    color: var(--gold);
+  }
+
+  .site-footer-desc {
+    margin-top: 0.75rem;
+    max-width: 22rem;
+    font-size: 0.875rem;
+    line-height: 1.75;
+    color: rgba(248, 250, 252, 0.62);
+  }
+
+  .site-footer-label {
+    margin-bottom: 1rem;
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: rgba(212, 175, 55, 0.82);
+  }
+
+  .site-footer-nav ul {
+    display: flex;
+    flex-direction: column;
+    gap: 0.625rem;
+  }
+
+  .site-footer-nav a {
+    display: inline-block;
+    font-size: 0.9375rem;
+    font-weight: 500;
+    color: rgba(248, 250, 252, 0.72);
+    transition: color 0.2s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .site-footer-nav a:hover,
+  .site-footer-nav a:focus-visible {
+    color: var(--gold-light);
+  }
+
+  .site-footer-contact-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .site-footer-contact-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.625rem;
+    max-width: 100%;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: rgba(248, 250, 252, 0.76);
+    transition: color 0.2s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .site-footer-contact-link svg {
+    width: 1rem;
+    height: 1rem;
+    flex-shrink: 0;
+    color: rgba(212, 175, 55, 0.75);
+  }
+
+  .site-footer-contact-link span {
+    min-width: 0;
+    overflow-wrap: anywhere;
+  }
+
+  .site-footer-contact-link:hover,
+  .site-footer-contact-link:focus-visible {
+    color: #fff;
+  }
+
+  .site-footer-contact-link--accent {
+    color: rgba(249, 224, 118, 0.92);
+  }
+
+  .site-footer-contact-link--accent svg {
+    color: currentColor;
+  }
+
+  .site-footer-bar {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+    padding: 1.375rem 0 5.5rem;
+    border-top: 1px solid rgba(212, 175, 55, 0.12);
+  }
+
+  @media (min-width: 640px) {
+    .site-footer-bar {
+      flex-direction: row;
+      align-items: center;
+      justify-content: space-between;
+      padding-bottom: 2.5rem;
+    }
+  }
+
+  .site-footer-copy {
+    font-size: 0.8125rem;
+    color: rgba(248, 250, 252, 0.48);
+  }
+
+  .site-footer-top {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.375rem;
+    font-size: 0.8125rem;
+    font-weight: 500;
+    color: rgba(248, 250, 252, 0.52);
+    transition: color 0.2s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .site-footer-top svg {
+    width: 0.875rem;
+    height: 0.875rem;
+  }
+
+  .site-footer-top:hover,
+  .site-footer-top:focus-visible {
+    color: var(--gold-light);
   }
 
   .footer-contact-card {
