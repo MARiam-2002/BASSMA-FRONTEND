@@ -525,13 +525,13 @@ export default function App() {
                 <img
                   src="/logo-slogan.png"
                   alt="بصمة BASMA"
-                  className="w-40 sm:w-48 lg:w-[220px] mb-6 lg:mb-8 object-contain animate-fade-up"
+                  className="w-auto h-auto max-h-36 sm:max-h-40 lg:max-h-44 mb-5 sm:mb-6 lg:mb-7 object-contain animate-fade-up"
                   style={{ animationDelay: "0.05s" }}
                   loading="eager"
                   fetchPriority="high"
                   decoding="async"
-                  width={220}
-                  height={80}
+                  width={180}
+                  height={274}
                 />
 
                 <h1
