@@ -202,8 +202,8 @@ function ProjectCard({
         </button>
       </div>
 
-      <div className="project-card-footer">
-        {linkUrl ? (
+      {linkUrl ? (
+        <div className="project-card-footer">
           <a
             href={linkUrl}
             target="_blank"
@@ -213,14 +213,9 @@ function ProjectCard({
             {linkLabel}
             <ExternalLinkIcon />
           </a>
-        ) : (
-          <span className="project-card-cta btn-gold opacity-60 cursor-default">
-            {linkLabel}
-            <ExternalLinkIcon />
-          </span>
-        )}
-        <span className="project-card-link-hint">{linkHint}</span>
-      </div>
+          <span className="project-card-link-hint">{linkHint}</span>
+        </div>
+      ) : null}
     </article>
   );
 }

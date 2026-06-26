@@ -41,19 +41,56 @@ function resolveProjectImage(project: ApiProject): string {
   return firstGallery?.trim() ?? "";
 }
 
+function resolveAppLinkLabel(url: string): { ar: string; en: string } {
+  const lower = url.toLowerCase();
+  if (lower.includes("play.google.com")) {
+    return { ar: "Google Play", en: "Google Play" };
+  }
+  if (lower.includes("apps.apple.com") || lower.includes("itunes.apple.com")) {
+    return { ar: "App Store", en: "App Store" };
+  }
+  return { ar: "التطبيق", en: "App" };
+}
+
+function resolveSocialLinkLabel(url: string): { ar: string; en: string } {
+  const lower = url.toLowerCase();
+  if (lower.includes("instagram.com")) {
+    return { ar: "Instagram", en: "Instagram" };
+  }
+  if (lower.includes("facebook.com")) {
+    return { ar: "Facebook", en: "Facebook" };
+  }
+  return { ar: "سوشيال", en: "Social" };
+}
+
 export function toDisplayProject(project: ApiProject): DisplayProject {
   const category = mapApiCategory(project.category);
+  const websiteUrl = project.websiteUrl?.trim() || undefined;
+  const appUrl = project.appUrl?.trim() || undefined;
+  const socialUrl = project.socialUrl?.trim() || undefined;
+
   let linkUrl: string | undefined;
   let linkLabel = { ar: "الموقع", en: "Website" };
 
-  if (project.websiteUrl?.trim()) {
-    linkUrl = project.websiteUrl.trim();
-  } else if (project.appUrl?.trim()) {
-    linkUrl = project.appUrl.trim();
+  if (project.category === "apps") {
     linkLabel = { ar: "التطبيق", en: "App" };
-  } else if (project.socialUrl?.trim()) {
-    linkUrl = project.socialUrl.trim();
+    linkUrl = appUrl ?? websiteUrl;
+    if (linkUrl === appUrl && appUrl) {
+      linkLabel = resolveAppLinkLabel(appUrl);
+    } else if (linkUrl === websiteUrl && websiteUrl) {
+      linkLabel = { ar: "الموقع", en: "Website" };
+    }
+  } else if (project.category === "social") {
     linkLabel = { ar: "سوشيال", en: "Social" };
+    linkUrl = socialUrl ?? websiteUrl;
+    if (linkUrl === socialUrl && socialUrl) {
+      linkLabel = resolveSocialLinkLabel(socialUrl);
+    }
+  } else {
+    linkUrl = websiteUrl ?? appUrl;
+    if (linkUrl === appUrl && appUrl) {
+      linkLabel = resolveAppLinkLabel(appUrl);
+    }
   }
 
   return {
