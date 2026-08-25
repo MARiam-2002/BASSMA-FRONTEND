@@ -517,7 +517,6 @@ export default function App() {
                   className="w-auto h-auto max-h-36 sm:max-h-40 lg:max-h-44 mb-5 sm:mb-6 lg:mb-7 object-contain animate-fade-up"
                   style={{ animationDelay: "0.05s" }}
                   loading="eager"
-                  fetchPriority="high"
                   decoding="async"
                   width={180}
                   height={274}
@@ -566,7 +565,6 @@ export default function App() {
                   alt={t.hero.mockupAlt}
                   className="w-full max-w-[560px] lg:max-w-[720px] object-contain animate-float"
                   loading="eager"
-                  fetchPriority="high"
                   decoding="async"
                   width={720}
                   height={720}
