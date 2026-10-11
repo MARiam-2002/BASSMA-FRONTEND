@@ -172,3 +172,14 @@
  .studio-photo img { max-height:none; }
  .studio-photo figcaption { bottom:10px; inset-inline-end:10px; font-size:10px; padding:6px 10px; }
 }
+
+/* Each section has a distinct visual rhythm. */
+.about-grid .about-photo { margin:0; align-self:stretch; }
+.about-grid .about-photo figure { height:100%; }
+.about-grid .about-photo img { height:100%; min-height:360px; max-height:none; object-fit:cover; object-position:38% center; }
+.about-grid .about-detail { align-self:center; }
+.services-photo img { aspect-ratio:2.65; max-height:none; object-fit:cover; object-position:center 53%; }
+@media(max-width:767px) {
+ .about-grid .about-photo img { height:auto; min-height:0; aspect-ratio:1.25; }
+ .services-photo img { aspect-ratio:1.5; }
+}
