@@ -120,3 +120,46 @@ body { background:#071525; color:var(--paper); }
 @media(prefers-reduced-motion:reduce) {
  .whatsapp,.whatsapp .whatsapp-label { transition:none; }
 }
+/* Reserve clearance below footer controls for the fixed WhatsApp action. */
+.studio-footer .footer-bottom {
+ padding-bottom:calc(110px + env(safe-area-inset-bottom,0px));
+ flex-wrap:wrap;
+}
+.footer-utilities { flex-wrap:wrap; row-gap:12px; }
+.studio-footer .back-top,.studio-footer .motion-control {
+ min-height:44px;
+}
+@media(max-width:767px) {
+ .studio-footer .footer-bottom { padding-bottom:calc(100px + env(safe-area-inset-bottom,0px)); }
+}
+/* Keep each statistic and its label aligned as one readable unit. */
+.about-detail .stats {
+ grid-template-columns:repeat(3,minmax(0,1fr));
+ gap:0; padding-block:24px; margin-block:28px;
+}
+.about-detail .stats > div {
+ min-width:0; padding-inline:14px; text-align:center;
+ display:flex; flex-direction:column; align-items:center;
+}
+.about-detail .stats > div + div { border-inline-start:1px solid var(--line); }
+.about-detail .stats strong {
+ width:100%; min-height:46px; display:flex; align-items:center; justify-content:center;
+ font-family:Arial,sans-serif; font-size:clamp(28px,2.5vw,36px); font-weight:500;
+ line-height:1.2; letter-spacing:-.03em; white-space:nowrap; text-align:center;
+}
+.about-detail .stats span {
+ margin-top:8px; max-width:145px; text-align:center; white-space:normal;
+ font-size:13px; line-height:1.8; color:#b7c5d4;
+}
+.about-detail .text-link { gap:12px; font-size:15px; }
+@media(max-width:767px) {
+ .about-detail .stats { padding-block:20px; margin-block:24px; }
+ .about-detail .stats > div { padding-inline:8px; }
+ .about-detail .stats strong { font-size:clamp(22px,6vw,28px); min-height:36px; }
+ .about-detail .stats span { font-size:12px; line-height:1.75; }
+}
+@media(max-width:359px) {
+ .about-detail .stats > div { padding-inline:5px; }
+ .about-detail .stats strong { font-size:20px; }
+ .about-detail .stats span { font-size:11px; }
+}
