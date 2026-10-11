@@ -83,19 +83,6 @@ function usePointerDepth<T extends HTMLElement>() {
   return ref;
 }
 
-function SignatureArtwork() {
-  const ref = usePointerDepth<HTMLDivElement>();
-  return <div ref={ref} className="hero-art signature-artwork device-artwork" aria-hidden="true">
-    <div className="device-meta"><span>من الفكرة إلى الأثر</span><span dir="ltr">BASMA / DIGITAL</span></div>
-    <div className="device-scene">
-      <img className="device-image" src="/basma-hero-computer-v1.webp"
-        srcSet="/basma-hero-computer-v1-small.webp 640w, /basma-hero-computer-v1.webp 1200w"
-        sizes="(max-width: 767px) 92vw, 45vw" width="1200" height="800"
-        alt="" loading="eager" decoding="async" />
-    </div>
-    <div className="device-caption"><span>تصميم له شخصية.</span><span>هندسة تصنع الفرق.</span></div>
-  </div>;
-}
 
 function Reveal({
   children,
@@ -484,8 +471,8 @@ export default function App() {
         </nav>
       </header>
       <main>
-        <section id="home" className="hero glass-hero">
-          <div className="hero-backdrop" aria-hidden="true"><img src="/basma-gulf-hero-v1.webp" srcSet="/basma-gulf-hero-v1-small.webp 800w, /basma-gulf-hero-v1.webp 1600w" sizes="100vw" width="1600" height="900" alt="" loading="eager" decoding="async" /></div>
+        <section id="home" className="hero glass-hero team-hero">
+          <div className="hero-backdrop" aria-hidden="true"><img src="/basma-team-hero-v1.webp" srcSet="/basma-team-hero-v1-small.webp 720w, /basma-team-hero-v1.webp 1600w" sizes="100vw" width="1600" height="900" alt="" loading="eager" decoding="async" /></div>
           <div className="container hero-grid">
             <div className="hero-copy">
               <span className="eyebrow hero-enter">
@@ -528,7 +515,7 @@ export default function App() {
                 <span dir="ltr">EG / KSA</span>
               </div>
             </div>
-            <SignatureArtwork />
+
           </div>
           <div className="hero-bottom container">
             <span dir="ltr">INDEPENDENT DIGITAL STUDIO</span>
@@ -603,6 +590,7 @@ export default function App() {
                 subtitle="نحن بصمة. نجمع التفكير الإبداعي والهندسة لنصنع تجارب تستحق أن تُستخدم."
               />
             </Reveal>
+            <Reveal className="studio-photo about-photo"><figure><img src="/basma-team-meeting-v1.webp" srcSet="/basma-team-meeting-v1-small.webp 720w, /basma-team-meeting-v1.webp 1200w" sizes="(max-width: 767px) 92vw, 80vw" width="1200" height="800" alt="مشهد تمثيلي لاجتماع تصميم داخل مكتب بطابع خليجي وشعار بصمة" loading="lazy" decoding="async" /><figcaption>مشهد تمثيلي لهوية بصمة</figcaption></figure></Reveal>
             <div className="about-grid">
               <Reveal className="about-manifesto">
                 <p>
@@ -643,6 +631,7 @@ export default function App() {
                 subtitle="تصميم وتطوير، بمنظور واحد: تجربة متكاملة تعكس علامتك."
               />
             </Reveal>
+            <Reveal className="studio-photo services-photo"><figure><img src="/basma-team-design-v1.webp" srcSet="/basma-team-design-v1-small.webp 720w, /basma-team-design-v1.webp 1200w" sizes="(max-width: 767px) 92vw, 80vw" width="1200" height="800" alt="مشهد تمثيلي لمراجعة تصميم موقع وتطبيق داخل مكتب يحمل شعار بصمة" loading="lazy" decoding="async" /><figcaption>مشهد تمثيلي لهوية بصمة</figcaption></figure></Reveal>
             <div className="services-grid">
               {loading ? (
                 [0, 1, 2, 3].map((i) => (
