@@ -4,6 +4,7 @@ import {
   useState,
   type ReactNode,
   type FormEvent,
+  type CSSProperties,
 } from "react";
 import { submitContact } from "./api/client";
 import { useSiteContent } from "./hooks/useSiteContent";
@@ -43,6 +44,71 @@ function Arrow() {
     </svg>
   );
 }
+
+// Pointer work is limited to one frame and never updates React state.
+function usePointerDepth<T extends HTMLElement>() {
+  const ref = useRef<T>(null);
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const media = window.matchMedia("(hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference)");
+    let frame = 0;
+    let x = 0, y = 0;
+    const reset = () => {
+      cancelAnimationFrame(frame); frame = 0;
+      el.style.setProperty("--pointer-x", "0");
+      el.style.setProperty("--pointer-y", "0");
+    };
+    const move = (event: PointerEvent) => {
+      if (!media.matches || event.pointerType !== "mouse" || el.closest(".motion-paused")) return;
+      const bounds = el.getBoundingClientRect();
+      x = Math.max(-1, Math.min(1, (event.clientX - bounds.left) / bounds.width * 2 - 1));
+      y = Math.max(-1, Math.min(1, (event.clientY - bounds.top) / bounds.height * 2 - 1));
+      if (!frame) frame = requestAnimationFrame(() => {
+        el.style.setProperty("--pointer-x", String(x));
+        el.style.setProperty("--pointer-y", String(y));
+        frame = 0;
+      });
+    };
+    el.addEventListener("pointermove", move);
+    el.addEventListener("pointerleave", reset);
+    media.addEventListener("change", reset);
+    return () => {
+      reset();
+      el.removeEventListener("pointermove", move);
+      el.removeEventListener("pointerleave", reset);
+      media.removeEventListener("change", reset);
+    };
+  }, []);
+  return ref;
+}
+
+function SignatureArtwork() {
+  const ref = usePointerDepth<HTMLDivElement>();
+  return <div ref={ref} className="hero-art signature-artwork" aria-hidden="true">
+    <div className="trace-panel">
+      <div className="trace-meta"><span>من الفكرة إلى الأثر</span><span dir="ltr">BASMA / DIGITAL</span></div>
+      <div className="trace-canvas">
+        <span className="trace-cross cross-one"/><span className="trace-cross cross-two"/>
+        <svg className="trace-art" viewBox="0 0 480 480" fill="none">
+          <g className="trace-lines" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
+            {Array.from({length: 8}, (_, i) => {
+              const l=65+i*19, r=415-i*19, top=34+i*24, bottom=431-i*17;
+              return <path key={i} pathLength="1" style={{"--trace-order": i} as CSSProperties}
+                d={`M${l} ${260-i*7}V190C${l} ${top} ${r} ${top} ${r} 190V275C${r} ${bottom} ${150+i*12} ${bottom} ${145+i*12} ${325-i*9}`}/>;
+            })}
+          </g>
+          <path className="trace-accent" pathLength="1" d="M65 260V190C65 34 415 34 415 190V275C415 431 150 431 145 325" stroke="currentColor" strokeWidth="5" strokeLinecap="round" />
+          <path className="trace-signal" pathLength="1" d="M65 260V190C65 34 415 34 415 190V275C415 431 150 431 145 325" stroke="currentColor" strokeWidth="7" strokeLinecap="round" />
+          <rect className="trace-point" x="56" y="251" width="18" height="18" rx="4" />
+        </svg>
+        <div className="trace-coordinate" dir="ltr"><span>01 / EXPLORE</span><span>02 / CREATE</span><span>03 / LEAVE A MARK</span></div>
+      </div>
+      <div className="trace-bottom"><Wordmark/><span>تصميم له شخصية.<br/>هندسة تصنع الفرق.</span></div>
+    </div>
+  </div>;
+}
+
 function Reveal({
   children,
   className = "",
@@ -140,10 +206,12 @@ function ProjectCard({
 }) {
   const { lang, t } = useLanguage();
   const [failed, setFailed] = useState(false);
+  const mediaRef = usePointerDepth<HTMLButtonElement>();
   useEffect(() => setFailed(false), [project.image]);
   return (
     <article className="project-card">
       <button
+        ref={mediaRef}
         className="project-media"
         onClick={onOpen}
         aria-label={`${t.portfolio.viewDetails}: ${project.title[lang]}`}
@@ -436,9 +504,8 @@ export default function App() {
                 شريكك في التصميم والتطوير
               </span>
               <h1 className="hero-enter">
-                نحوّل الأفكار.
-                <br />
-                إلى{" "}
+                <span className="headline-line"><span>نحوّل الأفكار.</span></span>
+                <span className="headline-line"><span>إلى{" "}
                 <span className="signature">
                   أثر.
                   <svg viewBox="0 0 300 24" fill="none" aria-hidden="true">
@@ -449,7 +516,7 @@ export default function App() {
                       strokeLinecap="round"
                     />
                   </svg>
-                </span>
+                </span></span></span>
               </h1>
               <p className="hero-description hero-enter">
                 من أول فكرة إلى تجربة رقمية متكاملة.
@@ -472,19 +539,7 @@ export default function App() {
                 <span dir="ltr">EG / KSA</span>
               </div>
             </div>
-            <div className="hero-art" aria-hidden="true">
-              <div className="trace-panel">
-                <div className="trace-meta"><span>من الفكرة إلى الأثر</span><span dir="ltr">BASMA / DIGITAL</span></div>
-                <svg className="trace-art" viewBox="0 0 480 480" fill="none">
-                  <g className="trace-lines" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
-                    {Array.from({length: 9}, (_, i) => <path key={i} d={`M${55+i*20} ${250-i*8} V${185+i*9} C${55+i*20} ${40+i*16} ${425-i*20} ${40+i*16} ${425-i*20} ${185+i*9} V${275-i*4} C${425-i*20} ${410-i*8} ${150+i*8} ${425-i*10} ${135+i*13} ${310-i*2}`} />)}
-                  </g>
-                  <path className="trace-accent" d="M55 250V185C55 40 425 40 425 185V275C425 410 150 425 135 310" stroke="currentColor" strokeWidth="5" strokeLinecap="round" />
-                  <rect className="trace-point" x="45" y="240" width="20" height="20" rx="5" />
-                </svg>
-                <div className="trace-bottom"><Wordmark/><span>تصميم له شخصية.<br/>هندسة تصنع الفرق.</span></div>
-              </div>
-            </div>
+            <SignatureArtwork />
           </div>
           <div className="hero-bottom container">
             <span dir="ltr">INDEPENDENT DIGITAL STUDIO</span>

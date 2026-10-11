@@ -1902,3 +1902,78 @@ svg {
   .trace-lines path, .trace-accent { animation: none; stroke-dashoffset: 0; }
   .project-visual img { transition: none; }
 }
+/* Verified production refinements: legible dark navigation and compact mobile title. */
+.header:not(.scrolled) .desktop-nav a { color: #d9d0df; }
+.header:not(.scrolled) .desktop-nav a:hover,
+.header:not(.scrolled) .desktop-nav a.active { color: var(--paper); }
+@media (max-width: 767px) {
+  .hero h1 { font-size: clamp(32px, 9.5vw, 46px); line-height: 1.5; letter-spacing: -1px; }
+}
+
+/* Basma motion choreography. One entrance; interaction follows the user's intent. */
+.hero h1.hero-enter { animation: none; }
+.headline-line { display: block; overflow: clip; padding-block: .06em; }
+.headline-line > span { display: block; animation: headline-arrive 1.05s var(--ease) both; }
+.headline-line:nth-child(2) > span { animation-delay: .14s; }
+@keyframes headline-arrive { from { transform: translateY(115%); opacity: .2; } to { transform: translateY(0); opacity: 1; } }
+.hero-description.hero-enter { animation-delay: .35s; }
+.hero-actions.hero-enter { animation-delay: .5s; }
+.hero-note.hero-enter { animation-delay: .65s; }
+.signature-artwork { animation: rise 1.1s .15s var(--ease) both; }
+.trace-canvas { position: relative; }
+.signature-artwork .trace-art { transform: translate(calc(var(--pointer-x, 0) * 7px), calc(var(--pointer-y, 0) * 7px)); transition: transform .55s var(--ease); }
+.signature-artwork .trace-lines path { stroke-dasharray: 1; stroke-dashoffset: 1; animation: fingerprint-arrive 1.8s var(--ease) both; animation-delay: calc(.25s + var(--trace-order) * .09s); }
+.signature-artwork .trace-accent { stroke-dasharray: 1; stroke-dashoffset: 1; animation: fingerprint-arrive 2.2s .2s var(--ease) both; }
+@keyframes fingerprint-arrive { to { stroke-dashoffset: 0; } }
+.trace-signal { color: #fff2d8; stroke-dasharray: .07 .93; stroke-dashoffset: 1; opacity: 0; animation: trace-travel 2s 1.55s cubic-bezier(.4,0,.2,1) both; }
+@keyframes trace-travel { 0% { opacity: 0; stroke-dashoffset: 1; } 15%, 80% { opacity: 1; } 100% { opacity: 0; stroke-dashoffset: 0; } }
+.trace-point { transform-box: fill-box; transform-origin: center; animation: point-arrive .7s .2s var(--ease) both; }
+@keyframes point-arrive { from { opacity: 0; transform: scale(.2); } to { opacity: 1; transform: scale(1); } }
+.trace-cross { position: absolute; width: 12px; height: 12px; opacity: .35; }
+.trace-cross::before, .trace-cross::after { content: ''; position: absolute; background: var(--paper); }
+.trace-cross::before { width: 12px; height: 1px; top: 6px; }
+.trace-cross::after { height: 12px; width: 1px; left: 6px; }
+.cross-one { top: 8%; right: 0; }
+.cross-two { bottom: 12%; left: 0; }
+.trace-coordinate { display: flex; justify-content: space-between; gap: 10px; font: 8px monospace; letter-spacing: .6px; color: #c5b8cf; margin-bottom: 25px; }
+.trace-coordinate span { animation: rise .7s var(--ease) both; animation-delay: 1.1s; }
+.trace-coordinate span:nth-child(2) { animation-delay: 1.3s; }
+.trace-coordinate span:nth-child(3) { animation-delay: 1.5s; }
+.reveal { transition-duration: .85s; transform: translateY(30px); }
+.reveal.visible { transform: translateY(0); }
+.reveal .section-title h2 { clip-path: inset(0 0 100% 0); transform: translateY(16px); transition: clip-path 1s var(--ease), transform 1s var(--ease); }
+.reveal.visible .section-title h2 { clip-path: inset(0); transform: none; }
+.project-media .project-visual img { transform: translate(calc(var(--pointer-x, 0) * 3px), calc(var(--pointer-y, 0) * 3px)) scale(1); transition: transform .8s var(--ease); }
+.project-media:hover .project-visual img { transform: translate(calc(var(--pointer-x, 0) * 5px), calc(var(--pointer-y, 0) * 5px)) scale(1.035); }
+.project-media:focus-visible .project-visual img { transform: scale(1.035); }
+.project-open { transition: transform .5s var(--ease), background .3s; }
+.project-media:hover .project-open { transform: translate(calc(var(--pointer-x, 0) * 6px), calc(var(--pointer-y, 0) * 6px)); }
+.button.primary { position: relative; overflow: hidden; isolation: isolate; }
+.button.primary::before { content: ''; position: absolute; inset: 0; z-index: -1; background: #ff876f; transform: translateY(105%); transition: transform .45s var(--ease); border-radius: 50% 50% 0 0; }
+.button.primary:hover::before, .button.primary:focus-visible::before { transform: translateY(0); border-radius: 0; }
+.project-info h3 button { transition: color .25s; }
+.project-info h3 button:hover { color: #bd391f; }
+.project-modal[open] { animation: modal-arrive .5s var(--ease) both; }
+.project-modal::backdrop { animation: backdrop-arrive .4s ease both; }
+@keyframes modal-arrive { from { opacity: 0; transform: translateY(28px) scale(.98); } to { opacity: 1; transform: none; } }
+@keyframes backdrop-arrive { from { opacity: 0; } to { opacity: 1; } }
+.motion-paused *, .motion-paused *::before, .motion-paused *::after { animation: none !important; transition: none !important; }
+.motion-paused .headline-line > span, .motion-paused .hero-enter, .motion-paused .signature-artwork { opacity: 1; transform: none; }
+.motion-paused .reveal { opacity: 1; transform: none; }
+.motion-paused .section-title h2 { clip-path: none; transform: none; }
+.motion-paused .trace-art, .motion-paused .project-media .project-visual img { transform: none; }
+.motion-paused .trace-lines path, .motion-paused .trace-accent { stroke-dashoffset: 0; }
+.motion-paused .trace-signal { opacity: 0; }
+@media (hover:none) { .project-media .project-visual img, .project-media:hover .project-visual img { transform: none; } }
+@media (max-width:767px) { .trace-coordinate { font-size: 7px; letter-spacing: 0; margin-bottom: 18px; } }
+@media (prefers-reduced-motion:reduce) {
+  .headline-line > span, .trace-coordinate span { opacity: 1; transform: none; }
+  .reveal .section-title h2 { clip-path: none; transform: none; }
+  .signature-artwork .trace-lines path, .signature-artwork .trace-accent { stroke-dashoffset: 0; }
+  .trace-signal { opacity: 0; }
+  .signature-artwork .trace-art, .project-media .project-visual img { transform: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .reveal, .hero-art, .hero-enter { opacity: 1; transform: none; }
+  .trace-point { opacity: 1; transform: none; }
+}
