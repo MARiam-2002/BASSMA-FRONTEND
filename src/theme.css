@@ -41,3 +41,22 @@ body { background:#071525; color:var(--paper); }
 
 .header:not(.scrolled) .mobile-nav { color:var(--paper); background:#0c1c2d; }
 .content-status { background:#ffffff05; }
+/* Brighter gold calls to action with a restrained light halo. */
+.button.primary,.whatsapp {
+  background:linear-gradient(115deg,#f7df7d 0%,#e9c84d 42%,#d5b33f 100%);
+  border-color:#f5df8db3;
+  box-shadow:inset 0 1px 0 #fff8,0 0 18px #e9c84d30,0 8px 30px #d5b33f26;
+  transition:transform .3s var(--ease),box-shadow .3s var(--ease),background .3s;
+}
+.button.primary:hover,.button.primary:focus-visible,.whatsapp:hover,.whatsapp:focus-visible {
+  background:linear-gradient(115deg,#fff0a8,#efd36b 55%,#dfbf51);
+  box-shadow:inset 0 1px 0 #fffa,0 0 26px #e9c84d50,0 12px 36px #d5b33f35;
+  color:#071525;
+}
+.button.primary:disabled { box-shadow:none; }
+@media(max-width:767px) {
+ .button.primary,.whatsapp { box-shadow:inset 0 1px 0 #fff7,0 0 14px #e9c84d30,0 6px 20px #d5b33f26; }
+}
+@media(prefers-reduced-motion:reduce) {
+ .button.primary,.whatsapp { transition:none; }
+}
