@@ -1,0 +1,62 @@
+/* Shared Arabic typography scale. Keep content comfortably readable. */
+:root {
+  --type-display: clamp(54px, 5.8vw, 86px);
+  --type-section: clamp(34px, 3.7vw, 52px);
+  --type-card: 22px;
+  --type-body: 16px;
+  --type-caption: 12px;
+}
+.hero h1 { font-size: var(--type-display); line-height: 1.38; font-weight: 700; letter-spacing: normal; }
+.headline-line { padding-block: .04em; }
+.hero-description { font-size: 18px; line-height: 1.9; max-width: 32em; }
+.section-title h2, .contact-copy h2, .faq-layout h2 { font-size: var(--type-section); font-weight: 600; line-height: 1.5; letter-spacing: normal; }
+.section-title { gap: 36px; margin-bottom: 44px; }
+.section-title > p, .about-detail > p, .contact-copy > p { font-size: var(--type-body); line-height: 1.9; }
+.about-manifesto p { font-size: clamp(28px, 3vw, 42px); line-height: 1.65; font-weight: 600; letter-spacing: normal; }
+.project-info h3, .service-card h3, .process-step h3 { font-size: var(--type-card); line-height: 1.6; font-weight: 600; letter-spacing: normal; }
+.project-summary, .service-card p, .process-step p, .faq-list p { font-size: var(--type-body); line-height: 1.9; }
+.project-summary { margin-top: 12px; max-width: 100%; }
+.project-info { margin-top: 20px; }
+.portfolio-grid { gap: 52px 32px; }
+.project-tags span, .project-category, .stats span { font-size: var(--type-caption); line-height: 1.7; }
+.button, .text-link, .service-bottom, .filters button { font-weight: 600; }
+.button { min-height: 52px; }
+.service-bottom { font-size: 14px; }
+.eyebrow, .field label, .footer-columns h3 { font-size: 13px; font-weight: 600; }
+.field input, .field textarea { font-size: 16px; line-height: 1.7; }
+.faq-list summary { font-size: 17px; font-weight: 600; line-height: 1.7; }
+.footer-invitation h2 { font-size: clamp(36px, 4vw, 58px); font-weight: 600; line-height: 1.5; letter-spacing: normal; }
+.footer-identity p { font-size: 16px; line-height: 1.9; }
+.footer-contact-note, .footer-region, .footer-privacy summary { font-size: 13px; }
+.footer-privacy p { font-size: 14px; line-height: 1.9; }
+@media (min-width:768px) and (max-width:1100px) {
+  .hero h1 { font-size: clamp(44px, 5.5vw, 62px); }
+  .hero-description { font-size: 16px; }
+  .service-card h3 { font-size: 20px; }
+}
+@media (max-width:767px) {
+  :root { --type-section: clamp(28px, 8vw, 32px); --type-card: 20px; --type-body: 15px; }
+  .hero h1 { font-size: clamp(32px, 9.5vw, 44px); line-height: 1.5; margin-block: 20px; }
+  .hero-description { font-size: 16px; line-height: 1.9; margin-top: 20px; margin-bottom: 24px; }
+  .hero-grid { gap: 32px; padding-bottom: 28px; }
+  .hero-note { margin-top: 24px; font-size: 11px; line-height: 1.8; }
+  .hero-actions { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+  .hero-actions .button { width: 100%; min-width: 0; padding: 14px 10px; gap: 10px; font-size: 13px; min-height: 50px; }
+  .hero-actions .button svg { width: 18px; flex-shrink: 0; }
+  .section { padding-block: 64px; }
+  .section-title { gap: 16px; margin-bottom: 32px; }
+  .section-title h2 { margin-top: 12px; }
+  .section-title > p { margin-bottom: 0; }
+  .about-manifesto p { font-size: 27px; line-height: 1.65; }
+  .portfolio-grid { gap: 38px; }
+  .project-info h3 { line-height: 1.65; }
+  .project-summary { font-size: 15px; line-height: 1.9; }
+  .project-tags { margin-top: 12px; }
+  .service-card h3, .process-step h3 { font-size: 20px; }
+  .service-card p, .process-step p, .faq-list p { font-size: 15px; }
+  .service-bottom { font-size: 13px; }
+  .faq-list summary { font-size: 16px; }
+  .footer-invitation h2 { font-size: var(--type-section); }
+  .footer-identity p { font-size: 15px; }
+  .footer-contact-note, .footer-region { font-size: 12px; }
+}
