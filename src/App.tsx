@@ -4,7 +4,6 @@ import {
   useState,
   type ReactNode,
   type FormEvent,
-  type CSSProperties,
 } from "react";
 import { submitContact } from "./api/client";
 import { useSiteContent } from "./hooks/useSiteContent";
@@ -86,27 +85,15 @@ function usePointerDepth<T extends HTMLElement>() {
 
 function SignatureArtwork() {
   const ref = usePointerDepth<HTMLDivElement>();
-  return <div ref={ref} className="hero-art signature-artwork" aria-hidden="true">
-    <div className="trace-panel">
-      <div className="trace-meta"><span>من الفكرة إلى الأثر</span><span dir="ltr">BASMA / DIGITAL</span></div>
-      <div className="trace-canvas">
-        <span className="trace-cross cross-one"/><span className="trace-cross cross-two"/>
-        <svg className="trace-art" viewBox="0 0 480 480" fill="none">
-          <g className="trace-lines" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
-            {Array.from({length: 8}, (_, i) => {
-              const l=65+i*19, r=415-i*19, top=34+i*24, bottom=431-i*17;
-              return <path key={i} pathLength="1" style={{"--trace-order": i} as CSSProperties}
-                d={`M${l} ${260-i*7}V190C${l} ${top} ${r} ${top} ${r} 190V275C${r} ${bottom} ${150+i*12} ${bottom} ${145+i*12} ${325-i*9}`}/>;
-            })}
-          </g>
-          <path className="trace-accent" pathLength="1" d="M65 260V190C65 34 415 34 415 190V275C415 431 150 431 145 325" stroke="currentColor" strokeWidth="5" strokeLinecap="round" />
-          <path className="trace-signal" pathLength="1" d="M65 260V190C65 34 415 34 415 190V275C415 431 150 431 145 325" stroke="currentColor" strokeWidth="7" strokeLinecap="round" />
-          <rect className="trace-point" x="56" y="251" width="18" height="18" rx="4" />
-        </svg>
-        <div className="trace-coordinate" dir="ltr"><span>01 / EXPLORE</span><span>02 / CREATE</span><span>03 / LEAVE A MARK</span></div>
-      </div>
-      <div className="trace-bottom"><Wordmark/><span>تصميم له شخصية.<br/>هندسة تصنع الفرق.</span></div>
+  return <div ref={ref} className="hero-art signature-artwork device-artwork" aria-hidden="true">
+    <div className="device-meta"><span>من الفكرة إلى الأثر</span><span dir="ltr">BASMA / DIGITAL</span></div>
+    <div className="device-scene">
+      <img className="device-image" src="/basma-hero-computer-v1.webp"
+        srcSet="/basma-hero-computer-v1-small.webp 640w, /basma-hero-computer-v1.webp 1200w"
+        sizes="(max-width: 767px) 92vw, 45vw" width="1200" height="800"
+        alt="" loading="eager" decoding="async" />
     </div>
+    <div className="device-caption"><span>تصميم له شخصية.</span><span>هندسة تصنع الفرق.</span></div>
   </div>;
 }
 
@@ -497,7 +484,8 @@ export default function App() {
         </nav>
       </header>
       <main>
-        <section id="home" className="hero">
+        <section id="home" className="hero glass-hero">
+          <div className="hero-backdrop" aria-hidden="true"><img src="/basma-gulf-hero-v1.webp" srcSet="/basma-gulf-hero-v1-small.webp 800w, /basma-gulf-hero-v1.webp 1600w" sizes="100vw" width="1600" height="900" alt="" loading="eager" decoding="async" /></div>
           <div className="container hero-grid">
             <div className="hero-copy">
               <span className="eyebrow hero-enter">
