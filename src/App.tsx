@@ -409,10 +409,12 @@ export default function App() {
     { id: "portfolio", label: t.nav.portfolio },
     { id: "contact", label: t.nav.contact },
   ];
+  const visibleProjects = projects.filter((project) => project.category !== "social");
+  const visibleServices = services.filter((service) => service.category !== "social");
   const filtered =
     activeFilter === "all"
-      ? projects
-      : projects.filter((p) => p.category === activeFilter);
+      ? visibleProjects
+      : visibleProjects.filter((p) => p.category === activeFilter);
   return (
     <div className={`site ${motionPaused ? "motion-paused" : ""}`} dir={dir}>
       <a className="skip-link" href="#home">
@@ -654,7 +656,7 @@ export default function App() {
                 number="02"
                 label="ما نصنعه"
                 title="من الفكرة. إلى كل نقطة اتصال."
-                subtitle="تصميم وتطوير وتسويق، بمنظور واحد: تجربة متكاملة تعكس علامتك."
+                subtitle="تصميم وتطوير، بمنظور واحد: تجربة متكاملة تعكس علامتك."
               />
             </Reveal>
             <div className="services-grid">
@@ -672,8 +674,8 @@ export default function App() {
                   retry={t.servicesSection.retry}
                   onRetry={retry}
                 />
-              ) : services.length ? (
-                services.map((s, i) => (
+              ) : visibleServices.length ? (
+                visibleServices.map((s, i) => (
                   <Reveal key={`${s.category}-${s.title.en}`} delay={i * 70}>
                     <article className="service-card">
                       <div className="service-top">
@@ -716,7 +718,7 @@ export default function App() {
                 subtitle={t.portfolio.subtitle}
               />
             </Reveal>
-            {!loading && !error && projects.length > 0 && (
+            {!loading && !error && visibleProjects.length > 0 && (
               <div className="filters" aria-label={t.portfolio.filterLabel}>
                 {filterKeys.map((filter) => (
                   <button
@@ -727,7 +729,7 @@ export default function App() {
                   >
                     {t.portfolio.filters[filter]}
                     {filter === "all" && (
-                      <span>{projects.length.toString().padStart(2, "0")}</span>
+                      <span>{visibleProjects.length.toString().padStart(2, "0")}</span>
                     )}
                   </button>
                 ))}

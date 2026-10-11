@@ -28,7 +28,7 @@ export const ui = {
         { value: "EG · KSA", label: "عملاء في مصر\nوالسعودية" },
         { value: "40+", label: "مشاريع منجزة" },
       ],
-      p1: "نحن وكالة رقمية متخصصة في الهوية الرقمية، تطوير المواقع والتطبيقات، والتسويق الرقمي. نعمل مع علامات في مصر والمملكة العربية السعودية ونحوّل الرؤية إلى تجارب رقمية فاخرة.",
+      p1: "نحن وكالة رقمية متخصصة في الهوية الرقمية وتطوير المواقع والتطبيقات. نعمل مع علامات في مصر والمملكة العربية السعودية ونحوّل الرؤية إلى تجارب رقمية فاخرة.",
       p2: "نؤمن بأن كل علامة تستحق بصمة مميزة — تصميماً وتقنيةً وأداءً.",
     },
     servicesSection: {
@@ -76,7 +76,7 @@ export const ui = {
       imageAlt: "تواصل معنا",
     },
     footer: {
-      tagline: "هوية · مواقع · تطبيقات · تسويق",
+      tagline: "هوية · مواقع · تطبيقات",
       desc: "وكالة رقمية من مصر — نخدم العلامات في الخليج ومنطقتنا بتصميم وتنفيذ محليّ.",
       explore: "الصفحات",
       contactTitle: "تواصل",
@@ -111,7 +111,7 @@ export const ui = {
         { value: "EG · KSA", label: "Clients in Egypt\n& Saudi Arabia" },
         { value: "40+", label: "Completed projects" },
       ],
-      p1: "We are a digital agency specializing in digital identity, web and app development, and digital marketing. We work with brands in Egypt and Saudi Arabia, turning vision into premium digital experiences.",
+      p1: "We are a digital agency specializing in digital identity and web and app development. We work with brands in Egypt and Saudi Arabia, turning vision into premium digital experiences.",
       p2: "We believe every brand deserves a distinctive mark — in design, technology, and performance.",
     },
     servicesSection: {
@@ -159,7 +159,7 @@ export const ui = {
       imageAlt: "Contact us",
     },
     footer: {
-      tagline: "Identity · Web · Apps · Marketing",
+      tagline: "Identity · Web · Apps",
       desc: "A digital agency from Egypt — serving brands across the Gulf and the region.",
       explore: "Pages",
       contactTitle: "Contact",
@@ -171,4 +171,4 @@ export const ui = {
   },
 } as const;
 
-export const filterKeys: FilterKey[] = ["all", "sites", "apps", "social"];
+export const filterKeys: FilterKey[] = ["all", "sites", "apps"];
