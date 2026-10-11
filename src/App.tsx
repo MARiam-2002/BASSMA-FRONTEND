@@ -165,20 +165,43 @@ function ProjectCard({
         onClick={onOpen}
         aria-label={`${t.portfolio.viewDetails}: ${project.title[lang]}`}
       >
-        {project.image && !failed ? (
-          <img
-            src={project.image}
-            alt={project.title[lang]}
-            loading="lazy"
-            decoding="async"
-            onError={() => setFailed(true)}
-          />
-        ) : (
-          <div className="project-placeholder">
-            <Mark />
-            <span>{t.portfolio.noImage}</span>
+        <span className="mockup-brand" aria-hidden="true">
+          <Mark />
+          <span dir="ltr">basma / work</span>
+        </span>
+        <div className="mockup-stage">
+          <div className={`mockup-frame mockup-${project.category}`}>
+            {project.category === "apps" ? (
+              <span className="mockup-notch" aria-hidden="true" />
+            ) : (
+              <div className="mockup-toolbar" aria-hidden="true">
+                <span className="mockup-controls"><i /><i /><i /></span>
+                <span className="mockup-caption">{project.title[lang]}</span>
+                <span className="mockup-toolbar-dot" />
+              </div>
+            )}
+            <div className="mockup-screen">
+              {project.image && !failed ? (
+                <img
+                  src={project.image}
+                  alt={project.title[lang]}
+                  loading="lazy"
+                  decoding="async"
+                  onError={() => setFailed(true)}
+                />
+              ) : (
+                <div className="project-placeholder">
+                  <Mark />
+                  <span>{t.portfolio.noImage}</span>
+                </div>
+              )}
+            </div>
+            {project.category === "apps" && <span className="mockup-home" aria-hidden="true" />}
           </div>
-        )}
+        </div>
+        <span className="mockup-category" aria-hidden="true">
+          <span className="tiny-dot" />{t.portfolio.categories[project.category]}
+        </span>
         <span className="project-open">
           <Arrow />
         </span>

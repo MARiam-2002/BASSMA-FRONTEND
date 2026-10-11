@@ -743,23 +743,170 @@ svg {
 .project-media {
   display: block;
   width: 100%;
-  aspect-ratio: 1.45;
+  aspect-ratio: 16 / 11;
   overflow: hidden;
   border-radius: 9px;
   border: 1px solid var(--line);
   position: relative;
-  background: #e8e0d8;
+  background: #ebe5dd;
   padding: 0;
   text-align: inherit;
 }
-.project-media img {
+.mockup-screen img {
   width: 100%;
   height: 100%;
-  object-fit: cover;
-  transition: transform 0.8s var(--ease);
+  object-fit: contain;
 }
-.project-media:hover img {
-  transform: scale(1.045);
+.project-media::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(#281a3517 1px, transparent 1px);
+  background-size: 22px 22px;
+  mask-image: linear-gradient(120deg, black, transparent 65%);
+  pointer-events: none;
+}
+.mockup-brand {
+  position: absolute;
+  top: 5%;
+  left: 5%;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--ink);
+}
+.mockup-brand > svg {
+  width: 18px;
+  height: 20px;
+}
+.mockup-brand > span {
+  font: 9px monospace;
+  letter-spacing: .7px;
+  opacity: .55;
+}
+.mockup-stage {
+  position: absolute;
+  inset: 15% 7% 13%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.mockup-frame {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  background: var(--paper);
+  border: 1px solid #281a3529;
+  box-shadow: 0 14px 30px #281a3518, 0 3px 6px #281a350d;
+  transition: transform .65s var(--ease), box-shadow .65s var(--ease);
+}
+.mockup-sites {
+  width: 100%;
+  height: 100%;
+  border-radius: 8px;
+}
+.mockup-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  direction: ltr;
+  gap: 10px;
+  height: 29px;
+  flex-shrink: 0;
+  padding: 0 12px;
+  border-bottom: 1px solid var(--line);
+  background: #f9f6f1;
+}
+.mockup-controls {
+  display: flex;
+  gap: 4px;
+}
+.mockup-controls i {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: #281a352e;
+}
+.mockup-controls i:first-child {
+  background: var(--orange);
+}
+.mockup-caption {
+  min-width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  font-size: 8px;
+  color: var(--muted);
+}
+.mockup-toolbar-dot {
+  width: 5px;
+  height: 5px;
+  background: var(--ink);
+  border-radius: 1px;
+  flex-shrink: 0;
+}
+.mockup-screen {
+  flex: 1;
+  min-height: 0;
+  width: 100%;
+  overflow: hidden;
+  background: #fff;
+}
+.mockup-apps {
+  height: 100%;
+  aspect-ratio: 9 / 18;
+  border: 5px solid var(--ink);
+  border-radius: 24px;
+  padding-block: 12px;
+  background: var(--ink);
+}
+.mockup-apps .mockup-screen {
+  border-radius: 12px;
+}
+.mockup-notch {
+  position: absolute;
+  top: 1px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 32%;
+  height: 8px;
+  border-radius: 0 0 8px 8px;
+  background: var(--ink);
+  z-index: 1;
+}
+.mockup-home {
+  position: absolute;
+  bottom: 3px;
+  left: 35%;
+  width: 30%;
+  height: 3px;
+  border-radius: 3px;
+  background: var(--paper);
+}
+.mockup-social {
+  height: 100%;
+  aspect-ratio: 1;
+  border-radius: 8px;
+}
+.mockup-category {
+  position: absolute;
+  bottom: 5%;
+  right: 5%;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  color: var(--muted);
+  font-size: 9px;
+}
+.mockup-category .tiny-dot {
+  width: 5px;
+  height: 5px;
+}
+.project-media:hover .mockup-frame,
+.project-media:focus-visible .mockup-frame {
+  transform: translateY(-5px);
+  box-shadow: 0 20px 38px #281a3523, 0 5px 8px #281a350d;
 }
 .project-open {
   position: absolute;
@@ -819,6 +966,7 @@ svg {
   width: 20px;
 }
 .project-placeholder {
+  min-height: 100%;
   height: 100%;
   display: flex;
   flex-direction: column;
@@ -835,10 +983,11 @@ svg {
   );
 }
 .project-placeholder svg {
-  width: 90px;
+  width: 35%;
+  max-width: 75px;
 }
 .project-placeholder span {
-  font-size: 11px;
+  font-size: 9px;
 }
 .content-status {
   grid-column: 1/-1;
