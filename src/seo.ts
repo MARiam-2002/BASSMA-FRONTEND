@@ -2,7 +2,7 @@ export const seo = {
   "title": "بصمة | تصميم وتطوير المواقع والتطبيقات في مصر والسعودية",
   "description": "بصمة استوديو تصميم وتطوير رقمي من مصر، يخدم عملاء في مصر والسعودية. نصمم الهوية البصرية وتجربة المستخدم، ونطور المواقع وتطبيقات الجوال. اكتشف أعمالنا وتواصل لمناقشة مشروعك.",
   "url": "https://basma-digital.vercel.app/",
-  "image": "https://basma-digital.vercel.app/basma-share-v5.jpg"
+  "image": "https://basma-digital.vercel.app/basma-share-gold-v6.jpg"
 };
 export const faqs = [
   {

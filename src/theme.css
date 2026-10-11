@@ -1,0 +1,43 @@
+/* Midnight navy and gold identity. Loaded last to keep color decisions together. */
+:root { --ink:#071525; --orange:#d5b33f; --gold:#d5b33f; --paper:#f4f6f8; --muted:#a7b5c4; --line:#b7c8d926; }
+body { background:#071525; color:var(--paper); }
+::selection { background:var(--gold); color:var(--ink); }
+.header,.header.scrolled { color:var(--paper); --nav-text:#c2cedb; --nav-active:#f4f6f8; }
+.header.scrolled { background:#071525ed; }
+.header-cta { border-color:#d5b33f55; }
+.header .menu-toggle span { background:var(--paper); }
+.mobile-nav { background:#0c1c2d; color:var(--paper); }
+.hero,.glass-hero { background:#071525; }
+.about-section { background:#0b1b2c; }
+.services-section { background:#081726; }
+.process-section,.faq-section { background:#0b1b2c; }
+.portfolio-section { background:#071525; }
+.contact-section,.footer { background:#06111f; }
+.button.primary,.whatsapp { background:linear-gradient(115deg,#efd36b,#d5b33f 65%,#c3a02d); color:#071525; }
+.button.primary:hover,.whatsapp:hover { background:linear-gradient(115deg,#f4df8f,#dfbf51); color:#071525; }
+.button.primary::before { background:#ffffff20; }
+.button.secondary,.header-cta { color:var(--paper); }
+.button.secondary:hover { background:#ffffff10; color:var(--paper); }
+.button-dot { border-color:currentColor; }
+.filters button { color:#cbd5df; }
+.filters button.selected { background:var(--gold); color:#071525; border-color:var(--gold); }
+.filters button:hover:not(.selected) { background:#ffffff09; }
+.project-media { background:#102237; border:1px solid var(--line); }
+.project-info h3,.about-detail,.section-title h2,.process-step h3 { color:var(--paper); }
+.project-summary,.project-category,.section-title > p,.process-step p { color:var(--muted); }
+.service-card { background:#102237a6; color:var(--paper); border-color:var(--line); }
+.service-card:hover { background:#152c43; color:var(--paper); border-color:#d5b33f66; }
+.service-card p,.service-card:hover p { color:#b7c5d4; }
+.service-bottom { border-color:var(--line); }
+.process-step,.faq-list details,.stats { border-color:var(--line); }
+.stats strong { color:var(--paper); }
+.contact-form { background:#102237a6; }
+.tags span { background:#ffffff09; border-color:var(--line); color:#cbd5df; }
+.project-modal { background:#0b1b2c; color:var(--paper); }
+.modal-close { background:#152c43; color:var(--paper); }
+.modal-body > p { color:var(--muted); }
+.skeleton { background:linear-gradient(90deg,#102237,#1b3148,#102237); background-size:200% 100%; }
+.form-feedback.error { background:#702d242b; color:#ffc1b5; }
+
+.header:not(.scrolled) .mobile-nav { color:var(--paper); background:#0c1c2d; }
+.content-status { background:#ffffff05; }

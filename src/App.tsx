@@ -472,7 +472,7 @@ export default function App() {
       </header>
       <main>
         <section id="home" className="hero glass-hero team-hero">
-          <div className="hero-backdrop" aria-hidden="true"><img src="/basma-team-hero-v1.webp" srcSet="/basma-team-hero-v1-small.webp 720w, /basma-team-hero-v1.webp 1600w" sizes="100vw" width="1600" height="900" alt="" loading="eager" decoding="async" /></div>
+          <div className="hero-backdrop" aria-hidden="true"><img src="/basma-team-hero-gold-v2.webp" srcSet="/basma-team-hero-gold-v2-small.webp 720w, /basma-team-hero-gold-v2.webp 1600w" sizes="100vw" width="1600" height="900" alt="" loading="eager" decoding="async" /></div>
           <div className="container hero-grid">
             <div className="hero-copy">
               <span className="eyebrow hero-enter">
@@ -592,7 +592,7 @@ export default function App() {
             </Reveal>
 
             <div className="about-grid">
-<Reveal className="studio-photo about-photo"><figure><img src="/basma-studio-reception-v1.webp" srcSet="/basma-studio-reception-v1-small.webp 720w, /basma-studio-reception-v1.webp 1200w" sizes="(max-width: 767px) 92vw, 80vw" width="1200" height="800" alt="تصور بصري لاستقبال استوديو بصمة بزجاج مضلع وشعار الشركة" loading="lazy" decoding="async" /><figcaption>مشهد تمثيلي لهوية بصمة</figcaption></figure></Reveal>
+<Reveal className="studio-photo about-photo"><figure><img src="/basma-studio-reception-gold-v2.webp" srcSet="/basma-studio-reception-gold-v2-small.webp 720w, /basma-studio-reception-gold-v2.webp 1200w" sizes="(max-width: 767px) 92vw, 80vw" width="1200" height="800" alt="تصور بصري لاستقبال استوديو بصمة بزجاج مضلع وشعار الشركة" loading="lazy" decoding="async" /><figcaption>مشهد تمثيلي لهوية بصمة</figcaption></figure></Reveal>
               <Reveal className="about-detail" delay={100}>
                 <p>{t.about.p1}</p>
                 <p>{t.about.p2}</p>
@@ -622,7 +622,7 @@ export default function App() {
                 subtitle="تصميم وتطوير، بمنظور واحد: تجربة متكاملة تعكس علامتك."
               />
             </Reveal>
-            <Reveal className="studio-photo services-photo"><figure><img src="/basma-design-details-v1.webp" srcSet="/basma-design-details-v1-small.webp 720w, /basma-design-details-v1.webp 1200w" sizes="(max-width: 767px) 92vw, 80vw" width="1200" height="800" alt="تكوين بصري لواجهات مواقع وتطبيقات وأدوات تصميم بألوان بصمة" loading="lazy" decoding="async" /><figcaption>مشهد تمثيلي لهوية بصمة</figcaption></figure></Reveal>
+            <Reveal className="studio-photo services-photo"><figure><img src="/basma-design-details-gold-v2.webp" srcSet="/basma-design-details-gold-v2-small.webp 720w, /basma-design-details-gold-v2.webp 1200w" sizes="(max-width: 767px) 92vw, 80vw" width="1200" height="800" alt="تكوين بصري لواجهات مواقع وتطبيقات وأدوات تصميم بألوان بصمة" loading="lazy" decoding="async" /><figcaption>مشهد تمثيلي لهوية بصمة</figcaption></figure></Reveal>
             <div className="services-grid">
               {loading ? (
                 [0, 1, 2, 3].map((i) => (
