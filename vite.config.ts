@@ -3,6 +3,8 @@ import react from '@vitejs/plugin-react'
 
 export default defineConfig({
   plugins: [react()],
+  // Avoid realpath access errors in restricted Windows workspaces.
+  resolve: { preserveSymlinks: true },
   server: {
     port: 5173,
     proxy: {

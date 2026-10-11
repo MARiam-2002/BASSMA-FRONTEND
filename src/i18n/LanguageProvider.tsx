@@ -18,7 +18,7 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
     document.documentElement.lang = "ar";
     document.documentElement.dir = "rtl";
     document.body.className = "lang-ar";
-    document.title = "بصمة | وكالة رقمية متخصصة";
+    document.title = "بصمة | تصميم وهندسة رقمية";
   }, []);
 
   return (

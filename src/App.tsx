@@ -1,43 +1,85 @@
-import { useEffect, useRef, useState, type CSSProperties, type ReactNode } from "react";
+import {
+  useEffect,
+  useRef,
+  useState,
+  type ReactNode,
+  type FormEvent,
+} from "react";
 import { submitContact } from "./api/client";
 import { useSiteContent } from "./hooks/useSiteContent";
 import { useLanguage } from "./i18n/LanguageProvider";
 import { filterKeys, type FilterKey } from "./i18n/translations";
 import type { DisplayProject } from "./lib/siteContent";
 
-// ─── Hooks & helpers ──────────────────────────────────────────────────────────
-
-function useHeaderScroll(threshold = 16) {
-  const [scrolled, setScrolled] = useState(false);
-
-  useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > threshold);
-    onScroll();
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
-  }, [threshold]);
-
-  return scrolled;
+function Mark({ className = "" }: { className?: string }) {
+  return (
+    <svg
+      className={className}
+      viewBox="0 0 120 120"
+      fill="none"
+      aria-hidden="true"
+    >
+      <path
+        fill="currentColor"
+        fillRule="evenodd"
+        d="M14 8h23v46c0 16 8 24 23 24s23-8 23-24V8h23v49c0 29-17 43-46 43S14 86 14 57V8Zm74 42L65 78h10l13-16V50Z"
+      />
+      <rect
+        className="mark-dot"
+        x="50"
+        y="104"
+        width="20"
+        height="16"
+        rx="4"
+        fill="currentColor"
+      />
+    </svg>
+  );
 }
-
+function Brand() {
+  return (
+    <span className="brand">
+      <Mark />
+      <span className="brand-words">
+        <strong>بصمة</strong>
+        <span dir="ltr">basma</span>
+      </span>
+    </span>
+  );
+}
+function Arrow() {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <path
+        d="M18 6H6v12M6 6l12 12"
+        stroke="currentColor"
+        strokeWidth="1.7"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
 function Reveal({
   children,
   className = "",
   delay = 0,
-  style,
 }: {
   children: ReactNode;
   className?: string;
   delay?: number;
-  style?: CSSProperties;
 }) {
   const ref = useRef<HTMLDivElement>(null);
   const [visible, setVisible] = useState(false);
-
   useEffect(() => {
-    const el = ref.current;
-    if (!el) return;
-
+    if (!ref.current) return;
+    if (
+      !window.IntersectionObserver ||
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches
+    ) {
+      setVisible(true);
+      return;
+    }
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
@@ -45,318 +87,282 @@ function Reveal({
           observer.disconnect();
         }
       },
-      { threshold: 0.12, rootMargin: "0px 0px -32px 0px" }
+      { threshold: 0.08 },
     );
-
-    observer.observe(el);
+    observer.observe(ref.current);
     return () => observer.disconnect();
   }, []);
-
   return (
     <div
       ref={ref}
-      className={`reveal ${visible ? "is-visible" : ""} ${className}`}
-      style={{ transitionDelay: `${delay}ms`, ...style }}
+      className={`reveal ${visible ? "visible" : ""} ${className}`}
+      style={{ transitionDelay: `${delay}ms` }}
     >
       {children}
     </div>
   );
 }
-
-function MailIcon() {
-  return (
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-      <path
-        d="M4 6.5A2.5 2.5 0 0 1 6.5 4h11A2.5 2.5 0 0 1 20 6.5v11A2.5 2.5 0 0 1 17.5 20h-11A2.5 2.5 0 0 1 4 17.5v-11Z"
-        stroke="currentColor"
-        strokeWidth="1.5"
-      />
-      <path d="m5 7 7 5 7-5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-    </svg>
-  );
-}
-
-function PhoneIcon() {
-  return (
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-      <path
-        d="M8.5 4.5h2.2c.6 0 1.1.4 1.2 1l.4 2.2a1.2 1.2 0 0 1-.3 1.1l-1.3 1.3a11.5 11.5 0 0 0 5.1 5.1l1.3-1.3c.3-.3.7-.4 1.1-.3l2.2.4c.6.1 1 .6 1 1.2v2.2c0 .7-.5 1.2-1.2 1.3C10.8 18.8 5.2 13.2 4.2 7.7c-.1-.7.4-1.3 1.1-1.3h3.2Z"
-        stroke="currentColor"
-        strokeWidth="1.5"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </svg>
-  );
-}
-
-function ArrowUpIcon() {
-  return (
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-      <path d="M12 19V5" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" />
-      <path d="m7 10 5-5 5 5" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" />
-    </svg>
-  );
-}
-
-// ─── Sub-components ───────────────────────────────────────────────────────────
-
-function ExternalLinkIcon() {
-  return (
-    <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ opacity: 0.9 }}>
-      <path
-        d="M10.5002 11.0833H3.50016C3.34545 11.0833 3.19708 11.0219 3.08768 10.9125C2.97829 10.8031 2.91683 10.6547 2.91683 10.5V3.5C2.91683 3.34529 2.97829 3.19692 3.08768 3.08752C3.19708 2.97812 3.34545 2.91667 3.50016 2.91667H6.41683V2.33333H3.50016C3.19074 2.33333 2.894 2.45625 2.6752 2.67504C2.45641 2.89383 2.3335 3.19058 2.3335 3.5V10.5C2.3335 10.8094 2.45641 11.1062 2.6752 11.325C2.894 11.5437 3.19074 11.6667 3.50016 11.6667H10.5002C10.8096 11.6667 11.1063 11.5437 11.3251 11.325C11.5439 11.1062 11.6668 10.8094 11.6668 10.5V7.58333H10.5002V10.5V11.0833ZM8.75016 1.75H12.2502V5.25H11.3752V3.24333L6.16016 8.45833L5.54183 7.84L10.7568 2.625H8.75016V1.75Z"
-        fill="#0C1220"
-      />
-    </svg>
-  );
-}
-
-function WhatsAppIcon({ className }: { className?: string }) {
-  return (
-    <svg width="29" height="29" viewBox="0 0 29 29" fill="none" xmlns="http://www.w3.org/2000/svg" className={className} aria-hidden="true">
-      <g clipPath="url(#clip0)">
-        <path
-          d="M21.112 17.3782C20.7531 17.1982 18.9877 16.3306 18.6591 16.2098C18.3292 16.0902 18.0899 16.0309 17.8495 16.391C17.6114 16.7499 16.9227 17.5583 16.7136 17.7975C16.5046 18.038 16.2943 18.067 15.9355 17.8882C15.5766 17.7069 14.419 17.3287 13.0476 16.1059C11.9806 15.1537 11.2592 13.978 11.0502 13.6179C10.8411 13.259 11.0284 13.0645 11.2073 12.8857C11.3692 12.7249 11.5673 12.4664 11.7462 12.2573C11.9262 12.0471 11.9854 11.8972 12.1063 11.6568C12.2259 11.4175 12.1667 11.2085 12.0761 11.0284C11.9854 10.8484 11.2677 9.08061 10.9692 8.36166C10.6768 7.66203 10.3808 7.75749 10.1608 7.74541C9.95181 7.73574 9.71256 7.73332 9.4721 7.73332C9.23285 7.73332 8.84376 7.82274 8.5151 8.18282C8.18643 8.5417 7.25843 9.41049 7.25843 11.1783C7.25843 12.9449 8.54531 14.6522 8.72414 14.8927C8.90418 15.1319 11.2568 18.7594 14.8588 20.3145C15.7156 20.6842 16.3838 20.9054 16.9058 21.0697C17.7661 21.344 18.5491 21.3053 19.1666 21.2123C19.8565 21.1096 21.2908 20.3435 21.5905 19.5049C21.8901 18.6663 21.8901 17.9474 21.7995 17.7975C21.7101 17.6477 21.4721 17.5583 21.112 17.3782ZM14.5604 26.3235H14.5556C12.4165 26.3237 10.3168 25.7486 8.47643 24.6584L8.04022 24.3999L3.51985 25.5864L4.72576 21.1784L4.44181 20.7265C3.24609 18.8225 2.61353 16.619 2.61722 14.3707C2.61843 7.78528 7.97739 2.42753 14.5652 2.42753C17.7552 2.42753 20.7543 3.67211 23.0091 5.92928C24.1215 7.03686 25.0033 8.35408 25.6034 9.8047C26.2034 11.2553 26.5098 12.8105 26.5048 14.3804C26.5011 20.9658 21.1458 26.3235 14.5604 26.3235ZM24.7261 4.21466C23.3947 2.87452 21.8107 1.81193 20.0657 1.08846C18.3207 0.364982 16.4494 -0.0049865 14.5604 -1.15206e-05C6.63976 -1.15206e-05 0.193306 6.44645 0.189681 14.3695C0.189681 16.9022 0.850639 19.3744 2.10851 21.553L0.0688477 29L7.68739 27.0014C9.79423 28.1492 12.1551 28.7508 14.5543 28.7511H14.5604C22.4798 28.7511 28.9275 22.3046 28.9311 14.3804C28.9369 12.4921 28.5683 10.6214 27.8465 8.87645C27.1248 7.13153 26.0642 5.54705 24.7261 4.21466Z"
-          fill="currentColor"
-        />
-      </g>
-      <defs>
-        <clipPath id="clip0">
-          <rect width="29" height="29" fill="white" />
-        </clipPath>
-      </defs>
-    </svg>
-  );
-}
-
-interface ProjectCardProps {
+function SectionTitle({
+  number,
+  label,
+  title,
+  subtitle,
+}: {
+  number: string;
+  label: string;
   title: string;
-  category: string;
-  image: string;
-  linkLabel: string;
-  linkUrl?: string;
-  viewDetails: string;
-  linkHint: string;
-  noImageLabel: string;
-  onViewDetails?: () => void;
-}
-
-function SectionHeader({ title, subtitle }: { title: string; subtitle: string }) {
+  subtitle: string;
+}) {
   return (
-    <div className="text-center mb-12">
-      <h2 className="section-heading">{title}</h2>
-      <p className="section-lead">{subtitle}</p>
+    <div className="section-title">
+      <div>
+        <span className="eyebrow">
+          <span className="tiny-dot" />
+          {number} / {label}
+        </span>
+        <h2>{title}</h2>
+      </div>
+      <p>{subtitle}</p>
     </div>
   );
 }
-
-function ProjectCard({
-  title,
-  category,
-  image,
-  linkLabel,
-  linkUrl,
-  viewDetails,
-  linkHint,
-  noImageLabel,
-  onViewDetails,
-}: ProjectCardProps) {
-  const [imageError, setImageError] = useState(false);
-
-  useEffect(() => {
-    setImageError(false);
-  }, [image]);
-
-  const showImage = Boolean(image) && !imageError;
-
+function Status({
+  message,
+  retry,
+  onRetry,
+}: {
+  message: string;
+  retry?: string;
+  onRetry?: () => void;
+}) {
   return (
-    <article className="project-card card-interactive group">
-      <div className="project-card-media">
-        {showImage ? (
+    <div className="content-status" role="status">
+      <span className="status-dot" />
+      <p>{message}</p>
+      {onRetry && (
+        <button className="button secondary" onClick={onRetry}>
+          {retry}
+          <Arrow />
+        </button>
+      )}
+    </div>
+  );
+}
+function ProjectCard({
+  project,
+  onOpen,
+}: {
+  project: DisplayProject;
+  onOpen: () => void;
+}) {
+  const { lang, t } = useLanguage();
+  const [failed, setFailed] = useState(false);
+  useEffect(() => setFailed(false), [project.image]);
+  return (
+    <article className="project-card">
+      <button
+        className="project-media"
+        onClick={onOpen}
+        aria-label={`${t.portfolio.viewDetails}: ${project.title[lang]}`}
+      >
+        {project.image && !failed ? (
           <img
-            src={image}
-            alt={title}
+            src={project.image}
+            alt={project.title[lang]}
             loading="lazy"
             decoding="async"
-            onError={() => setImageError(true)}
+            onError={() => setFailed(true)}
           />
         ) : (
-          <div className="project-card-media-placeholder" aria-hidden="true">
-            <span>{noImageLabel}</span>
+          <div className="project-placeholder">
+            <Mark />
+            <span>{t.portfolio.noImage}</span>
           </div>
         )}
-        <div className="project-card-media-overlay" aria-hidden="true" />
-      </div>
-
-      <div className="project-card-body">
-        <span className="project-card-category">{category}</span>
-        <h3 className="project-card-title">{title}</h3>
-        <button
-          type="button"
-          className="project-card-meta project-card-details-btn"
-          onClick={onViewDetails}
-        >
-          {viewDetails}
-        </button>
-      </div>
-
-      {linkUrl ? (
-        <div className="project-card-footer">
+        <span className="project-open">
+          <Arrow />
+        </span>
+      </button>
+      <div className="project-info">
+        <div>
+          <span className="project-category">
+            {t.portfolio.categories[project.category]}
+          </span>
+          <h3>
+            <button onClick={onOpen}>{project.title[lang]}</button>
+          </h3>
+        </div>
+        {project.linkUrl && (
           <a
-            href={linkUrl}
+            className="project-link"
+            href={project.linkUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="project-card-cta btn-gold"
+            aria-label={`${project.linkLabel[lang]}: ${project.title[lang]}`}
           >
-            {linkLabel}
-            <ExternalLinkIcon />
+            <Arrow />
           </a>
-          <span className="project-card-link-hint">{linkHint}</span>
-        </div>
-      ) : null}
+        )}
+      </div>
     </article>
   );
 }
-
-function ProjectCardSkeleton() {
-  return <article className="project-card project-card-skeleton" aria-hidden="true" />;
-}
-
-function ContentMessage({
-  message,
-  actionLabel,
-  onAction,
-}: {
-  message: string;
-  actionLabel?: string;
-  onAction?: () => void;
-}) {
-  return (
-    <div className="content-status">
-      <p>{message}</p>
-      {actionLabel && onAction ? (
-        <button type="button" className="content-status-btn" onClick={onAction}>
-          {actionLabel}
-        </button>
-      ) : null}
-    </div>
-  );
-}
-
-function ProjectDetailModal({
+function ProjectModal({
   project,
-  lang,
-  dir,
-  categoryLabel,
   onClose,
-  closeLabel,
 }: {
   project: DisplayProject;
-  lang: "ar" | "en";
-  dir: "rtl" | "ltr";
-  categoryLabel: string;
   onClose: () => void;
-  closeLabel: string;
 }) {
+  const { lang, t, dir } = useLanguage();
+  const dialog = useRef<HTMLDialogElement>(null);
   useEffect(() => {
-    const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") onClose();
-    };
+    const el = dialog.current;
+    if (!el) return;
+    const previous = document.activeElement as HTMLElement | null;
+    el.showModal();
+    const overflow = document.body.style.overflow;
     document.body.style.overflow = "hidden";
-    window.addEventListener("keydown", onKey);
     return () => {
-      document.body.style.overflow = "";
-      window.removeEventListener("keydown", onKey);
+      el.close();
+      document.body.style.overflow = overflow;
+      previous?.focus();
     };
-  }, [onClose]);
-
+  }, []);
   return (
-    <div
-      className="project-modal-backdrop"
-      role="dialog"
-      aria-modal="true"
-      aria-labelledby="project-modal-title"
-      onClick={onClose}
+    <dialog
+      ref={dialog}
+      className="project-modal"
+      dir={dir}
+      onCancel={onClose}
+      onClick={(e) => {
+        if (e.target === e.currentTarget) {
+          const r = e.currentTarget.getBoundingClientRect();
+          if (
+            e.clientX < r.left ||
+            e.clientX > r.right ||
+            e.clientY < r.top ||
+            e.clientY > r.bottom
+          )
+            onClose();
+        }
+      }}
+      aria-labelledby="project-title"
     >
-      <div
-        className="project-modal surface-card-elevated"
-        dir={dir}
-        onClick={(e) => e.stopPropagation()}
+      <button
+        className="modal-close"
+        onClick={onClose}
+        aria-label={t.portfolio.closeModal}
       >
-        <button type="button" className="project-modal-close" onClick={onClose} aria-label={closeLabel}>
-          ×
-        </button>
-
-        {project.image ? (
-          <img src={project.image} alt="" className="project-modal-cover" />
-        ) : null}
-
-        <div className="project-modal-body">
-          <p className="project-modal-category">{categoryLabel}</p>
-          <h3 id="project-modal-title" className="project-modal-title">
-            {project.title[lang]}
-          </h3>
-
-          {project.description?.[lang] ? (
-            <p className="project-modal-description">{project.description[lang]}</p>
-          ) : null}
-
-          {project.tags && project.tags.length > 0 ? (
-            <div className="project-modal-tags">
-              {project.tags.map((tag) => (
-                <span key={tag} className="project-modal-tag">
-                  {tag}
-                </span>
-              ))}
-            </div>
-          ) : null}
-
-          {project.gallery && project.gallery.length > 0 ? (
-            <div className="project-modal-gallery">
-              {project.gallery.map((src) => (
-                <img key={src} src={src} alt="" loading="lazy" decoding="async" />
-              ))}
-            </div>
-          ) : null}
-
-          {project.linkUrl ? (
-            <a
-              href={project.linkUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="project-modal-cta btn-gold"
-            >
-              {project.linkLabel[lang]}
-              <ExternalLinkIcon />
-            </a>
-          ) : null}
+        ×
+      </button>
+      {project.image && (
+        <img className="modal-cover" src={project.image} alt="" />
+      )}
+      <div className="modal-body">
+        <span className="eyebrow">
+          {t.portfolio.categories[project.category]}
+        </span>
+        <h2 id="project-title">{project.title[lang]}</h2>
+        <p>{project.description?.[lang]}</p>
+        <div className="tags">
+          {project.tags?.map((tag) => (
+            <span key={tag}>{tag}</span>
+          ))}
         </div>
+        {!!project.gallery?.length && (
+          <div className="modal-gallery">
+            {project.gallery.map((src, i) => (
+              <img
+                key={`${src}-${i}`}
+                src={src}
+                alt={`${project.title[lang]} — ${i + 1}`}
+                loading="lazy"
+              />
+            ))}
+          </div>
+        )}
+        {project.linkUrl && (
+          <a
+            className="button primary"
+            href={project.linkUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            {project.linkLabel[lang]}
+            <Arrow />
+          </a>
+        )}
       </div>
-    </div>
+    </dialog>
   );
 }
-
-// ─── Main Component ───────────────────────────────────────────────────────────
 
 export default function App() {
   const { lang, t, dir } = useLanguage();
   const { projects, services, loading, error, retry } = useSiteContent();
   const [activeFilter, setActiveFilter] = useState<FilterKey>("all");
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [formData, setFormData] = useState({ name: "", email: "", phone: "", message: "" });
-  const [contactSubmitting, setContactSubmitting] = useState(false);
-  const [selectedProject, setSelectedProject] = useState<DisplayProject | null>(null);
-  const headerScrolled = useHeaderScroll();
-
-  const filteredProjects =
-    activeFilter === "all"
-      ? projects
-      : projects.filter((p) => p.category === activeFilter);
-
-  const handleSubmit = async (e: React.FormEvent) => {
+  const [mobileOpen, setMobileOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+  const [activeSection, setActiveSection] = useState("home");
+  const [selected, setSelected] = useState<DisplayProject | null>(null);
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    phone: "",
+    message: "",
+  });
+  const [submitting, setSubmitting] = useState(false);
+  const [formStatus, setFormStatus] = useState<"success" | "error" | null>(
+    null,
+  );
+  const [motionPaused, setMotionPaused] = useState(false);
+  const progress = useRef<HTMLDivElement>(null);
+  const art = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    let frame = 0;
+    const update = () => {
+      const max = document.documentElement.scrollHeight - innerHeight;
+      progress.current?.style.setProperty(
+        "--progress",
+        `${max > 0 ? scrollY / max : 0}`,
+      );
+      setScrolled(scrollY > 24);
+      frame = 0;
+    };
+    const scroll = () => {
+      if (!frame) frame = requestAnimationFrame(update);
+    };
+    update();
+    window.addEventListener("scroll", scroll, { passive: true });
+    const observer = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries)
+          if (entry.isIntersecting) setActiveSection(entry.target.id);
+      },
+      { rootMargin: "-15% 0px -60% 0px" },
+    );
+    document
+      .querySelectorAll("main section[id]")
+      .forEach((el) => observer.observe(el));
+    return () => {
+      window.removeEventListener("scroll", scroll);
+      cancelAnimationFrame(frame);
+      observer.disconnect();
+    };
+  }, []);
+  useEffect(() => {
+    const key = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setMobileOpen(false);
+    };
+    document.addEventListener("keydown", key);
+    return () => document.removeEventListener("keydown", key);
+  }, []);
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setContactSubmitting(true);
+    if (submitting) return;
+    setSubmitting(true);
+    setFormStatus(null);
     try {
       await submitContact({
         name: formData.name,
@@ -365,551 +371,599 @@ export default function App() {
         message: formData.message,
         lang,
       });
-      alert(t.contact.success);
+      setFormStatus("success");
       setFormData({ name: "", email: "", phone: "", message: "" });
     } catch {
-      alert(t.contact.error);
+      setFormStatus("error");
     } finally {
-      setContactSubmitting(false);
+      setSubmitting(false);
     }
   };
-
-  const navLinks = [
-    { href: "#home", label: t.nav.home },
-    { href: "#about", label: t.nav.about },
-    { href: "#services", label: t.nav.services },
-    { href: "#portfolio", label: t.nav.portfolio },
-    { href: "#contact", label: t.nav.contact },
+  const nav = [
+    { id: "home", label: t.nav.home },
+    { id: "about", label: t.nav.about },
+    { id: "services", label: t.nav.services },
+    { id: "portfolio", label: t.nav.portfolio },
+    { id: "contact", label: t.nav.contact },
   ];
-
+  const filtered =
+    activeFilter === "all"
+      ? projects
+      : projects.filter((p) => p.category === activeFilter);
   return (
-    <div className="font-cairo min-h-screen" dir={dir}>
-      {/* ── Skip Link ── */}
-      <a
-        href="#home"
-        className="sr-only focus:not-sr-only focus:fixed focus:top-0 focus:z-[100] focus:px-4 focus:py-2 focus:text-sm focus:font-semibold focus:rounded-bl-xl focus:rounded-br-xl"
-        style={{
-          background: "linear-gradient(104deg, #F9E076 0%, #D4AF37 100%)",
-          color: "#0A0F18",
-          ...(dir === "rtl" ? { right: 0 } : { left: 0 }),
-        }}
-      >
+    <div className={`site ${motionPaused ? "motion-paused" : ""}`} dir={dir}>
+      <a className="skip-link" href="#home">
         {t.skipLink}
       </a>
-
-      {/* ══ HEADER ══════════════════════════════════════════════════════════ */}
-      <header
-        className={`fixed top-0 inset-x-0 z-50 h-[73px] transition-all duration-300 ease-snappy ${headerScrolled ? "header-scrolled" : ""}`}
-        style={{
-          borderBottom: "1px solid rgba(212, 175, 55, 0.22)",
-          background: "linear-gradient(180deg, rgba(3, 10, 20, 0.92) 0%, rgba(3, 10, 20, 0.65) 100%)",
-          backdropFilter: "blur(12px)",
-          WebkitBackdropFilter: "blur(12px)",
-        }}
+      <div ref={progress} className="scroll-progress" aria-hidden="true" />
+      <button
+        className="motion-control"
+        onClick={() => setMotionPaused(!motionPaused)}
+        aria-pressed={motionPaused}
+        aria-label={motionPaused ? "تشغيل الحركة" : "إيقاف الحركة"}
       >
-        <div className="relative flex items-center justify-between h-full px-6 lg:px-16 xl:px-24 max-w-[1400px] mx-auto">
-          {/* Logo — يمين في RTL */}
-          <a
-            href="#home"
-            className="group flex items-center gap-2.5 shrink-0 transition-transform duration-200 hover:scale-[1.03] z-10"
-          >
-            <span className="logo-mark shrink-0">
-              <img
-                src="/logo-only.png"
-                alt=""
-                className="w-7 h-7 object-contain"
-                width={28}
-                height={28}
-                decoding="async"
-              />
-            </span>
-            <span className="text-base font-bold gold-gradient-text">{t.brand}</span>
+        {motionPaused ? "▷" : "Ⅱ"}
+        <span>{motionPaused ? "تشغيل الحركة" : "إيقاف الحركة"}</span>
+      </button>
+      <header className={`header ${scrolled ? "scrolled" : ""}`}>
+        <div className="header-inner">
+          <a href="#home" aria-label="بصمة — الرئيسية">
+            <Brand />
           </a>
-
-          {/* Desktop Nav — وسط الشاشة */}
-          <nav className="hidden md:flex items-center gap-7 absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
-            {navLinks.map((link) => (
+          <nav className="desktop-nav" aria-label="القائمة الرئيسية">
+            {nav.map((link) => (
               <a
-                key={link.href}
-                href={link.href}
-                className="nav-link text-sm font-medium py-1"
+                href={`#${link.id}`}
+                key={link.id}
+                className={activeSection === link.id ? "active" : ""}
+                aria-current={
+                  activeSection === link.id ? "location" : undefined
+                }
               >
                 {link.label}
               </a>
             ))}
           </nav>
-
-          {/* Language Switcher + Mobile Menu */}
-          <div className="flex items-center gap-3 z-10">
-            <button
-              className="md:hidden flex flex-col justify-center gap-1.5 p-2 rounded-lg transition-colors hover:bg-white/5"
-              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              aria-label={t.menu}
-              aria-expanded={mobileMenuOpen}
+          <a className="header-cta" href="#contact">
+            لنصنع شيئاً مميزاً
+            <Arrow />
+          </a>
+          <button
+            className={`menu-toggle ${mobileOpen ? "open" : ""}`}
+            aria-label={mobileOpen ? "إغلاق القائمة" : t.menu}
+            aria-expanded={mobileOpen}
+            aria-controls="mobile-nav"
+            onClick={() => setMobileOpen(!mobileOpen)}
+          >
+            <span />
+            <span />
+          </button>
+        </div>
+        <nav
+          id="mobile-nav"
+          className="mobile-nav"
+          hidden={!mobileOpen}
+          aria-label="القائمة الرئيسية للموبايل"
+        >
+          {nav.map((link) => (
+            <a
+              href={`#${link.id}`}
+              key={link.id}
+              onClick={() => setMobileOpen(false)}
             >
-              <span
-                className="block w-6 h-0.5 transition-all duration-300 ease-snappy origin-center"
-                style={{ background: "rgba(248,250,252,0.8)", transform: mobileMenuOpen ? "rotate(45deg) translateY(7px)" : "none" }}
-              />
-              <span
-                className="block w-6 h-0.5 transition-all duration-300 ease-snappy"
-                style={{ background: "rgba(248,250,252,0.8)", opacity: mobileMenuOpen ? 0 : 1, transform: mobileMenuOpen ? "scaleX(0)" : "scaleX(1)" }}
-              />
-              <span
-                className="block w-6 h-0.5 transition-all duration-300 ease-snappy origin-center"
-                style={{ background: "rgba(248,250,252,0.8)", transform: mobileMenuOpen ? "rotate(-45deg) translateY(-7px)" : "none" }}
-              />
-            </button>
+              {link.label}
+              <Arrow />
+            </a>
+          ))}
+        </nav>
+      </header>
+      <main>
+        <section id="home" className="hero">
+          <div className="container hero-grid">
+            <div className="hero-copy">
+              <span className="eyebrow hero-enter">
+                <span className="tiny-dot" />
+                تصميم يفكّر. تقنية تُنجز.
+              </span>
+              <h1 className="hero-enter">
+                نصنع الفرق.
+                <br />
+                ونترك{" "}
+                <span className="signature">
+                  بصمة
+                  <svg viewBox="0 0 300 24" fill="none" aria-hidden="true">
+                    <path
+                      d="M5 17C80 0 210 0 293 12"
+                      stroke="currentColor"
+                      strokeWidth="7"
+                      strokeLinecap="round"
+                    />
+                  </svg>
+                </span>
+              </h1>
+              <p className="hero-description hero-enter">
+                من أول فكرة إلى تجربة رقمية متكاملة.
+                <br />
+                نصمّم هويتك، ونطوّر مواقع وتطبيقات تحمل شخصيتك.
+              </p>
+              <div className="hero-actions hero-enter">
+                <a className="button primary" href="#contact">
+                  ابدأ مشروعك
+                  <Arrow />
+                </a>
+                <a className="button secondary" href="#portfolio">
+                  اكتشف أعمالنا
+                  <span className="button-dot" />
+                </a>
+              </div>
+              <div className="hero-note hero-enter">
+                <span className="note-line" />
+                <span>من مصر. بأثر يتجاوز الحدود.</span>
+                <span dir="ltr">EG / KSA</span>
+              </div>
+            </div>
+            <div
+              ref={art}
+              className="hero-art"
+              aria-hidden="true"
+              onPointerMove={(e) => {
+                if (
+                  e.pointerType !== "mouse" ||
+                  window.matchMedia("(prefers-reduced-motion: reduce)").matches
+                )
+                  return;
+                const r = e.currentTarget.getBoundingClientRect();
+                art.current?.style.setProperty(
+                  "--rx",
+                  `${((e.clientY - r.top) / r.height - 0.5) * -8}deg`,
+                );
+                art.current?.style.setProperty(
+                  "--ry",
+                  `${((e.clientX - r.left) / r.width - 0.5) * 8}deg`,
+                );
+              }}
+              onPointerLeave={() => {
+                art.current?.style.setProperty("--rx", "0deg");
+                art.current?.style.setProperty("--ry", "0deg");
+              }}
+            >
+              <div className="art-stage">
+                <span className="art-caption" dir="ltr">
+                  THE DIGITAL SIGNATURE
+                </span>
+                <div className="art-grid" />
+                <div className="orbit orbit-one" />
+                <div className="orbit orbit-two" />
+                <div className="sculpture">
+                  <Mark />
+                </div>
+                <div className="art-bottom">
+                  <span dir="ltr">basma</span>
+                  <span className="art-coordinate" dir="ltr">
+                    DESIGN × ENGINEERING
+                  </span>
+                </div>
+                <span className="art-stamp">
+                  فكرة.
+                  <br />
+                  أثر.
+                  <br />
+                  بصمة.
+                </span>
+              </div>
+              <span className="art-tag tag-one">
+                هوية تميّزك<small dir="ltr">IDENTITY</small>
+              </span>
+              <span className="art-tag tag-two">
+                <span className="tiny-dot" />
+                تجربة تُصنع بعناية
+              </span>
+            </div>
+          </div>
+          <div className="hero-bottom container">
+            <span dir="ltr">INDEPENDENT DIGITAL STUDIO</span>
+            <a href="#about">
+              تعرّف على بصمة<span>↓</span>
+            </a>
+            <span dir="ltr">01 — 05</span>
+          </div>
+        </section>
+        <div className="ticker" aria-hidden="true">
+          <div className="ticker-track">
+            {[0, 1].map((i) => (
+              <div key={i}>
+                <span>هوية لها شخصية</span>
+                <span className="ticker-symbol">✳</span>
+                <span>مواقع تصنع الفرق</span>
+                <span className="ticker-symbol">✳</span>
+                <span>تطبيقات بفكر مختلف</span>
+                <span className="ticker-symbol">✳</span>
+                <span>أثر رقمي يستمر</span>
+                <span className="ticker-symbol">✳</span>
+              </div>
+            ))}
           </div>
         </div>
-      </header>
-
-      {/* Mobile Menu */}
-      <div
-        className={`fixed top-[73px] inset-x-0 z-40 flex flex-col py-2 md:hidden overflow-hidden transition-all duration-300 ease-snappy ${
-          mobileMenuOpen ? "max-h-80 opacity-100 pointer-events-auto" : "max-h-0 opacity-0 pointer-events-none"
-        }`}
-        style={{
-          background: "rgba(3,10,20,0.97)",
-          borderBottom: mobileMenuOpen ? "1px solid rgba(212,175,55,0.22)" : "1px solid transparent",
-          backdropFilter: "blur(12px)",
-        }}
-      >
-        {navLinks.map((link, i) => (
-          <a
-            key={link.href}
-            href={link.href}
-            onClick={() => setMobileMenuOpen(false)}
-            className="nav-link px-6 py-3.5 text-base font-medium text-start mx-2 rounded-xl transition-colors hover:bg-white/5"
-            style={{ animationDelay: `${i * 40}ms` }}
-          >
-            {link.label}
-          </a>
-        ))}
-      </div>
-
-      <main id="home">
-        {/* ══ HERO ═══════════════════════════════════════════════════════════ */}
-        <section className="relative min-h-screen flex items-center overflow-hidden pt-[73px]">
-          {/* Glow gradients */}
-          <div
-            className="pointer-events-none absolute inset-0"
-            style={{
-              background:
-                "radial-gradient(ellipse 50% 40% at 28% 55%, rgba(212,175,55,0.16) 0%, rgba(212,175,55,0.00) 72%)",
-            }}
-          />
-          <div
-            className="pointer-events-none absolute inset-0"
-            style={{
-              background:
-                "radial-gradient(ellipse 40% 35% at 78% 42%, rgba(212,175,55,0.10) 0%, rgba(212,175,55,0.00) 70%)",
-            }}
-          />
-
-          <div className="container mx-auto px-6 lg:px-12 xl:px-20 w-full max-w-[1400px]">
-            <div className="grid lg:grid-cols-2 items-center gap-10 lg:gap-8 py-10 lg:py-0 min-h-[calc(100vh-73px)]">
-              {/* Right: Content */}
-              <div className="flex flex-col items-center lg:items-start text-center lg:text-start order-1">
-                <img
-                  src="/logo-slogan.png"
-                  alt="بصمة BASMA"
-                  className="w-auto h-auto max-h-36 sm:max-h-40 lg:max-h-44 mb-5 sm:mb-6 lg:mb-7 object-contain animate-fade-up"
-                  style={{ animationDelay: "0.05s" }}
-                  loading="eager"
-                  fetchPriority="high"
-                  decoding="async"
-                  width={180}
-                  height={274}
-                />
-
-                <h1
-                  className="text-4xl sm:text-5xl lg:text-[58px] font-semibold leading-[1.12] mb-8 lg:mb-10 white-gradient-text max-w-xl animate-fade-up"
-                  style={{ letterSpacing: "0.88px", animationDelay: "0.12s" }}
-                >
-                  {t.hero.title}
-                </h1>
-
-                <div
-                  className="flex flex-wrap items-center justify-center lg:justify-start gap-3 sm:gap-4 animate-fade-up"
-                  style={{ animationDelay: "0.2s" }}
-                >
-                  <a
-                    href="#contact"
-                    className="btn-gold inline-flex items-center justify-center px-8 sm:px-10 py-3.5 rounded-2xl text-base font-semibold"
-                    style={{
-                      background: "linear-gradient(117deg, #F9E076 0%, #C9A227 45%, #D4AF37 100%)",
-                      boxShadow: "0 12px 40px 0 rgba(212,175,55,0.30)",
-                      color: "#0A0F18",
-                    }}
-                  >
-                    {t.hero.ctaContact}
-                  </a>
-                  <a
-                    href="#portfolio"
-                    className="btn-outline inline-flex items-center justify-center px-8 sm:px-10 py-3.5 rounded-2xl text-base font-semibold"
-                    style={{
-                      border: "1px solid rgba(248,250,252,0.22)",
-                      background: "rgba(10,25,47,0.35)",
-                      color: "#F8FAFC",
-                    }}
-                  >
-                    {t.hero.ctaPortfolio}
-                  </a>
+        <section id="about" className="section about-section">
+          <div className="container">
+            <Reveal>
+              <SectionTitle
+                number="01"
+                label="من نحن"
+                title="التفاصيل الصغيرة. الأثر الكبير."
+                subtitle="نحن بصمة. نجمع التفكير الإبداعي والهندسة لنصنع تجارب تستحق أن تُستخدم."
+              />
+            </Reveal>
+            <div className="about-grid">
+              <Reveal className="about-manifesto">
+                <p>
+                  لكل علامة قصة.
+                  <br />
+                  دورنا أن نعطيها
+                  <br />
+                  <span>حضوراً يليق بها.</span>
+                </p>
+                <Mark />
+              </Reveal>
+              <Reveal className="about-detail" delay={100}>
+                <p>{t.about.p1}</p>
+                <p>{t.about.p2}</p>
+                <div className="stats">
+                  {t.about.stats.map((s) => (
+                    <div key={s.value}>
+                      <strong dir="ltr">{s.value}</strong>
+                      <span>{s.label}</span>
+                    </div>
+                  ))}
                 </div>
-              </div>
-
-              {/* Left: Mockup */}
-              <div className="flex items-center justify-center order-2 animate-scale-in" style={{ animationDelay: "0.25s" }}>
-                <img
-                  src="/hero-mockup.png"
-                  alt={t.hero.mockupAlt}
-                  className="w-full max-w-[560px] lg:max-w-[720px] object-contain animate-float"
-                  loading="eager"
-                  fetchPriority="high"
-                  decoding="async"
-                  width={720}
-                  height={720}
-                />
-              </div>
+                <a className="text-link" href="#contact">
+                  لنتحدث عن فكرتك
+                  <Arrow />
+                </a>
+              </Reveal>
             </div>
           </div>
         </section>
-
-        {/* ══ ABOUT ══════════════════════════════════════════════════════════ */}
-        <section id="about" className="section-block">
-          <div className="container mx-auto px-6 lg:px-12 xl:px-20 max-w-[1400px]">
+        <section id="services" className="section services-section">
+          <div className="container">
             <Reveal>
-              <SectionHeader title={t.about.title} subtitle={t.about.subtitle} />
+              <SectionTitle
+                number="02"
+                label="ما نصنعه"
+                title="من الفكرة. إلى كل نقطة اتصال."
+                subtitle="تصميم وتطوير وتسويق، بمنظور واحد: تجربة متكاملة تعكس علامتك."
+              />
             </Reveal>
-
-            <div className="flex flex-wrap justify-center gap-4 mb-10">
-              {t.about.stats.map((stat, i) => (
-                <Reveal
-                  key={stat.value}
-                  delay={i * 80}
-                  className="flex flex-col items-center justify-center p-6 rounded-2xl backdrop-blur-sm text-center card-interactive surface-card"
-                  style={{
-                    minWidth: "170px",
-                    flex: "1 1 160px",
-                    maxWidth: "220px",
-                  }}
-                >
-                  <span className="text-2xl font-bold mb-1" style={{ color: "#F9E076" }}>
-                    {stat.value}
-                  </span>
-                  <span className="text-sm whitespace-pre-line" style={{ color: "rgba(248,250,252,0.68)" }}>
-                    {stat.label}
-                  </span>
+            <div className="services-grid">
+              {loading ? (
+                [0, 1, 2, 3].map((i) => (
+                  <div
+                    key={i}
+                    className="service-skeleton skeleton"
+                    aria-label={t.servicesSection.loading}
+                  />
+                ))
+              ) : error ? (
+                <Status
+                  message={t.servicesSection.error}
+                  retry={t.servicesSection.retry}
+                  onRetry={retry}
+                />
+              ) : services.length ? (
+                services.map((s, i) => (
+                  <Reveal key={`${s.category}-${s.title.en}`} delay={i * 70}>
+                    <article className="service-card">
+                      <div className="service-top">
+                        <span dir="ltr">0{i + 1}</span>
+                        <span
+                          className={`service-glyph glyph-${s.category}`}
+                          aria-hidden="true"
+                        >
+                          {s.category === "websites"
+                            ? "↗"
+                            : s.category === "apps"
+                              ? "▯"
+                              : s.category === "branding"
+                                ? "✳"
+                                : "◎"}
+                        </span>
+                      </div>
+                      <h3>{s.title[lang]}</h3>
+                      <p>{s.description[lang]}</p>
+                      <a href="#contact" className="service-bottom">
+                        لنتحدث عن مشروعك
+                        <Arrow />
+                      </a>
+                    </article>
+                  </Reveal>
+                ))
+              ) : (
+                <Status message="الخدمات ستُضاف قريباً." />
+              )}
+            </div>
+          </div>
+        </section>
+        <section id="portfolio" className="section portfolio-section">
+          <div className="container">
+            <Reveal>
+              <SectionTitle
+                number="03"
+                label="أعمال مختارة"
+                title="الفكرة تصبح واقعاً."
+                subtitle={t.portfolio.subtitle}
+              />
+            </Reveal>
+            {!loading && !error && projects.length > 0 && (
+              <div className="filters" aria-label={t.portfolio.filterLabel}>
+                {filterKeys.map((filter) => (
+                  <button
+                    key={filter}
+                    onClick={() => setActiveFilter(filter)}
+                    aria-pressed={activeFilter === filter}
+                    className={activeFilter === filter ? "selected" : ""}
+                  >
+                    {t.portfolio.filters[filter]}
+                    {filter === "all" && (
+                      <span>{projects.length.toString().padStart(2, "0")}</span>
+                    )}
+                  </button>
+                ))}
+              </div>
+            )}
+            <div className="portfolio-grid">
+              {loading ? (
+                [0, 1, 2, 3].map((i) => (
+                  <div
+                    className="project-skeleton skeleton"
+                    key={i}
+                    aria-label={t.portfolio.loading}
+                  />
+                ))
+              ) : error ? (
+                <Status
+                  message={t.portfolio.error}
+                  retry={t.portfolio.retry}
+                  onRetry={retry}
+                />
+              ) : filtered.length ? (
+                filtered.map((p, i) => (
+                  <Reveal key={p.id} delay={(i % 2) * 90}>
+                    <ProjectCard project={p} onOpen={() => setSelected(p)} />
+                  </Reveal>
+                ))
+              ) : (
+                <Status message={t.portfolio.empty} />
+              )}
+            </div>
+          </div>
+        </section>
+        <section className="section process-section">
+          <div className="container">
+            <Reveal>
+              <SectionTitle
+                number="04"
+                label="كيف نعمل"
+                title="وضوح في كل خطوة."
+                subtitle="رحلة منظمة من فهم احتياجك إلى إطلاق التجربة، بدون تعقيد."
+              />
+            </Reveal>
+            <div className="process-grid">
+              {[
+                {
+                  title: "نفهم",
+                  body: "نستمع لفكرتك، نفهم جمهورك، ونحدد ما يحتاجه مشروعك.",
+                },
+                {
+                  title: "نصمّم",
+                  body: "نحوّل الرؤية إلى هوية وتجربة واضحة، ونراجعها معك.",
+                },
+                {
+                  title: "نطوّر",
+                  body: "نبني التفاصيل بعناية، ونختبر الأداء وتجربة الاستخدام.",
+                },
+                {
+                  title: "نطلق",
+                  body: "نجهّز مشروعك للنشر، ونضعه بين يديك بثقة.",
+                },
+              ].map((step, i) => (
+                <Reveal delay={i * 80} key={step.title}>
+                  <article className="process-step">
+                    <span className="process-number" dir="ltr">
+                      0{i + 1}
+                    </span>
+                    <h3>
+                      {step.title}
+                      <span className="tiny-dot" />
+                    </h3>
+                    <p>{step.body}</p>
+                  </article>
                 </Reveal>
               ))}
             </div>
-
-            <Reveal delay={120}>
-              <div className="max-w-3xl mx-auto text-center">
-                <p className="text-base leading-loose mb-4" style={{ color: "rgba(248,250,252,0.68)", lineHeight: "1.75" }}>
-                  {t.about.p1}
-                </p>
-                <p className="text-base" style={{ color: "rgba(248,250,252,0.68)" }}>
-                  {t.about.p2}
-                </p>
+          </div>
+        </section>
+        <section id="contact" className="section contact-section">
+          <div className="container contact-grid">
+            <Reveal className="contact-copy">
+              <span className="eyebrow">
+                <span className="tiny-dot" />
+                05 / الخطوة القادمة
+              </span>
+              <h2>
+                فكرتك القادمة.
+                <br />
+                <span>بصمتنا المشتركة.</span>
+              </h2>
+              <p>
+                سواء عندك فكرة جديدة، أو مشروع محتاج خطوة للأمام، نحب نسمع منك.
+              </p>
+              <a
+                className="contact-email"
+                href="mailto:bassma1company@gmail.com"
+                dir="ltr"
+              >
+                bassma1company@gmail.com
+                <Arrow />
+              </a>
+              <a className="contact-phone" href="tel:+201021288238" dir="ltr">
+                +20 10 21288238
+              </a>
+              <div className="contact-pattern" aria-hidden="true">
+                {Array.from({ length: 15 }, (_, i) => (
+                  <span key={i} />
+                ))}
               </div>
             </Reveal>
-          </div>
-        </section>
-
-        {/* ══ SERVICES ═══════════════════════════════════════════════════════ */}
-        <section id="services" className="section-block section-block-alt">
-          <div className="container mx-auto px-6 lg:px-12 xl:px-20 max-w-[1400px]">
-            <Reveal>
-              <SectionHeader title={t.servicesSection.title} subtitle={t.servicesSection.subtitle} />
-            </Reveal>
-
-            <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-5">
-              {loading ? (
-                <ContentMessage message={t.servicesSection.loading} />
-              ) : error ? (
-                <ContentMessage
-                  message={t.servicesSection.error}
-                  actionLabel={t.servicesSection.retry}
-                  onAction={retry}
-                />
-              ) : (
-                services.map((service, i) => (
-                  <Reveal
-                    key={`${service.category}-${service.title.en}`}
-                    delay={i * 70}
-                    className="card-interactive group rounded-2xl p-6 flex flex-col gap-4 text-start h-full surface-card-elevated"
-                  >
-                    <div
-                      className="w-10 h-10 flex items-center justify-center rounded-xl self-start transition-all duration-300 group-hover:scale-110 group-hover:border-[rgba(212,175,55,0.45)]"
-                      style={{
-                        border: "1px solid rgba(212,175,55,0.20)",
-                        background: "rgba(212,175,55,0.10)",
-                        color: "#D4AF37",
-                        fontSize: "18px",
-                      }}
-                    >
-                      {service.icon}
-                    </div>
-                    <div>
-                      <h3 className="text-lg font-bold text-white mb-2">{service.title[lang]}</h3>
-                      <p className="text-sm leading-relaxed" style={{ color: "rgba(248,250,252,0.68)" }}>
-                        {service.description[lang]}
-                      </p>
-                    </div>
-                  </Reveal>
-                ))
-              )}
-            </div>
-          </div>
-        </section>
-
-        {/* ══ PORTFOLIO ══════════════════════════════════════════════════════ */}
-        <section id="portfolio" className="section-block">
-          <div className="container mx-auto px-6 lg:px-12 xl:px-20 max-w-[1400px]">
-            <Reveal>
-              <SectionHeader title={t.portfolio.title} subtitle={t.portfolio.subtitle} />
-            </Reveal>
-
-            <Reveal delay={60}>
-              {!loading && !error && projects.length > 0 ? (
-                <div className="flex flex-wrap items-center justify-center gap-2 mb-12" role="tablist" aria-label={t.portfolio.filterLabel}>
-                  {filterKeys.map((filter) => (
-                    <button
-                      key={filter}
-                      type="button"
-                      role="tab"
-                      aria-selected={activeFilter === filter}
-                      onClick={() => setActiveFilter(filter)}
-                      className={`filter-pill hover:scale-105 active:scale-95 ${activeFilter === filter ? "filter-pill-active" : ""}`}
-                    >
-                      {t.portfolio.filters[filter]}
-                    </button>
-                  ))}
-                </div>
-              ) : null}
-            </Reveal>
-
-            <div className="portfolio-grid">
-              {loading ? (
-                <>
-                  {Array.from({ length: 6 }).map((_, i) => (
-                    <ProjectCardSkeleton key={i} />
-                  ))}
-                  <p className="portfolio-status-text col-span-full">{t.portfolio.loading}</p>
-                </>
-              ) : error ? (
-                <ContentMessage
-                  message={t.portfolio.error}
-                  actionLabel={t.portfolio.retry}
-                  onAction={retry}
-                />
-              ) : filteredProjects.length === 0 ? (
-                <ContentMessage message={t.portfolio.empty} />
-              ) : (
-                filteredProjects.map((project, i) => (
-                  <Reveal key={project.id} delay={(i % 3) * 60} className="h-full">
-                    <ProjectCard
-                      title={project.title[lang]}
-                      category={t.portfolio.categories[project.category]}
-                      image={project.image}
-                      linkLabel={project.linkLabel[lang]}
-                      linkUrl={project.linkUrl}
-                      viewDetails={t.portfolio.viewDetails}
-                      linkHint={t.portfolio.linkHint}
-                      noImageLabel={t.portfolio.noImage}
-                      onViewDetails={() => setSelectedProject(project)}
-                    />
-                  </Reveal>
-                ))
-              )}
-            </div>
-          </div>
-        </section>
-
-        {/* ══ CONTACT ════════════════════════════════════════════════════════ */}
-        <section id="contact" className="section-block section-block-alt">
-          <div className="container mx-auto px-6 lg:px-12 xl:px-20 max-w-[1400px]">
-            <Reveal>
-              <SectionHeader title={t.contact.title} subtitle={t.contact.subtitle} />
-            </Reveal>
-
-            <div
-              className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-14 xl:gap-20 items-center"
-            >
-              <Reveal className="w-full max-w-[503px] justify-self-center lg:justify-self-start mx-auto lg:mx-0" delay={80}>
-                <form onSubmit={handleSubmit} className="contact-form-card">
-                  <div className="flex flex-col gap-2">
-                    <label className="text-sm font-medium text-start" style={{ color: "rgba(248,250,252,0.68)" }}>
-                      {t.contact.name}
+            <Reveal delay={100}>
+              <form
+                onSubmit={handleSubmit}
+                className="contact-form"
+                aria-busy={submitting}
+              >
+                <span className="form-heading">
+                  احكي لنا عن مشروعك
+                  <Arrow />
+                </span>
+                <div className="form-row">
+                  <div className="field">
+                    <label htmlFor="name">
+                      {t.contact.name} <span>*</span>
                     </label>
                     <input
-                      type="text"
+                      id="name"
+                      name="name"
+                      autoComplete="name"
+                      placeholder="اسمك الكريم"
+                      required
                       value={formData.name}
-                      onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                      required
-                      className="contact-field contact-field-input"
+                      onChange={(e) =>
+                        setFormData({ ...formData, name: e.target.value })
+                      }
                     />
                   </div>
-
-                  <div className="flex flex-col gap-2">
-                    <label className="text-sm font-medium text-start" style={{ color: "rgba(248,250,252,0.68)" }}>
-                      {t.contact.email}
+                  <div className="field">
+                    <label htmlFor="phone">
+                      {t.contact.phone} <small>اختياري</small>
                     </label>
                     <input
-                      type="email"
-                      value={formData.email}
-                      onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                      required
-                      className="contact-field contact-field-input"
-                    />
-                  </div>
-
-                  <div className="flex flex-col gap-2">
-                    <label className="text-sm font-medium text-start" style={{ color: "rgba(248,250,252,0.68)" }}>
-                      {t.contact.phone}
-                    </label>
-                    <input
+                      id="phone"
+                      name="phone"
                       type="tel"
+                      autoComplete="tel"
+                      dir="ltr"
+                      placeholder="+20"
                       value={formData.phone}
-                      onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                      className="contact-field contact-field-input"
+                      onChange={(e) =>
+                        setFormData({ ...formData, phone: e.target.value })
+                      }
                     />
                   </div>
-
-                  <div className="flex flex-col gap-2">
-                    <label className="text-sm font-medium text-start" style={{ color: "rgba(248,250,252,0.68)" }}>
-                      {t.contact.message}
-                    </label>
-                    <textarea
-                      value={formData.message}
-                      onChange={(e) => setFormData({ ...formData, message: e.target.value })}
-                      required
-                      rows={5}
-                      className="contact-field contact-field-textarea"
-                    />
-                  </div>
-
-                  <button type="submit" className="contact-submit" disabled={contactSubmitting}>
-                    {contactSubmitting ? t.contact.submitting : t.contact.submit}
-                  </button>
-                </form>
-              </Reveal>
-
-              <Reveal className="relative w-full flex items-center justify-center min-h-[280px] lg:min-h-[420px]" delay={140}>
-                <div className="contact-visual-glow pointer-events-none absolute inset-0 animate-glow-pulse" />
-                <img
-                  src="/contact-us.png"
-                  alt={t.contact.imageAlt}
-                  className="relative w-full max-w-[680px] object-contain animate-float"
-                  loading="lazy"
-                  decoding="async"
-                />
-              </Reveal>
-            </div>
+                </div>
+                <div className="field">
+                  <label htmlFor="email">
+                    {t.contact.email} <span>*</span>
+                  </label>
+                  <input
+                    id="email"
+                    name="email"
+                    type="email"
+                    autoComplete="email"
+                    dir="ltr"
+                    placeholder="you@company.com"
+                    required
+                    value={formData.email}
+                    onChange={(e) =>
+                      setFormData({ ...formData, email: e.target.value })
+                    }
+                  />
+                </div>
+                <div className="field">
+                  <label htmlFor="message">
+                    {t.contact.message} <span>*</span>
+                  </label>
+                  <textarea
+                    id="message"
+                    name="message"
+                    rows={4}
+                    placeholder="ما الذي تريد أن نصنعه معاً؟"
+                    required
+                    value={formData.message}
+                    onChange={(e) =>
+                      setFormData({ ...formData, message: e.target.value })
+                    }
+                  />
+                </div>
+                <button
+                  className="button primary submit-button"
+                  disabled={submitting}
+                  type="submit"
+                >
+                  {submitting ? t.contact.submitting : "لنبدأ الحديث"}
+                  <Arrow />
+                </button>
+                <div
+                  className={`form-feedback ${formStatus || ""}`}
+                  role="status"
+                  aria-live="polite"
+                >
+                  {formStatus === "success"
+                    ? t.contact.success
+                    : formStatus === "error"
+                      ? t.contact.error
+                      : ""}
+                </div>
+              </form>
+            </Reveal>
           </div>
         </section>
       </main>
-
-      {/* ══ FOOTER ═════════════════════════════════════════════════════════ */}
-      <footer className="site-footer">
-        <div className="site-footer-glow" aria-hidden="true" />
-
-        <div className="container mx-auto px-6 lg:px-12 xl:px-20 max-w-[1400px] relative">
-          <div className="site-footer-main">
-            <div className="site-footer-brand">
-              <a href="#home" className="site-footer-logo group">
-                <span className="logo-mark shrink-0">
-                  <img
-                    src="/logo-only.png"
-                    alt=""
-                    className="w-7 h-7 object-contain"
-                    width={28}
-                    height={28}
-                    decoding="async"
-                  />
-                </span>
-                <span className="text-xl font-bold gold-gradient-text">{t.brand}</span>
-              </a>
-              <p className="site-footer-tagline">{t.footer.tagline}</p>
-              <p className="site-footer-desc">{t.footer.desc}</p>
-            </div>
-
-            <nav className="site-footer-nav" aria-label={t.footer.explore}>
-              <p className="site-footer-label">{t.footer.explore}</p>
-              <ul>
-                {navLinks.map((link) => (
-                  <li key={link.href}>
-                    <a href={link.href}>{link.label}</a>
-                  </li>
-                ))}
-              </ul>
-            </nav>
-
-            <div className="site-footer-contact">
-              <p className="site-footer-label">{t.footer.contactTitle}</p>
-              <ul className="site-footer-contact-list">
-                <li>
-                  <a href="mailto:bassma1company@gmail.com" className="site-footer-contact-link">
-                    <MailIcon />
-                    <span dir="ltr">bassma1company@gmail.com</span>
-                  </a>
-                </li>
-                <li>
-                  <a href="tel:+201021288238" className="site-footer-contact-link">
-                    <PhoneIcon />
-                    <span dir="ltr">+20 10 21288238</span>
-                  </a>
-                </li>
-                <li>
-                  <a
-                    href="https://wa.me/201021288238"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="site-footer-contact-link site-footer-contact-link--accent"
-                  >
-                    <WhatsAppIcon className="w-[1.125rem] h-[1.125rem]" />
-                    <span>واتساب</span>
-                  </a>
-                </li>
-              </ul>
-            </div>
-          </div>
-
-          <div className="site-footer-bar">
-            <p className="site-footer-copy">{t.footer.copyright}</p>
-            <a href="#home" className="site-footer-top">
-              <ArrowUpIcon />
-              {t.footer.backToTop}
+      <footer className="footer">
+        <div className="container">
+          <div className="footer-top">
+            <a href="#home" aria-label="بصمة — الرئيسية">
+              <Brand />
             </a>
+            <p>{t.footer.tagline}</p>
+            <a className="back-top" href="#home">
+              {t.footer.backToTop} ↑
+            </a>
+          </div>
+          <div className="footer-bottom">
+            <span>{t.footer.copyright}</span>
+            <nav aria-label="روابط التذييل">
+              {nav.slice(1).map((link) => (
+                <a href={`#${link.id}`} key={link.id}>
+                  {link.label}
+                </a>
+              ))}
+            </nav>
+            <span dir="ltr">MADE WITH PURPOSE.</span>
           </div>
         </div>
       </footer>
-
-      {/* ── WhatsApp Floating Button ── */}
       <a
+        className="whatsapp"
         href="https://wa.me/201021288238"
         target="_blank"
         rel="noopener noreferrer"
-        className="btn-gold whatsapp-fab fixed z-50 flex items-center justify-center rounded-full w-14 h-14 p-0 sm:w-auto sm:h-auto sm:gap-2.5 sm:px-6 sm:py-3.5 text-sm lg:text-base font-semibold"
-        style={dir === "rtl" ? { left: "1.25rem" } : { right: "1.25rem" }}
         aria-label={t.footer.whatsappFabLabel}
       >
-        <WhatsAppIcon className="w-[1.625rem] h-[1.625rem] sm:w-6 sm:h-6 shrink-0" />
-        <span className="hidden sm:inline">{t.footer.whatsappFab}</span>
+        <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <path
+            d="M20 11.5a8 8 0 0 1-11.8 7L4 20l1.4-4.3A8 8 0 1 1 20 11.5Z"
+            stroke="currentColor"
+            strokeWidth="1.6"
+          />
+          <path
+            d="M9 7.5c-2 1 .5 6 4 7l1.5-1.5-2-1-.8.7c-1.5-.8-2-1.5-2.3-2.4l.6-.8L9 7.5Z"
+            fill="currentColor"
+          />
+        </svg>
+        <span>نتحدث؟</span>
       </a>
-
-      {selectedProject ? (
-        <ProjectDetailModal
-          project={selectedProject}
-          lang={lang}
-          dir={dir}
-          categoryLabel={t.portfolio.categories[selectedProject.category]}
-          onClose={() => setSelectedProject(null)}
-          closeLabel={t.portfolio.closeModal}
-        />
-      ) : null}
+      {selected && (
+        <ProjectModal project={selected} onClose={() => setSelected(null)} />
+      )}
     </div>
   );
 }
