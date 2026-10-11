@@ -60,3 +60,35 @@ body { background:#071525; color:var(--paper); }
 @media(prefers-reduced-motion:reduce) {
  .button.primary,.whatsapp { transition:none; }
 }
+/* One horizontal gutter, consistent cards and usable touch targets. */
+.container { padding-inline:0; max-width:none; }
+.service-card { border-radius:16px; border-top:1px solid var(--line); }
+.service-bottom { min-height:48px; }
+.text-link { min-height:44px; display:inline-flex; align-items:center; }
+.filters button { min-height:44px; }
+.footer-navigation a,.footer-contact a { min-height:44px; }
+.hero .hero-actions .button { font-size:14px; }
+@media(max-width:767px) {
+ .container { width:calc(100% - 40px); }
+ .header-inner { width:calc(100% - 40px); }
+ .hero-grid { padding-top:24px; }
+ .hero h1 { margin-block:18px; }
+ .hero .hero-description { margin-bottom:22px; }
+ .hero .hero-actions .button { font-size:13px; min-height:52px; }
+ .hero-note { margin-top:22px; }
+ .service-card { padding:24px; }
+ .project-media { border-radius:14px; }
+ .project-tags span { border-radius:6px; }
+ .contact-form { padding:24px 20px; border-radius:18px; }
+ .field label { font-size:13px; }
+ .field label small { font-size:11px; }
+ .faq-list summary { min-height:44px; }
+ .footer-invitation { padding-bottom:30px; }
+}
+@media(max-width:359px) {
+ .container,.header-inner { width:calc(100% - 32px); }
+ .hero .hero-actions { grid-template-columns:1fr; }
+ .hero-note { flex-wrap:wrap; gap:10px; }
+}
+
+@media(max-width:767px) { .form-row { grid-template-columns:1fr; gap:0; } }
