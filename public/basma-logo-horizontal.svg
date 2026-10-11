@@ -15,4 +15,4 @@
 <path d="M119 9C101-1 89 8 99 17L111 23C124 34 105 42 91 32"/>
 <path d="M135 36V8M135 19C135 2 154 2 154 19V36M154 19C154 2 173 2 173 19V36"/>
 <path d="M190 20C190 2 216 2 216 20C216 39 190 39 190 20ZM216 7V36"/>
-</g></g><g transform="translate(300 18)"><path fill="currentColor" fill-rule="evenodd" d="M14 8h23v46c0 16 8 24 23 24s23-8 23-24V8h23v49c0 29-17 43-46 43S14 86 14 57V8Zm74 42L65 78h10l13-16V50Z"/><rect x="50" y="104" width="20" height="16" rx="4" fill="#ff5638"/></g></svg>
+</g></g><g transform="translate(300 18)"><g stroke="currentColor" stroke-width="9" stroke-linecap="round" stroke-linejoin="round"><path d="M20 66V50C20 10 100 10 100 50V68C100 92 82 104 60 104"/><path d="M38 70V50C38 26 82 26 82 50V68C82 82 72 90 60 90H49"/><path d="M56 71V51C56 47 64 47 64 51V67"/></g><rect x="15" y="86" width="13" height="13" rx="3" fill="#ff5638"/></g></svg>

@@ -13,29 +13,14 @@ import type { DisplayProject } from "./lib/siteContent";
 import Wordmark from "./components/Wordmark";
 
 function Mark({ className = "" }: { className?: string }) {
-  return (
-    <svg
-      className={className}
-      viewBox="0 0 120 120"
-      fill="none"
-      aria-hidden="true"
-    >
-      <path
-        fill="currentColor"
-        fillRule="evenodd"
-        d="M14 8h23v46c0 16 8 24 23 24s23-8 23-24V8h23v49c0 29-17 43-46 43S14 86 14 57V8Zm74 42L65 78h10l13-16V50Z"
-      />
-      <rect
-        className="mark-dot"
-        x="50"
-        y="104"
-        width="20"
-        height="16"
-        rx="4"
-        fill="currentColor"
-      />
-    </svg>
-  );
+  return <svg className={className} viewBox="0 0 120 120" fill="none" aria-hidden="true">
+    <g stroke="currentColor" strokeWidth="9" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M20 66V50C20 10 100 10 100 50V68C100 92 82 104 60 104" />
+      <path d="M38 70V50C38 26 82 26 82 50V68C82 82 72 90 60 90H49" />
+      <path d="M56 71V51C56 47 64 47 64 51V67" />
+    </g>
+    <rect className="mark-dot" x="15" y="86" width="13" height="13" rx="3" fill="currentColor" />
+  </svg>;
 }
 function Brand() {
   return (
@@ -163,43 +148,13 @@ function ProjectCard({
         onClick={onOpen}
         aria-label={`${t.portfolio.viewDetails}: ${project.title[lang]}`}
       >
-        <span className="mockup-brand" aria-hidden="true">
-          <Mark />
-          <span dir="ltr">basma / work</span>
-        </span>
-        <div className="mockup-stage">
-          <div className={`mockup-frame mockup-${project.category}`}>
-            {project.category === "apps" ? (
-              <span className="mockup-notch" aria-hidden="true" />
-            ) : (
-              <div className="mockup-toolbar" aria-hidden="true">
-                <span className="mockup-controls"><i /><i /><i /></span>
-                <span className="mockup-caption">{project.title[lang]}</span>
-                <span className="mockup-toolbar-dot" />
-              </div>
-            )}
-            <div className="mockup-screen">
-              {project.image && !failed ? (
-                <img
-                  src={project.image}
-                  alt={project.title[lang]}
-                  loading="lazy"
-                  decoding="async"
-                  onError={() => setFailed(true)}
-                />
-              ) : (
-                <div className="project-placeholder">
-                  <Mark />
-                  <span>{t.portfolio.noImage}</span>
-                </div>
-              )}
-            </div>
-            {project.category === "apps" && <span className="mockup-home" aria-hidden="true" />}
-          </div>
+        <div className="project-visual">
+          {project.image && !failed ? (
+            <img src={project.image} alt={project.title[lang]} loading="lazy" decoding="async" onError={() => setFailed(true)} />
+          ) : (
+            <div className="project-placeholder"><Mark /><span>{t.portfolio.noImage}</span></div>
+          )}
         </div>
-        <span className="mockup-category" aria-hidden="true">
-          <span className="tiny-dot" />{t.portfolio.categories[project.category]}
-        </span>
         <span className="project-open">
           <Arrow />
         </span>
@@ -225,6 +180,8 @@ function ProjectCard({
           </a>
         )}
       </div>
+      {project.description?.[lang] && <p className="project-summary">{project.description[lang]}</p>}
+      {project.tags?.length ? <div className="project-tags">{project.tags.slice(0, 3).map(tag => <span key={tag}>{tag}</span>)}</div> : null}
     </article>
   );
 }
@@ -339,7 +296,6 @@ export default function App() {
   );
   const [motionPaused, setMotionPaused] = useState(false);
   const progress = useRef<HTMLDivElement>(null);
-  const art = useRef<HTMLDivElement>(null);
   useEffect(() => {
     let frame = 0;
     const update = () => {
@@ -477,14 +433,14 @@ export default function App() {
             <div className="hero-copy">
               <span className="eyebrow hero-enter">
                 <span className="tiny-dot" />
-                تصميم يفكّر. تقنية تُنجز.
+                شريكك في التصميم والتطوير
               </span>
               <h1 className="hero-enter">
-                نصنع تجارب.
+                نحوّل الأفكار.
                 <br />
-                تترك{" "}
+                إلى{" "}
                 <span className="signature">
-                  بصمة
+                  أثر.
                   <svg viewBox="0 0 300 24" fill="none" aria-hidden="true">
                     <path
                       d="M5 17C80 0 210 0 293 12"
@@ -498,7 +454,7 @@ export default function App() {
               <p className="hero-description hero-enter">
                 من أول فكرة إلى تجربة رقمية متكاملة.
                 <br />
-                هوية تعبّر عنك، ومواقع وتطبيقات تجمع جمال التصميم وقوة التنفيذ.
+                نصمّم هويتك، ونبني مواقع وتطبيقات واضحة، سريعة، وقابلة للنمو.
               </p>
               <div className="hero-actions hero-enter">
                 <a className="button primary" href="#contact">
@@ -516,41 +472,17 @@ export default function App() {
                 <span dir="ltr">EG / KSA</span>
               </div>
             </div>
-            <div
-              ref={art}
-              className="hero-art"
-              aria-hidden="true"
-              onPointerMove={(e) => {
-                if (
-                  e.pointerType !== "mouse" ||
-                  window.matchMedia("(prefers-reduced-motion: reduce)").matches
-                )
-                  return;
-                const r = e.currentTarget.getBoundingClientRect();
-                art.current?.style.setProperty(
-                  "--rx",
-                  `${((e.clientY - r.top) / r.height - 0.5) * -8}deg`,
-                );
-                art.current?.style.setProperty(
-                  "--ry",
-                  `${((e.clientX - r.left) / r.width - 0.5) * 8}deg`,
-                );
-              }}
-              onPointerLeave={() => {
-                art.current?.style.setProperty("--rx", "0deg");
-                art.current?.style.setProperty("--ry", "0deg");
-              }}
-            >
-              <div className="art-stage identity-specimen">
-                <div className="specimen-heading"><span>لكل فكرة أثر.</span><span className="specimen-index" dir="ltr">B / 01</span></div>
-                <div className="imprint-composition">
-                  <Mark className="imprint-echo echo-one" />
-                  <Mark className="imprint-echo echo-two" />
-                  <Mark className="imprint-echo echo-three" />
-                  <Mark className="imprint-primary" />
-                </div>
-                <div className="specimen-footer"><Wordmark/><p>هويتك.<br/>تجربتك.<br/>بصمتك.</p></div>
-                <div className="specimen-dots">{Array.from({length:9},(_,i)=><span key={i}/>)}</div>
+            <div className="hero-art" aria-hidden="true">
+              <div className="trace-panel">
+                <div className="trace-meta"><span>من الفكرة إلى الأثر</span><span dir="ltr">BASMA / DIGITAL</span></div>
+                <svg className="trace-art" viewBox="0 0 480 480" fill="none">
+                  <g className="trace-lines" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
+                    {Array.from({length: 9}, (_, i) => <path key={i} d={`M${55+i*20} ${250-i*8} V${185+i*9} C${55+i*20} ${40+i*16} ${425-i*20} ${40+i*16} ${425-i*20} ${185+i*9} V${275-i*4} C${425-i*20} ${410-i*8} ${150+i*8} ${425-i*10} ${135+i*13} ${310-i*2}`} />)}
+                  </g>
+                  <path className="trace-accent" d="M55 250V185C55 40 425 40 425 185V275C425 410 150 425 135 310" stroke="currentColor" strokeWidth="5" strokeLinecap="round" />
+                  <rect className="trace-point" x="45" y="240" width="20" height="20" rx="5" />
+                </svg>
+                <div className="trace-bottom"><Wordmark/><span>تصميم له شخصية.<br/>هندسة تصنع الفرق.</span></div>
               </div>
             </div>
           </div>
@@ -562,27 +494,66 @@ export default function App() {
             <span dir="ltr">01 — 05</span>
           </div>
         </section>
-        <div className="ticker" aria-hidden="true">
-          <div className="ticker-track">
-            {[0, 1].map((i) => (
-              <div key={i}>
-                <span>هوية لها شخصية</span>
-                <span className="ticker-symbol">✳</span>
-                <span>مواقع تصنع الفرق</span>
-                <span className="ticker-symbol">✳</span>
-                <span>تطبيقات بفكر مختلف</span>
-                <span className="ticker-symbol">✳</span>
-                <span>أثر رقمي يستمر</span>
-                <span className="ticker-symbol">✳</span>
-              </div>
-            ))}
-          </div>
-        </div>
-        <section id="about" className="section about-section">
+        <div className="discipline-strip container"><span>فكر واضح. تنفيذ متقن.</span><div><span>الهوية البصرية</span><i/><span>تجربة المستخدم</span><i/><span>المواقع والتطبيقات</span></div><span dir="ltr">DESIGN × ENGINEERING</span></div>
+        <section id="portfolio" className="section portfolio-section">
           <div className="container">
             <Reveal>
               <SectionTitle
                 number="01"
+                label="أعمال مختارة"
+                title="شغلنا يتكلم."
+                subtitle="مواقع وتطبيقات نفخر بصناعتها. اكتشف الفكرة، والتفاصيل، والتجربة."
+              />
+            </Reveal>
+            {!loading && !error && visibleProjects.length > 0 && (
+              <div className="filters" aria-label={t.portfolio.filterLabel}>
+                {filterKeys.map((filter) => (
+                  <button
+                    key={filter}
+                    onClick={() => setActiveFilter(filter)}
+                    aria-pressed={activeFilter === filter}
+                    className={activeFilter === filter ? "selected" : ""}
+                  >
+                    {t.portfolio.filters[filter]}
+                    {filter === "all" && (
+                      <span>{visibleProjects.length.toString().padStart(2, "0")}</span>
+                    )}
+                  </button>
+                ))}
+              </div>
+            )}
+            <div className="portfolio-grid">
+              {loading ? (
+                [0, 1, 2, 3].map((i) => (
+                  <div
+                    className="project-skeleton skeleton"
+                    key={i}
+                    aria-label={t.portfolio.loading}
+                  />
+                ))
+              ) : error ? (
+                <Status
+                  message={t.portfolio.error}
+                  retry={t.portfolio.retry}
+                  onRetry={retry}
+                />
+              ) : filtered.length ? (
+                filtered.map((p, i) => (
+                  <Reveal key={p.id} delay={(i % 2) * 90}>
+                    <ProjectCard project={p} onOpen={() => setSelected(p)} />
+                  </Reveal>
+                ))
+              ) : (
+                <Status message={t.portfolio.empty} />
+              )}
+            </div>
+          </div>
+        </section>
+        <section id="about" className="section about-section">
+          <div className="container">
+            <Reveal>
+              <SectionTitle
+                number="02"
                 label="من نحن"
                 title="التفاصيل الصغيرة. الأثر الكبير."
                 subtitle="نحن بصمة. نجمع التفكير الإبداعي والهندسة لنصنع تجارب تستحق أن تُستخدم."
@@ -622,7 +593,7 @@ export default function App() {
           <div className="container">
             <Reveal>
               <SectionTitle
-                number="02"
+                number="03"
                 label="ما نصنعه"
                 title="من الفكرة. إلى كل نقطة اتصال."
                 subtitle="تصميم وتطوير، بمنظور واحد: تجربة متكاملة تعكس علامتك."
@@ -673,60 +644,6 @@ export default function App() {
                 ))
               ) : (
                 <Status message="الخدمات ستُضاف قريباً." />
-              )}
-            </div>
-          </div>
-        </section>
-        <section id="portfolio" className="section portfolio-section">
-          <div className="container">
-            <Reveal>
-              <SectionTitle
-                number="03"
-                label="أعمال مختارة"
-                title="الفكرة تصبح واقعاً."
-                subtitle={t.portfolio.subtitle}
-              />
-            </Reveal>
-            {!loading && !error && visibleProjects.length > 0 && (
-              <div className="filters" aria-label={t.portfolio.filterLabel}>
-                {filterKeys.map((filter) => (
-                  <button
-                    key={filter}
-                    onClick={() => setActiveFilter(filter)}
-                    aria-pressed={activeFilter === filter}
-                    className={activeFilter === filter ? "selected" : ""}
-                  >
-                    {t.portfolio.filters[filter]}
-                    {filter === "all" && (
-                      <span>{visibleProjects.length.toString().padStart(2, "0")}</span>
-                    )}
-                  </button>
-                ))}
-              </div>
-            )}
-            <div className="portfolio-grid">
-              {loading ? (
-                [0, 1, 2, 3].map((i) => (
-                  <div
-                    className="project-skeleton skeleton"
-                    key={i}
-                    aria-label={t.portfolio.loading}
-                  />
-                ))
-              ) : error ? (
-                <Status
-                  message={t.portfolio.error}
-                  retry={t.portfolio.retry}
-                  onRetry={retry}
-                />
-              ) : filtered.length ? (
-                filtered.map((p, i) => (
-                  <Reveal key={p.id} delay={(i % 2) * 90}>
-                    <ProjectCard project={p} onOpen={() => setSelected(p)} />
-                  </Reveal>
-                ))
-              ) : (
-                <Status message={t.portfolio.empty} />
               )}
             </div>
           </div>
