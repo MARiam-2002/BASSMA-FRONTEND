@@ -934,7 +934,7 @@ export default function App() {
             fill="currentColor"
           />
         </svg>
-        <span>نتحدث؟</span>
+        <span className="whatsapp-label">خلّينا نتكلم</span><span className="whatsapp-arrow" aria-hidden="true"><Arrow /></span>
       </a>
       {selected && (
         <ProjectModal project={selected} onClose={() => setSelected(null)} />
