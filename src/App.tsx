@@ -12,6 +12,7 @@ import { useLanguage } from "./i18n/LanguageProvider";
 import { filterKeys, type FilterKey } from "./i18n/translations";
 import type { DisplayProject } from "./lib/siteContent";
 import Wordmark from "./components/Wordmark";
+import { faqs } from "./seo";
 
 function Mark({ className = "" }: { className?: string }) {
   return <svg className={className} viewBox="0 0 120 120" fill="none" aria-hidden="true">
@@ -746,6 +747,12 @@ export default function App() {
                 </Reveal>
               ))}
             </div>
+          </div>
+        </section>
+        <section className="section faq-section" aria-labelledby="faq-title">
+          <div className="container faq-layout">
+            <div><span className="eyebrow"><span className="tiny-dot"/>قبل ما نبدأ</span><h2 id="faq-title">إجابات واضحة.<br/>لبداية أوضح.</h2></div>
+            <div className="faq-list">{faqs.map(item => <details key={item.question}><summary>{item.question}<span aria-hidden="true">+</span></summary><p>{item.answer}</p></details>)}</div>
           </div>
         </section>
         <section id="contact" className="section contact-section">

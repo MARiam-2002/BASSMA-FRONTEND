@@ -1,5 +1,6 @@
 import { createContext, useContext, useEffect, type ReactNode } from "react";
 import { ui, type Lang } from "./translations";
+import { seo } from "../seo";
 
 type LanguageContextValue = {
   lang: Lang;
@@ -18,7 +19,8 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
     document.documentElement.lang = "ar";
     document.documentElement.dir = "rtl";
     document.body.className = "lang-ar";
-    document.title = "بصمة | تصميم وهندسة رقمية";
+    document.title = seo.title;
+    document.getElementById("root")?.setAttribute("data-hydrated", "true");
   }, []);
 
   return (

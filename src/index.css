@@ -1977,3 +1977,17 @@ svg {
   .reveal, .hero-art, .hero-enter { opacity: 1; transform: none; }
   .trace-point { opacity: 1; transform: none; }
 }
+
+/* Crawlable company information remains usable before hydration or without JS. */
+#root:not([data-hydrated]) .reveal { opacity: 1; transform: none; }
+#root:not([data-hydrated]) .reveal .section-title h2 { clip-path: none; transform: none; }
+.faq-section { border-top: 1px solid var(--line); }
+.faq-layout { display: grid; grid-template-columns: .8fr 1.2fr; gap: 70px; }
+.faq-layout h2 { font-size: clamp(32px, 3.5vw, 48px); line-height: 1.5; margin-top: 22px; }
+.faq-list details { border-bottom: 1px solid var(--line); padding-block: 24px; }
+.faq-list summary { display: flex; justify-content: space-between; align-items: center; gap: 25px; cursor: pointer; font-size: 17px; font-weight: 700; list-style: none; }
+.faq-list summary::-webkit-details-marker { display: none; }
+.faq-list summary span { color: var(--orange); font-size: 25px; }
+.faq-list details[open] summary span { transform: rotate(45deg); }
+.faq-list p { line-height: 2; font-size: 15px; color: var(--muted); margin-top: 18px; }
+@media(max-width:767px) { .faq-layout { grid-template-columns: 1fr; gap: 25px; } .faq-list summary { font-size: 15px; } .faq-list p { font-size: 14px; } }
