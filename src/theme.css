@@ -92,3 +92,31 @@ body { background:#071525; color:var(--paper); }
 }
 
 @media(max-width:767px) { .form-row { grid-template-columns:1fr; gap:0; } }
+/* Compact contact control; text expands only on desktop interaction. */
+.whatsapp {
+ width:58px; height:58px; padding:15px; gap:0; direction:ltr;
+ justify-content:flex-start; overflow:hidden;
+ transition:width .35s var(--ease),gap .35s var(--ease),transform .3s var(--ease),box-shadow .3s var(--ease);
+}
+.whatsapp > svg { width:26px; height:26px; flex-shrink:0; }
+.whatsapp .whatsapp-label { display:block; max-width:0; opacity:0; overflow:hidden; white-space:nowrap; direction:rtl; transition:max-width .35s var(--ease),opacity .2s ease; }
+.whatsapp .whatsapp-arrow { display:none; }
+@media(min-width:768px) {
+ .whatsapp:focus-visible { width:190px; gap:12px; }
+ .whatsapp:focus-visible .whatsapp-label { max-width:118px; opacity:1; }
+}
+@media(min-width:768px) and (hover:hover) and (pointer:fine) {
+ .whatsapp:hover { width:190px; gap:12px; }
+ .whatsapp:hover .whatsapp-label { max-width:118px; opacity:1; }
+}
+@media(max-width:767px) {
+ .whatsapp { width:54px; height:54px; padding:12px; justify-content:center; }
+ .whatsapp .whatsapp-label { display:none; }
+}
+/* Explicit foreground keeps the details arrow visible in the dark theme. */
+.project-open { color:#071525; background:#efd36b; border:1px solid #fff2; box-shadow:0 4px 16px #0003; }
+.project-open svg { width:22px; height:22px; color:#071525; flex-shrink:0; }
+.project-info h3 button:hover { color:var(--gold); }
+@media(prefers-reduced-motion:reduce) {
+ .whatsapp,.whatsapp .whatsapp-label { transition:none; }
+}
