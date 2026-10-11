@@ -890,29 +890,36 @@ export default function App() {
           </div>
         </section>
       </main>
-      <footer className="footer">
+      <footer className="footer studio-footer">
         <div className="container">
-          <div className="footer-top">
-            <a href="#home" aria-label="بصمة — الرئيسية">
-              <Brand />
-            </a>
-            <p>{t.footer.tagline}</p>
-            <a className="back-top" href="#home">
-              {t.footer.backToTop} ↑
-            </a>
+          <div className="footer-invitation">
+            <div><span className="eyebrow"><span className="tiny-dot"/>الخطوة الجاية تبدأ بكلمة</span><h2>عندك فكرة؟<br/><span>نترك لها بصمة.</span></h2></div>
+            <a className="footer-project-link" href="#contact"><span>احكي لنا عنها</span><Arrow /></a>
           </div>
+          <div className="footer-columns">
+            <div className="footer-identity">
+              <a href="#home" aria-label="بصمة — الرئيسية"><Brand /></a>
+              <p>استوديو تصميم وتطوير رقمي.<br/>نصنع هويات، مواقع وتطبيقات<br/>تجمع وضوح الفكرة وجودة التنفيذ.</p>
+              <span className="footer-region">من مصر، لعملاء في مصر والسعودية.</span>
+            </div>
+            <nav className="footer-navigation" aria-label="روابط التذييل"><h3>اكتشف بصمة</h3>{nav.slice(1).map(link => <a href={`#${link.id}`} key={link.id}>{link.label}<span aria-hidden="true">↖</span></a>)}</nav>
+            <div className="footer-contact"><h3>لنتحدث</h3>
+              <a className="footer-email" href="mailto:bassma1company@gmail.com" dir="ltr">bassma1company@gmail.com</a>
+              <a href="tel:+201021288238" dir="ltr">+20 10 21288238</a>
+              <a className="footer-whatsapp" href="https://wa.me/201021288238" target="_blank" rel="noopener noreferrer">تواصل على واتساب<Arrow/></a>
+              <span className="footer-contact-note">ابدأ بفكرتك. نتواصل لنفهم التفاصيل.</span>
+            </div>
+          </div>
+          <details className="footer-privacy" id="privacy-notice">
+            <summary>الخصوصية وبيانات التواصل<span aria-hidden="true">+</span></summary>
+            <div><p>عند إرسال نموذج التواصل، يتم إرسال الاسم والبريد الإلكتروني والرسالة، ورقم الهاتف إذا أضفته، لاستقبال استفسارك والتواصل بشأن مشروعك. تجنّب إرسال كلمات المرور أو بيانات الدفع أو أي معلومات حساسة في الرسالة.</p><p>روابط واتساب والمشاريع تفتح خدمات خارجية لها سياسات خصوصية مستقلة. للاستفسار عن بيانات رسالتك أو طلب حذفها، تواصل مع <a href="mailto:bassma1company@gmail.com">bassma1company@gmail.com</a>.</p></div>
+          </details>
           <div className="footer-bottom">
             <span>{t.footer.copyright}</span>
-            <nav aria-label="روابط التذييل">
-              {nav.slice(1).map((link) => (
-                <a href={`#${link.id}`} key={link.id}>
-                  {link.label}
-                </a>
-              ))}
-            </nav>
-            <button className="motion-control" onClick={() => setMotionPaused(!motionPaused)} aria-pressed={motionPaused} aria-label={motionPaused ? "تشغيل الحركة" : "إيقاف الحركة"}>
-              {motionPaused ? "▷" : "Ⅱ"}<span>{motionPaused ? "تشغيل الحركة" : "إيقاف الحركة"}</span>
-            </button>
+            <div className="footer-utilities">
+              <button className="motion-control" onClick={() => setMotionPaused(!motionPaused)} aria-pressed={motionPaused} aria-label={motionPaused ? "تشغيل الحركة" : "إيقاف الحركة"}>{motionPaused ? "▷" : "Ⅱ"}<span>{motionPaused ? "تشغيل الحركة" : "إيقاف الحركة"}</span></button>
+              <a className="back-top" href="#home">للأعلى<span aria-hidden="true">↑</span></a>
+            </div>
           </div>
         </div>
       </footer>
