@@ -88,6 +88,8 @@ svg {
   transform-origin: right;
 }
 .header {
+  --nav-text: #d9d0df;
+  --nav-active: #f4f0e9;
   position: fixed;
   inset: 0 0 auto;
   z-index: 50;
@@ -96,6 +98,8 @@ svg {
     box-shadow 0.3s;
 }
 .header.scrolled {
+  --nav-text: #62596b;
+  --nav-active: #281a35;
   background: rgba(244, 240, 233, 0.94);
   backdrop-filter: blur(16px);
   box-shadow: 0 1px 0 var(--line);
@@ -147,12 +151,12 @@ svg {
 .desktop-nav a {
   position: relative;
   padding-block: 10px;
-  color: var(--muted);
+  color: var(--nav-text);
   transition: color 0.2s;
 }
 .desktop-nav a:hover,
 .desktop-nav a.active {
-  color: var(--ink);
+  color: var(--nav-active);
 }
 .desktop-nav a:after {
   content: "";
@@ -1903,9 +1907,9 @@ svg {
   .project-visual img { transition: none; }
 }
 /* Verified production refinements: legible dark navigation and compact mobile title. */
-.header:not(.scrolled) .desktop-nav a { color: #d9d0df; }
-.header:not(.scrolled) .desktop-nav a:hover,
-.header:not(.scrolled) .desktop-nav a.active { color: var(--paper); }
+
+
+
 @media (max-width: 767px) {
   .hero h1 { font-size: clamp(32px, 9.5vw, 46px); line-height: 1.5; letter-spacing: -1px; }
 }
