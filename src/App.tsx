@@ -10,6 +10,7 @@ import { useSiteContent } from "./hooks/useSiteContent";
 import { useLanguage } from "./i18n/LanguageProvider";
 import { filterKeys, type FilterKey } from "./i18n/translations";
 import type { DisplayProject } from "./lib/siteContent";
+import Wordmark from "./components/Wordmark";
 
 function Mark({ className = "" }: { className?: string }) {
   return (
@@ -40,10 +41,7 @@ function Brand() {
   return (
     <span className="brand">
       <Mark />
-      <span className="brand-words">
-        <strong>بصمة</strong>
-        <span dir="ltr">basma</span>
-      </span>
+      <Wordmark />
     </span>
   );
 }
@@ -421,15 +419,6 @@ export default function App() {
         {t.skipLink}
       </a>
       <div ref={progress} className="scroll-progress" aria-hidden="true" />
-      <button
-        className="motion-control"
-        onClick={() => setMotionPaused(!motionPaused)}
-        aria-pressed={motionPaused}
-        aria-label={motionPaused ? "تشغيل الحركة" : "إيقاف الحركة"}
-      >
-        {motionPaused ? "▷" : "Ⅱ"}
-        <span>{motionPaused ? "تشغيل الحركة" : "إيقاف الحركة"}</span>
-      </button>
       <header className={`header ${scrolled ? "scrolled" : ""}`}>
         <div className="header-inner">
           <a href="#home" aria-label="بصمة — الرئيسية">
@@ -491,9 +480,9 @@ export default function App() {
                 تصميم يفكّر. تقنية تُنجز.
               </span>
               <h1 className="hero-enter">
-                نصنع الفرق.
+                نصنع تجارب.
                 <br />
-                ونترك{" "}
+                تترك{" "}
                 <span className="signature">
                   بصمة
                   <svg viewBox="0 0 300 24" fill="none" aria-hidden="true">
@@ -509,7 +498,7 @@ export default function App() {
               <p className="hero-description hero-enter">
                 من أول فكرة إلى تجربة رقمية متكاملة.
                 <br />
-                نصمّم هويتك، ونطوّر مواقع وتطبيقات تحمل شخصيتك.
+                هوية تعبّر عنك، ومواقع وتطبيقات تجمع جمال التصميم وقوة التنفيذ.
               </p>
               <div className="hero-actions hero-enter">
                 <a className="button primary" href="#contact">
@@ -552,37 +541,17 @@ export default function App() {
                 art.current?.style.setProperty("--ry", "0deg");
               }}
             >
-              <div className="art-stage">
-                <span className="art-caption" dir="ltr">
-                  THE DIGITAL SIGNATURE
-                </span>
-                <div className="art-grid" />
-                <div className="orbit orbit-one" />
-                <div className="orbit orbit-two" />
-                <div className="sculpture">
-                  <Mark />
+              <div className="art-stage identity-specimen">
+                <div className="specimen-heading"><span>لكل فكرة أثر.</span><span className="specimen-index" dir="ltr">B / 01</span></div>
+                <div className="imprint-composition">
+                  <Mark className="imprint-echo echo-one" />
+                  <Mark className="imprint-echo echo-two" />
+                  <Mark className="imprint-echo echo-three" />
+                  <Mark className="imprint-primary" />
                 </div>
-                <div className="art-bottom">
-                  <span dir="ltr">basma</span>
-                  <span className="art-coordinate" dir="ltr">
-                    DESIGN × ENGINEERING
-                  </span>
-                </div>
-                <span className="art-stamp">
-                  فكرة.
-                  <br />
-                  أثر.
-                  <br />
-                  بصمة.
-                </span>
+                <div className="specimen-footer"><Wordmark/><p>هويتك.<br/>تجربتك.<br/>بصمتك.</p></div>
+                <div className="specimen-dots">{Array.from({length:9},(_,i)=><span key={i}/>)}</div>
               </div>
-              <span className="art-tag tag-one">
-                هوية تميّزك<small dir="ltr">IDENTITY</small>
-              </span>
-              <span className="art-tag tag-two">
-                <span className="tiny-dot" />
-                تجربة تُصنع بعناية
-              </span>
             </div>
           </div>
           <div className="hero-bottom container">
@@ -962,7 +931,9 @@ export default function App() {
                 </a>
               ))}
             </nav>
-            <span dir="ltr">MADE WITH PURPOSE.</span>
+            <button className="motion-control" onClick={() => setMotionPaused(!motionPaused)} aria-pressed={motionPaused} aria-label={motionPaused ? "تشغيل الحركة" : "إيقاف الحركة"}>
+              {motionPaused ? "▷" : "Ⅱ"}<span>{motionPaused ? "تشغيل الحركة" : "إيقاف الحركة"}</span>
+            </button>
           </div>
         </div>
       </footer>

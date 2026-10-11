@@ -1,0 +1,24 @@
+/** Geometric bilingual wordmark. Paths keep the logo independent of web fonts. */
+export default function Wordmark() {
+  return (
+    <svg className="brand-wordmark" viewBox="0 0 260 146" fill="none" aria-hidden="true">
+      <g stroke="currentColor" strokeWidth="12" strokeLinejoin="round" strokeLinecap="square">
+        <path d="M245 20V43Q245 55 233 55H214" />
+        <path fill="currentColor" stroke="none" fillRule="evenodd" d="M146 61H215Q231 61 231 42Q231 17 209 17Q182 17 162 49H146V61ZM183 49H214Q219 49 219 42Q219 29 208 29Q195 29 183 49Z" />
+        <path d="M151 55H143M108 55H84" />
+        <path d="M139 47C139 28 112 28 112 47C112 66 139 66 139 47Z" />
+        <path d="M60 27C27 27 27 61 60 61C93 61 93 27 60 27Z" />
+      </g>
+      <rect x="46" y="3" width="11" height="10" rx="2" fill="currentColor" />
+      <rect x="64" y="3" width="11" height="10" rx="2" fill="currentColor" />
+      <rect className="mark-dot" x="228" y="72" width="13" height="11" rx="3" fill="currentColor" />
+      <g transform="translate(19 98)" stroke="currentColor" strokeWidth="7" strokeLinecap="square" strokeLinejoin="round">
+        <path d="M5 0V36M5 20C5 1 31 2 31 20C31 39 5 40 5 20Z" />
+        <path d="M48 20C48 2 74 2 74 20C74 39 48 39 48 20ZM74 7V36" />
+        <path d="M119 9C101-1 89 8 99 17L111 23C124 34 105 42 91 32" />
+        <path d="M135 36V8M135 19C135 2 154 2 154 19V36M154 19C154 2 173 2 173 19V36" />
+        <path d="M190 20C190 2 216 2 216 20C216 39 190 39 190 20ZM216 7V36" />
+      </g>
+    </svg>
+  );
+}

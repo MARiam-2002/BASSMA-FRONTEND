@@ -337,154 +337,60 @@ svg {
 }
 .hero-art {
   position: relative;
-  perspective: 1000px;
-  padding: 10px 8px 30px;
-  animation: rise 1.2s 0.25s var(--ease) both;
+  perspective: 1100px;
+  padding: 0;
+  animation: rise 1.2s .2s var(--ease) both;
 }
 .art-stage {
   position: relative;
-  aspect-ratio: 1/0.99;
+  aspect-ratio: 1 / 1.08;
   background: var(--ink);
   color: var(--paper);
-  border-radius: 10px 10px 100px 10px;
+  border-radius: 3px;
   overflow: hidden;
   transform: rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg));
-  transition: transform 0.6s var(--ease);
+  transition: transform .8s var(--ease);
   isolation: isolate;
-  box-shadow: 0 25px 50px #281a351a;
 }
-.art-caption {
-  position: absolute;
-  top: 30px;
-  left: 30px;
-  font: 10px monospace;
-  letter-spacing: 2px;
-  opacity: 0.6;
-}
-.art-grid {
-  position: absolute;
-  inset: 0;
-  opacity: 0.15;
-  background-image:
-    linear-gradient(#f4f0e947 1px, transparent 1px),
-    linear-gradient(90deg, #f4f0e947 1px, transparent 1px);
-  background-size: 50px 50px;
-  mask-image: radial-gradient(ellipse at center, black, transparent 75%);
-}
-.sculpture {
-  position: absolute;
-  width: 53%;
-  left: 24%;
-  top: 21%;
-  animation: float 7s ease-in-out infinite;
-  filter: drop-shadow(14px 18px 0 #12091e);
-}
-.sculpture svg {
-  width: 100%;
-  color: var(--paper);
-  transform: rotate(-9deg);
-}
-.sculpture .mark-dot {
-  color: var(--orange);
-}
-.orbit {
-  position: absolute;
-  border: 1px solid #f4f0e925;
-  border-radius: 50%;
-  width: 81%;
-  height: 81%;
-  left: 9%;
-  top: 8%;
-}
-.orbit-one:before {
+.identity-specimen::before {
   content: "";
   position: absolute;
-  width: 10px;
-  height: 10px;
-  border-radius: 3px;
+  bottom: 0;
+  left: 0;
+  width: 8px;
+  height: 24%;
   background: var(--orange);
-  left: 15%;
-  top: 13%;
 }
-.orbit-one {
-  animation: spin 40s linear infinite;
-}
-.orbit-two {
-  width: 110%;
-  height: 110%;
-  left: -6%;
-  top: -7%;
-  border-style: dashed;
-  opacity: 0.45;
-  animation: spin 70s linear reverse infinite;
-}
-.art-bottom {
+.specimen-heading {
   position: absolute;
-  bottom: 32px;
-  left: 30px;
-  right: 40px;
+  top: 6%;
+  inset-inline: 7%;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  direction: ltr;
+  font-size: 14px;
+  border-bottom: 1px solid #f4f0e930;
+  padding-bottom: 18px;
 }
-.art-bottom > span:first-child {
-  font: 600 27px Arial;
-}
-.art-coordinate {
-  font: 8px monospace;
-  letter-spacing: 1px;
-  opacity: 0.5;
-}
-.art-stamp {
-  position: absolute;
-  top: 82px;
-  right: 25px;
-  font-size: 12px;
-  line-height: 1.8;
-  opacity: 0.7;
-}
-.art-tag {
-  position: absolute;
-  z-index: 2;
-  box-shadow: 0 15px 40px #281a351a;
-  border: 1px solid var(--line);
-}
-.tag-one {
-  top: 14%;
-  right: -26px;
-  padding: 15px 22px;
-  background: var(--paper);
-  border-radius: 5px;
-  transform: rotate(5deg);
-  font-size: 13px;
-  font-weight: 700;
-  animation: float 8s ease-in-out infinite;
-}
-.tag-one small {
-  display: block;
-  margin-top: 6px;
-  font: 8px monospace;
-  letter-spacing: 2px;
-  color: var(--muted);
-}
-.tag-two {
-  bottom: 14px;
-  left: 22px;
-  padding: 13px 24px;
-  background: var(--orange);
-  border-color: transparent;
-  border-radius: 5px;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  transform: rotate(-4deg);
-  font-size: 12px;
-  font-weight: 700;
-}
-.tag-two .tiny-dot {
-  background: var(--ink);
-}
+.specimen-index {font: 11px monospace; letter-spacing: 1px; color: #c9bdcf;}
+.imprint-composition {position: absolute; inset: 23% 12% 23%;}
+.imprint-composition > svg {position: absolute; width: 75%; height: 100%; left: 10%; top: 0;}
+.imprint-echo {color: #beadc8;}
+.imprint-echo path, .imprint-echo rect {fill: none; stroke: currentColor; stroke-width: .65;}
+.imprint-echo .mark-dot {color: inherit;}
+.echo-one {transform: translate(-40px, -22px); opacity: .22;}
+.echo-two {transform: translate(-20px, -11px); opacity: .42;}
+.echo-three {transform: translate(20px, 11px); opacity: .2;}
+.imprint-primary {color: var(--paper);}
+.imprint-primary path {animation: imprint-reveal 1.35s .35s var(--ease) both;}
+.imprint-primary .mark-dot {animation: signature-dot .8s 1s var(--ease) both; transform-origin: center; transform-box: fill-box;}
+.specimen-footer {position: absolute; bottom: 6%; inset-inline: 7%; display: flex; align-items: flex-end; justify-content: space-between; border-top: 1px solid #f4f0e930; padding-top: 24px; direction: ltr;}
+.specimen-footer .brand-wordmark {width: 88px; height: auto;}
+.specimen-footer p {font-size: 13px; line-height: 1.8; text-align: right; direction: rtl; color: #ddd3e3;}
+.specimen-dots {position: absolute; top: 29%; right: 7%; display: grid; grid-template-columns: repeat(3, 3px); gap: 7px; opacity: .45;}
+.specimen-dots span {width: 3px; height: 3px; background: var(--orange);}
+@keyframes imprint-reveal {from {clip-path: inset(100% 0 0 0);} to {clip-path: inset(0);}}
+@keyframes signature-dot {from {opacity: 0; transform: translateY(-10px) scale(.7);} to {opacity: 1; transform: none;}}
 .hero-bottom {
   display: flex;
   justify-content: space-between;
@@ -1834,4 +1740,87 @@ svg {
   .art-stage {
     transform: none;
   }
+}
+
+/* Signature identity: restrained composition and a readable type scale. */
+:root { --muted: #62596b; }
+.brand > .brand-wordmark { width: 88px; height: auto; }
+.brand { gap: 14px; }
+.desktop-nav { font-size: 14px; }
+.header-cta { font-size: 13px; }
+.hero { padding-top: 125px; }
+.hero-grid { min-height: 610px; gap: 75px; padding-block: 35px 55px; }
+.hero h1 { font-size: clamp(54px, 5.1vw, 80px); letter-spacing: -2px; line-height: 1.42; }
+.hero-description { font-size: 17px; line-height: 1.95; max-width: 490px; }
+.hero-note { font-size: 12px; }
+.eyebrow { font-size: 13px; }
+.button { font-size: 14px; padding: 17px 26px; }
+.section-title > p { font-size: 15px; max-width: 355px; }
+.about-detail > p { font-size: 15px; }
+.stats span { font-size: 12px; }
+.text-link { font-size: 14px; }
+.services-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 24px; }
+.service-card { padding: 32px 28px 25px; }
+.service-card h3 { font-size: 21px; }
+.service-card p { font-size: 14px; }
+.service-bottom { font-size: 12px; }
+.project-category { font-size: 12px; }
+.filters button { font-size: 13px; }
+.process-step p { font-size: 14px; }
+.contact-copy > p { font-size: 15px; }
+.field label { font-size: 13px; }
+.field input, .field textarea { font-size: 15px; }
+.field label small { font-size: 11px; }
+.form-feedback { font-size: 14px; }
+.footer-top > p, .footer-bottom { font-size: 12px; }
+.back-top { font-size: 13px; }
+.motion-control { position: static; padding: 8px 12px; color: var(--paper); background: transparent; border-color: #ffffff30; box-shadow: none; }
+.motion-control span { font-size: 11px; }
+.whatsapp { width: 46px; height: 46px; padding: 0; border-radius: 50%; justify-content: center; left: 20px; bottom: 20px; }
+.whatsapp span { display: none; }
+.motion-paused .imprint-primary path, .motion-paused .imprint-primary .mark-dot { animation-play-state: paused; }
+@media (max-width: 1100px) {
+  .hero-grid { gap: 40px; }
+  .hero h1 { font-size: 57px; }
+  .hero-description { font-size: 15px; }
+  .header-cta { font-size: 11px; }
+  .desktop-nav { gap: 20px; font-size: 13px; }
+  .service-card { padding: 25px 22px; }
+  .service-card h3 { font-size: 19px; }
+}
+@media (max-width: 767px) {
+  .brand > .brand-wordmark { width: 75px; }
+  .hero { padding-top: 90px; }
+  .hero-grid { min-height: 0; padding-block: 30px 35px; gap: 35px; }
+  .hero h1 { font-size: clamp(43px, 9.2vw, 66px); letter-spacing: -1.5px; }
+  .hero-description { font-size: 15px; }
+  .hero-note { font-size: 11px; }
+  .eyebrow { font-size: 12px; }
+  .hero-art { width: 100%; max-width: 460px; padding: 0; }
+  .art-stage { aspect-ratio: 1 / 1.04; }
+  .specimen-heading { font-size: 13px; padding-bottom: 14px; }
+  .specimen-footer { padding-top: 18px; }
+  .specimen-footer .brand-wordmark { width: 75px; }
+  .specimen-footer p { font-size: 12px; }
+  .echo-one { transform: translate(-28px, -16px); }
+  .echo-two { transform: translate(-14px, -8px); }
+  .echo-three { transform: translate(14px, 8px); }
+  .button { font-size: 13px; padding: 16px 22px; gap: 20px; }
+  .section-title > p, .about-detail > p, .contact-copy > p { font-size: 14px; }
+  .services-grid { grid-template-columns: 1fr; gap: 15px; }
+  .service-card { padding: 26px; }
+  .service-top { margin-bottom: 20px; }
+  .service-card h3 { font-size: 20px; }
+  .service-card p { font-size: 14px; padding-bottom: 23px; }
+  .service-bottom { font-size: 12px; }
+  .process-step p { font-size: 13px; }
+  .project-category { font-size: 12px; }
+  .filters button { font-size: 12px; }
+  .field input, .field textarea { font-size: 16px; }
+  .footer-top > p, .footer-bottom { font-size: 11px; }
+  .whatsapp { width: 44px; height: 44px; left: 15px; bottom: 15px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .imprint-primary path { clip-path: none; }
+  .motion-control { display: none; }
 }
